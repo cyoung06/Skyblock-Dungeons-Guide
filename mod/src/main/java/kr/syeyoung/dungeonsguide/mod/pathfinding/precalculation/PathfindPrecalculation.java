@@ -8,9 +8,8 @@ import lombok.Getter;
 import org.apache.commons.io.input.CountingInputStream;
 
 import java.io.*;
+import java.lang.foreign.Arena;
 import java.lang.ref.SoftReference;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
@@ -131,10 +130,12 @@ public class PathfindPrecalculation {
         private AtomicInteger reference = new AtomicInteger(0);
         private AtomicBoolean killed = new AtomicBoolean(false);
 
+        private final Arena arena;
         @Getter
         private ByteBuffer byteBuffer;
 
-        public ReferenceCountedByteBufferWrapper(ByteBuffer byteBuffer) {
+        public ReferenceCountedByteBufferWrapper(Arena arena, ByteBuffer byteBuffer) {
+            this.arena = arena;
             this.byteBuffer = byteBuffer;
         }
 
@@ -152,23 +153,10 @@ public class PathfindPrecalculation {
             }
         }
 
+        // 1.8.9 freed the direct buffer through DirectByteBuffer.cleaner() by reflection, which java 25 doesn't allow
         private void cleanup() {
-            try {
-                if (killed.compareAndSet(false, true))
-                    destroyDirectByteBuffer(byteBuffer);
-            } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        public static void destroyDirectByteBuffer(ByteBuffer toBeDestroyed)
-                throws IllegalArgumentException, IllegalAccessException,
-                InvocationTargetException, SecurityException, NoSuchMethodException {
-            Method cleanerMethod = toBeDestroyed.getClass().getMethod("cleaner");
-            cleanerMethod.setAccessible(true);
-            Object cleaner = cleanerMethod.invoke(toBeDestroyed);
-            Method cleanMethod = cleaner.getClass().getMethod("clean");
-            cleanMethod.setAccessible(true);
-            cleanMethod.invoke(cleaner);
+            if (killed.compareAndSet(false, true))
+                arena.close();
         }
 
     }
@@ -202,10 +190,18 @@ public class PathfindPrecalculation {
 //            byte[] b = new byte[xLen * yLen * zLen * 8];
 //            dataInputStream.readFully(b);
 
-            ByteBuffer buffer = ByteBuffer.allocateDirect(xLen * yLen * zLen * 8); // use off-heap buffer.
-            ReadableByteChannel channel = Channels.newChannel(dataInputStream);
-            while (channel.read(buffer) > 0);
-            ReferenceCountedByteBufferWrapper wrapper = new ReferenceCountedByteBufferWrapper(buffer);
+            // use off-heap buffer. shared, the pathfinders read it from their own threads
+            Arena arena = Arena.ofShared();
+            ByteBuffer buffer;
+            try {
+                buffer = arena.allocate(xLen * yLen * zLen * 8).asByteBuffer();
+                ReadableByteChannel channel = Channels.newChannel(dataInputStream);
+                while (channel.read(buffer) > 0);
+            } catch (IOException | RuntimeException e) {
+                arena.close();
+                throw e;
+            }
+            ReferenceCountedByteBufferWrapper wrapper = new ReferenceCountedByteBufferWrapper(arena, buffer);
             wrapper.use();
             byteBufferWeakReference = new SoftReference<>(wrapper);
 
