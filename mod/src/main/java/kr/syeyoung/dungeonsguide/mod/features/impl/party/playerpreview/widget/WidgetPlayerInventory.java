@@ -72,7 +72,6 @@ public class WidgetPlayerInventory extends Widget implements Renderer, Layouter 
                 context.drawRect(x, y, x + 18, y + 18, 0xFF000000);
                 context.drawRect(x + 1, y + 1, x + 17, y + 17, 0xFF666666);
 
-                // 1.8.9's renderItemAndEffectIntoGUI skipped null stacks
                 ItemStack stack = playerProfile.getInventory()[(i + 9) % 36];
                 if (stack != null)
                     context.drawItem(stack, (i % 9) * 18 + 2, (i / 9) * 18 + 2);

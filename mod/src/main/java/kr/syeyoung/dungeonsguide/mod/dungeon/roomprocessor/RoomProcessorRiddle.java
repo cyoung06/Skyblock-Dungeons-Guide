@@ -79,7 +79,6 @@ public class RoomProcessorRiddle extends GeneralRoomProcessor {
             final BlockPos high = getDungeonRoom().getRoomBounds().getMax();
             DGWorld w = getDungeonRoom().getContext().getWorld();
             Level level = Minecraft.getInstance().level;
-            // the room's bounds (D114)
             AABB roomBox = new AABB(low.getX(), level.getMinY(), low.getZ(), high.getX() + 1, level.getMaxY() + 1, high.getZ() + 1);
             List<ArmorStand> armor = level.getEntitiesOfClass(ArmorStand.class, roomBox, new Predicate<ArmorStand>() {
                 @Override

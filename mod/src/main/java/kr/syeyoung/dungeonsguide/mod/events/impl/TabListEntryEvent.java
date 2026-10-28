@@ -24,9 +24,6 @@ import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 
 import java.util.EnumSet;
 
-/**
- * Vanilla's tab list entries changing, fired by ClientPacketListenerMixin after vanilla applied the packet.
- */
 public abstract class TabListEntryEvent extends DGEvent {
     @Getter
     private final PlayerInfo playerInfo;
@@ -35,21 +32,18 @@ public abstract class TabListEntryEvent extends DGEvent {
         this.playerInfo = playerInfo;
     }
 
-    // a player new to the tab list
     public static class Add extends TabListEntryEvent {
         public Add(PlayerInfo playerInfo) {
             super(playerInfo);
         }
     }
 
-    // a player removed from the tab list
     public static class Remove extends TabListEntryEvent {
         public Remove(PlayerInfo playerInfo) {
             super(playerInfo);
         }
     }
 
-    // an existing entry updated by the packet's actions
     public static class Update extends TabListEntryEvent {
         @Getter
         private final EnumSet<ClientboundPlayerInfoUpdatePacket.Action> actions;

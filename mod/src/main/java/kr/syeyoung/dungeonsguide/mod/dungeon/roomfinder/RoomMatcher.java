@@ -88,7 +88,6 @@ public class RoomMatcher {
                 if (data == -1) continue;
                 BlockState b = dungeonRoom.getRelativeBlockAt(x,0,z);
 
-                // D110: 1.8.9 compared block ids without meta, the same as comparing legacy groups
                 if (b == null || LegacyBlock.legacyId(b) != LegacyBlock.legacyId(dungeonRoomInfo.getPaletteState(data))) {
                     wrongs++;
 
@@ -102,7 +101,6 @@ public class RoomMatcher {
     private static final int offset = 3;
     public DungeonRoomInfo createNew() {
         DungeonRoomInfo roomInfo = new DungeonRoomInfo(dungeonRoom.getRoomBounds().getShape(), dungeonRoom.getColor());
-        // new rooms are format 2 (D111)
         roomInfo.setFormatVersion(2);
 
         int maxX = dungeonRoom.getRoomBounds().getMax().getX();

@@ -5,7 +5,6 @@ layout(std140) uniform Repeat {
     vec2 size;
 };
 
-// 1.8.9: uniform sampler2D tex
 uniform sampler2D Sampler0;
 
 in vec2 texCoord0;

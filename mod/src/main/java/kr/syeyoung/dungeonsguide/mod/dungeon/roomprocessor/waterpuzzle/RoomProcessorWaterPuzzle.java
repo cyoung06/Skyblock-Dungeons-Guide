@@ -113,7 +113,6 @@ public class RoomProcessorWaterPuzzle extends GeneralRoomProcessor {
                 DGWorld w=  getDungeonRoom().getContext().getWorld();
                 BlockState lever = w.getBlockState(pos);
                 Direction enumFacing = lever.getValue(LeverBlock.FACING);
-                // 1.8.9's floor / ceiling levers faced up / down, so the offset was zero
                 BlockPos newPos = lever.getValue(LeverBlock.FACE) == AttachFace.WALL ? pos.offset(-enumFacing.getStepX(),0,-enumFacing.getStepZ()) : pos;
 
                 int id = LegacyBlock.legacyId(w.getBlockState(newPos));

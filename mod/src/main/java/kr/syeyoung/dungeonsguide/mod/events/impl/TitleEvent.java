@@ -28,7 +28,5 @@ import kr.syeyoung.dungeonsguide.mod.events.DGEvent;
 @EqualsAndHashCode(callSuper=false)
 @AllArgsConstructor
 public class TitleEvent extends DGEvent {
-    // 1.8.9: S45PacketTitle. on 26.1 one of ClientboundSetTitleTextPacket, ClientboundSetSubtitleTextPacket,
-    // ClientboundSetTitlesAnimationPacket, ClientboundClearTitlesPacket
     Packet<?> packetTitle;
 }

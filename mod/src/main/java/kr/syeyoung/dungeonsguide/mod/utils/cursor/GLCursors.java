@@ -32,7 +32,6 @@ public class GLCursors {
     private static Map<EnumCursor, CursorType> enumCursorCursorMap = new HashMap<>();
 
 
-    // needs glfw, runs on CLIENT_STARTED
     public static void setupCursors() {
         if (enumCursorCursorMap.size() != 0) return;
         CursorType resizeNWSE = CursorType.createStandardCursor(GLFW.GLFW_RESIZE_NWSE_CURSOR, "resize_nwse", CursorType.DEFAULT);

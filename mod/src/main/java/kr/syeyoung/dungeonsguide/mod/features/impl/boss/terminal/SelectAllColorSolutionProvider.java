@@ -56,8 +56,6 @@ public class SelectAllColorSolutionProvider implements TerminalSolutionProvider 
         return ts;
     }
 
-    // 1.8.9 matched the color by metadata on wool, stained glass (panes), stained clay and carpet;
-    // 26.1 has an item per color (D125)
     private static boolean isColored(ItemStack stack, DyeColor color) {
         for (String kind : new String[] {"wool", "stained_glass", "stained_glass_pane", "terracotta", "carpet"}) {
             if (stack.is(BuiltInRegistries.ITEM.getValue(Identifier.withDefaultNamespace(color.getName() + "_" + kind)))) return true;
@@ -65,7 +63,6 @@ public class SelectAllColorSolutionProvider implements TerminalSolutionProvider 
         return false;
     }
 
-    // 1.8.9's dye item by dye damage: the dyes, and ink sac / cocoa beans / lapis / bone meal for their colors
     private static boolean isDye(ItemStack stack, DyeColor color) {
         if (stack.is(BuiltInRegistries.ITEM.getValue(Identifier.withDefaultNamespace(color.getName() + "_dye")))) return true;
         switch (color) {

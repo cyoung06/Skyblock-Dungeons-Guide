@@ -33,9 +33,6 @@ import org.joml.Matrix4f;
 import java.awt.*;
 import java.util.List;
 
-/**
- * Vanilla glyphs (D79) that share a pipeline and a texture.
- */
 @AllArgsConstructor
 public class GlyphRunState implements DGRenderState {
     private final Matrix3x2f pose;

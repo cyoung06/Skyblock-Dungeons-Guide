@@ -38,7 +38,6 @@ public class FeatureTooltipDungeonStat extends SimpleFeature {
         
 
         ItemStack hoveredItem = event.itemStack;
-        // 1.8.9's ExtraAttributes nbt, custom_data on 26.1 (D125)
         CompoundTag nbtTagCompound = SkyblockUtils.getExtraAttributes(hoveredItem);
         if (nbtTagCompound.isEmpty())
             return;

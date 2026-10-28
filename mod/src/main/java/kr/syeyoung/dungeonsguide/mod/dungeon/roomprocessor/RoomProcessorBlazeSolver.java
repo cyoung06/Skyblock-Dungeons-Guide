@@ -61,7 +61,6 @@ public class RoomProcessorBlazeSolver extends GeneralRoomProcessor {
         Level w = Minecraft.getInstance().level;
         final BlockPos low = dungeonRoom.getRoomBounds().getMin();
         final BlockPos high = dungeonRoom.getRoomBounds().getMax();
-        // the room's bounds (D114)
         AABB roomBox = new AABB(low.getX(), w.getMinY(), low.getZ(), high.getX() + 1, w.getMaxY() + 1, high.getZ() + 1);
         // TODO: D5 entity name stopgap (D116)
         entityList = new ArrayList<ArmorStand>(w.getEntitiesOfClass(ArmorStand.class, roomBox, input -> {

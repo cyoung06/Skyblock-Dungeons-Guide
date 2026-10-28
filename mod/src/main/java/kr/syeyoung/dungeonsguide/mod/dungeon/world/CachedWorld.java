@@ -23,7 +23,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-// a room's view of the level through its chunk cache (D108)
 public class CachedWorld implements DGWorld {
     private final EditableChunkCache chunkCache;
     private final ThreadLocal<BlockPos.MutableBlockPos> blockPosThreadLocal = ThreadLocal.withInitial(BlockPos.MutableBlockPos::new);
@@ -82,5 +81,4 @@ public class CachedWorld implements DGWorld {
         return chunkCache.getMaxZ();
     }
 
-    // 1.8.9 forwarded light and isSideSolid to the chunk cache, light is the adapter's (none) and solidity comes from block shapes on 26.1
 }

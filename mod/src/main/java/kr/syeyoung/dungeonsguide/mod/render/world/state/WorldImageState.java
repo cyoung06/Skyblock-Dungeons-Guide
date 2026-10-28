@@ -39,11 +39,9 @@ import java.util.List;
 @AllArgsConstructor
 public class WorldImageState implements DGWorldRenderState {
     private final StencilImage image;
-    // a StencilImageTexture of image
     private final Identifier texture;
     private final List<DGRenderState> states;
     private final int width, height;
-    // top left, bottom left, bottom right, top right of the image
     private final Vec3[] corners;
     private final boolean depth;
 

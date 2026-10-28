@@ -73,7 +73,6 @@ public class BDChamber {
         return getEntityAt(entity, pos);
     }
     public <T extends Entity> T getEntityAt(Class<T> entity, final BlockPos pos) {
-        // the block at pos (D114)
         List<T> entities = Minecraft.getInstance().level.getEntitiesOfClass(entity, new AABB(pos), new Predicate<T>() {
             @Override
             public boolean apply(@Nullable T input) {

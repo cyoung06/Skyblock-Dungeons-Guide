@@ -33,7 +33,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Minecraft.class)
 public class MinecraftMixin {
-    // 1.8.9: GuiOpenEvent
     @Inject(method = "setScreen", at = @At("HEAD"), cancellable = true)
     private void dungeonsguide$onSetScreen(Screen _screen, CallbackInfo ci, @Local(argsOnly = true) LocalRef<Screen> screen) {
         ScreenOpenEvent event = new ScreenOpenEvent(screen.get());
@@ -44,7 +43,6 @@ public class MinecraftMixin {
         screen.set(event.gui);
     }
 
-    // 1.8.9: WorldEvent.Unload. fabric only has an event for the new level
     @Inject(method = "updateLevelInEngines(Lnet/minecraft/client/multiplayer/ClientLevel;Z)V", at = @At("HEAD"))
     private void dungeonsguide$onLevelChange(ClientLevel level, boolean stopSound, CallbackInfo ci) {
         ClientLevel previous = ((Minecraft) (Object) this).level;

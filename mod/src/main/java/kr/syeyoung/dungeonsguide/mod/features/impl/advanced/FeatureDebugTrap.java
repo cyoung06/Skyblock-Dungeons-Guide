@@ -75,7 +75,7 @@ public class FeatureDebugTrap extends TextHUDFeature {
     @Override
     public TextSpan getText() {
 
-        // the loaded chunk area around the player (D114)
+        // TODO: change into proper radius
         Minecraft mc = Minecraft.getInstance();
         ChunkPos center = mc.player.chunkPosition();
         int loadedRadius = mc.options.getEffectiveRenderDistance() * 16;

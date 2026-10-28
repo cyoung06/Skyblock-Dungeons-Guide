@@ -152,7 +152,6 @@ public class DGWorldRenderer {
         FramePass imagePass = frame.addPass("dungeonsguide_world_images");
         imagePass.disableCulling();
         imagePass.executes(() -> {
-            // gui content has no fog, like vanilla's gui
             GpuBufferSlice noFog = Minecraft.getInstance().gameRenderer.fogRenderer.getBuffer(FogRenderer.FogMode.NONE);
             for (DGWorldRenderState state : frameStates) {
                 if (state instanceof WorldImageState) ((WorldImageState) state).prepare(noFog);

@@ -106,7 +106,6 @@ public class Line extends AnnotatedExportOnlyWidget implements Layouter, Rendere
 
         int color = this.color.getValue();
         boolean horizontal = direction.getValue() == Orientation.HORIZONTAL;
-        // 1.8.9 used glLineWidth in pixels (thickness * scale), so the quad is thickness wide in local units
         double thickness = this.thickness.getValue();
 
         Short pattern = this.pattern.getValue();

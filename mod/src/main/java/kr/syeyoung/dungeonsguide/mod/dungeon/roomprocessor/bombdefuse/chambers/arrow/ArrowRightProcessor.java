@@ -100,7 +100,6 @@ public class ArrowRightProcessor extends GeneralDefuseChamberProcessor {
         if (armorStand == null) return -1;
         ItemStack item = armorStand.getItemBySlot(EquipmentSlot.HEAD);
         if (item.isEmpty()) return -1;
-        // 1.8.9's SkullOwner.Properties.textures, the profile component on 26.1 (D125)
         ResolvableProfile profile = item.get(DataComponents.PROFILE);
         if (profile == null) return -1;
         String str = profile.partialProfile().properties().get("textures").stream().findFirst().map(Property::value).orElse("");

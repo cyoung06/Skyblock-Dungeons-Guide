@@ -37,7 +37,6 @@ public class TexturedRectState implements DGRenderState {
     private final float x0, y0, x1, y1;
     private final float u0, u1, v0, v1;
     private final int color;
-    // textures can be (re)loaded between recording and executing
     private final Supplier<GpuTextureView> texture;
     private final Supplier<GpuSampler> sampler;
     private final Rectangle scissor;

@@ -27,15 +27,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 
-/**
- * Stencil step of the Stencil / NegativeStencil elements, executed as raw gl (D74/D75). Not a draw.
- */
 @AllArgsConstructor
 public class StencilState implements DGRenderState {
     public enum Action {
-        // clear the stencil, following draws write 1 and no color
         BEGIN_MASK,
-        // following draws only where stencil == ref
         BEGIN_MASKED,
         END
     }

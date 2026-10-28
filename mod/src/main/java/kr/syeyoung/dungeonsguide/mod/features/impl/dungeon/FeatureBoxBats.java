@@ -59,7 +59,7 @@ public class FeatureBoxBats extends SimpleFeature  {
         int val = this.<Integer>getParameter("radius").getValue();
         final int sq = val * val;
 
-        // the loaded chunk area around the player (D114)
+        // TODO: change into proper radius
         Minecraft mc = Minecraft.getInstance();
         ChunkPos center = mc.player.chunkPosition();
         int loadedRadius = mc.options.getEffectiveRenderDistance() * 16;

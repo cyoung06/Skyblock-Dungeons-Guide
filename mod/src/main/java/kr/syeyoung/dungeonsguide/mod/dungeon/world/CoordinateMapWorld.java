@@ -57,5 +57,4 @@ public class CoordinateMapWorld implements DGWorld {
         return map.getMaxZ();
     }
 
-    // 1.8.9 also overrode isSideSolid (the default inside y 0..256), 26.1 decides face solidity from the block shape
 }

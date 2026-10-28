@@ -74,7 +74,6 @@ public class PacketListener {
         }
     }
 
-    // the parallel universe keeps what the server sent, so text is copied before vanilla or other mods get the packet (D106)
     private static Component copy(Component component) {
         return component == null ? null : TextUtils.copyComponent(component);
     }
@@ -117,7 +116,6 @@ public class PacketListener {
                 objective.updateScore(score.owner(), score.score(), copy(score.display().orElse(null)), score.numberFormat().orElse(null));
             }
         } else if (packet instanceof ClientboundResetScorePacket) {
-            // 1.8.9's S3C REMOVE. no objective means every objective
             ClientboundResetScorePacket reset = (ClientboundResetScorePacket) packet;
             if (reset.objectiveName() == null) {
                 ScoreboardManager.INSTANCE.removeScoreFromAll(reset.owner());
@@ -130,7 +128,6 @@ public class PacketListener {
             ScoreboardManager.INSTANCE.displayScoreboard(board.getSlot().id(), board.getObjectiveName());
         } else if (packet instanceof ClientboundSetPlayerTeamPacket) {
             ClientboundSetPlayerTeamPacket pkt = (ClientboundSetPlayerTeamPacket) packet;
-            // 1.8.9 actions: 0 create, 1 remove, 2 update, 3 player add, 4 player remove
             if (pkt.getTeamAction() == ClientboundSetPlayerTeamPacket.Action.ADD) {
                 // CREATE
                 Team team = new Team(pkt.getName());
@@ -180,12 +177,10 @@ public class PacketListener {
                 }
             }
         }  else if (packet instanceof ClientboundPlayerInfoUpdatePacket) {
-            // 1.8.9 sent one action per packet, 26.1 sends a set of them
             ClientboundPlayerInfoUpdatePacket pkt = (ClientboundPlayerInfoUpdatePacket) packet;
             EnumSet<ClientboundPlayerInfoUpdatePacket.Action> actions = pkt.actions();
             for (ClientboundPlayerInfoUpdatePacket.Entry entry : pkt.entries()) {
                 if (actions.contains(ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER)) {
-                    // the profile is an immutable record on 26.1
                     TabListEntry tabListEntry = new TabListEntry(entry.profile(), entry.gameMode());
                     tabListEntry.setPing(entry.latency());
                     tabListEntry.setDisplayName(copy(entry.displayName()));
@@ -209,7 +204,6 @@ public class PacketListener {
                 }
             }
         } else if (packet instanceof ClientboundBossEventPacket) {
-            // 1.8.9's BossStatus was set from the boss entity, 26.1 sends boss bars as packets
             ((ClientboundBossEventPacket) packet).dispatch(new ClientboundBossEventPacket.Handler() {
                 @Override
                 public void add(UUID id, Component name, float progress, BossEvent.BossBarColor color, BossEvent.BossBarOverlay overlay, boolean darkenScreen, boolean playMusic, boolean createWorldFog) {
@@ -237,7 +231,6 @@ public class PacketListener {
                 }
             });
         } else if (packet instanceof ClientboundPlayerInfoRemovePacket) {
-            // 1.8.9's S38 REMOVE_PLAYER
             for (UUID profileId : ((ClientboundPlayerInfoRemovePacket) packet).profileIds()) {
                 TabList.INSTANCE.removeEntry(profileId);
             }

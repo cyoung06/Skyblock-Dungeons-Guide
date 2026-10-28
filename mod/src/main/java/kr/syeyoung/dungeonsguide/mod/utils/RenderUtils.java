@@ -40,11 +40,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-/**
- * World drawing records DG world render states that DGWorldRenderer submits after RenderWorldEvent (D81).
- * They are in world coordinates, 1.8.9 translated by the interpolated camera here; the _ variants drew in the
- * caller's matrix, which is the same now that the camera is applied when the states are submitted.
- */
 public class RenderUtils {
     public static final Identifier icons = Identifier.parse("textures/gui/icons.png");
 
@@ -242,7 +237,6 @@ public class RenderUtils {
             DGWorldRenderer.record(new LineStripState(loop2, red, 5, true, true));
         }
 
-        // 1.8.9 drew this with the depth test still on, at 0.02 scale
         DGWorldRenderer.record(new WorldTextState("Type: "+dungeonDoor.getType(),
                 new Vec3(dungeonDoor.getPosition().getX(), dungeonDoor.getPosition().getY(), dungeonDoor.getPosition().getZ()),
                 0xFF00FFFF, 0.02f, false, false, true));
@@ -275,7 +269,6 @@ public class RenderUtils {
     }
 
     public static void drawLines(List<BlockPos> poses, Color colour, float thickness, float partialTicks, boolean depth) {
-        // 1.8.9 drew the AColor version and then this one over it
         if (colour instanceof AColor) drawLines(poses, (AColor)colour, thickness, partialTicks,depth);
         List<Vec3> points = new ArrayList<>();
         int[] colors = new int[poses.size()];
@@ -329,7 +322,6 @@ public class RenderUtils {
         DGWorldRenderer.record(new FilledBoxState(axisAlignedBB, rgb, depth));
     }
 
-    // 1.8.9's default box around an entity's position, by entity type
     private static AABB entityBox(Entity entity) {
         if (entity instanceof ArmorStand) {
             return new AABB(-0.4, -1.5, -0.4, 0.4, 0, 0.4);
@@ -367,7 +359,6 @@ public class RenderUtils {
     }
 
     public static Vector3f getRenderPos(float x, float y, float z, float partialTicks) {
-        // 1.8.9 used the interpolated player position, 26.1 draws relative to the camera
         Vec3 camera = Minecraft.getInstance().gameRenderer.getMainCamera().position();
         return new Vector3f(
                 x - (float) camera.x,

@@ -53,7 +53,6 @@ public class PearlCalculatingCoordinateMap implements ICoordinateMap<PearlCalcul
         int minZ = Mth.floor(pearlTest.minZ);
         int maxZ = Mth.floor(pearlTest.maxZ + 1.0D);
 
-        // 26.1: volumes of the blocks' collision shapes inside the test cube and its top half, 1.8.9 summed clipped boxes
         VoxelShape pearlShape = Shapes.create(pearlTest);
         VoxelShape topShape = Shapes.create(new AABB(pearlTest.minX, pearlTest.minY + 0.3, pearlTest.minZ, pearlTest.maxX, pearlTest.maxY, pearlTest.maxZ));
         BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos();

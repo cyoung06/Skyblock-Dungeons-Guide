@@ -18,7 +18,6 @@
 
 package kr.syeyoung.dungeonsguide.mod.utils;
 
-// keeps track of loading steps like forge's ProgressManager did on 1.8.9. nothing displays it on 26.1
 public class ProgressManager {
     public static ProgressBar push(String title, int steps) {
         return new ProgressBar(title, steps);

@@ -31,12 +31,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-// called from ConnectionMixin before minecraft or any other mod handles the packet,
-// so dg sees exactly what the server sent
 public class PacketInjector {
 
     private static final Set<Class> targetedPackets = new HashSet<>();
-    // S04 was only there for the spirit boots fix (D107), chunk packets only for block updates, now ClientChunkCacheMixin (D105)
     static {
         targetedPackets.add(ClientboundSetTitleTextPacket.class); // S45PacketTitle
         targetedPackets.add(ClientboundSetSubtitleTextPacket.class); // S45PacketTitle
@@ -59,7 +56,6 @@ public class PacketInjector {
         targetedPackets.add(ClientboundBossEventPacket.class); // BossStatus
     }
 
-    // netty thread. returns the packet minecraft should handle
     public static Packet<?> onPacketReceived(Packet<?> packet) {
         if (packet instanceof ClientboundBundlePacket bundlePacket) {
             boolean replaced = false;
@@ -89,7 +85,6 @@ public class PacketInjector {
         return packet;
     }
 
-    // netty thread, after minecraft scheduled handling the packet
     public static void afterPacketReceived(Packet<?> packet) {
         if (packet instanceof ClientboundBundlePacket bundlePacket) {
             for (Packet<? super ClientGamePacketListener> subPacket : bundlePacket.subPackets())

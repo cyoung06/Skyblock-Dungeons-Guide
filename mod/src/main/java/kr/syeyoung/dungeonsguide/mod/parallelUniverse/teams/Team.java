@@ -28,7 +28,6 @@ import java.util.*;
 public class Team {
     @Getter
     private final String teamName;
-    // the server's components, deep copies (D106)
     @Getter @Setter
     private Component prefix;
     @Getter @Setter

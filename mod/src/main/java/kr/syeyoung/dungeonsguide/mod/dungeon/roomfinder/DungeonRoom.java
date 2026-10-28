@@ -171,7 +171,6 @@ public class DungeonRoom  {
         if (this.cachedWorld != null) return cachedWorld;
 
 
-        // rooms read the real level, offline contexts use DRIWorld
         Level level = ((MinecraftWorld) getContext().getWorld()).getLevel();
 
         int minZChunk = roomBounds.getMin().getZ() >> 4;
@@ -343,7 +342,6 @@ public class DungeonRoom  {
         }
     }
 
-    // 26.1: the block state, checks go through LegacyBlock (D112)
     public BlockState getRelativeBlockAt(int x, int y, int z) {
         // validate x y z's
         if (getRoomBounds().canAccessRelative(x,z)) {
@@ -366,7 +364,6 @@ public class DungeonRoom  {
         if (getRoomBounds().canAccessRelative(x,z)) {
             BlockPos pos = new BlockPos(x,y,z).offset(roomBounds.getMin().getX(), roomBounds.getMin().getY(), roomBounds.getMin().getZ());
             BlockState iBlockState = getCachedWorld().getBlockState(pos);
-            // 1.8.9's meta
             return LegacyBlock.meta(iBlockState);
         }
         return -1;

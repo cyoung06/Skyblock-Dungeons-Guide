@@ -54,14 +54,12 @@ import net.minecraft.network.chat.Component;
 
 public class CommandDungeonsGuide {
 
-    // registered as redirects to /dg
     public static final String[] ALIASES = {
             "dungeonsguide",
             "dungeonguide", //because people keep saying "dungeon guide" the singular
             "deegee", //in case another mod/server somehow uses a command "/dg" and no one wants to type out the entire name "dungeonsguide"
             "던전가이드", //easter egg
             "던전안내" //easter egg
-            // for each new alias, add a new line
     };
 
     @DGCommand("dg")

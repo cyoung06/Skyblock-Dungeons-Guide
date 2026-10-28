@@ -25,7 +25,6 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-// add to or change toolTip to change the tooltip
 @AllArgsConstructor
 public class ItemTooltipEvent extends DGEvent {
     public final ItemStack itemStack;

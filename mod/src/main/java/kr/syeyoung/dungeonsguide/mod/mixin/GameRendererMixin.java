@@ -30,7 +30,6 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {
-    // DG's gui images are drawn right before vanilla's gui, which composites them (D71/D76)
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/render/GuiRenderer;render(Lcom/mojang/blaze3d/buffers/GpuBufferSlice;)V"))
     private void dungeonsguide$renderDGGui(GuiRenderer guiRenderer, GpuBufferSlice fog, Operation<Void> original) {
         try {

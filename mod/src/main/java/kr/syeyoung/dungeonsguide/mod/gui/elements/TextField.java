@@ -391,7 +391,6 @@ public class TextField extends AnnotatedExportOnlyWidget implements Renderer, La
         }
         return false;
     }
-    // text comes as its own event on glfw
     @Override
     public boolean charTyped(CharacterEvent characterEvent) {
         if (!getDomElement().isFocused()) return false;

@@ -26,14 +26,6 @@ import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
-/**
- * Taken from NotEnoughUpdates under Creative Commons Attribution-NonCommercial 3.0
- * And modified to fit out need.
- * https://github.com/Moulberry/NotEnoughUpdates/blob/master/LICENSE
- * @author Moulberry
- *
- * The beam RenderUtils.renderBeaconBeam drew on 1.8.9, through walls like it did then.
- */
 @AllArgsConstructor
 public class BeaconBeamState implements DGWorldRenderState {
     private final double x, y, z;

@@ -24,7 +24,6 @@ import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.gui.screens.Screen;
 
-// fired before minecraft opens a screen. replace gui to open a different one, cancel to not open it
 public class ScreenOpenEvent extends DGEvent implements Cancelable {
     public Screen gui;
 

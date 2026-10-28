@@ -445,7 +445,6 @@ public class DungeonListener {
                             BlockState blockState = dungeonRoom.getDungeonRoomInfo().getBlock(offsetPoint, dungeonRoom.getRoomMatcher().getRotation());
                             if (!blockState.equals(dungeonRoom.getCachedWorld().getBlockState(allInBox))) {
                                 RenderUtils.highlightBlock(allInBox, new Color(0x70FF0000,true), renderWorldLastEvent.partialTicks, false);
-                                // the expected block at half size in the middle of the block
                                 DGWorldRenderer.record(new BlockModelState(blockState,
                                         new Matrix4f().translate(allInBox.getX(), allInBox.getY(), allInBox.getZ()).scale(0.5f).translate(0.5f, 0.5f, 0.5f), true));
                             }
@@ -640,7 +639,6 @@ public class DungeonListener {
         }
     }
 
-    // 1.8.9 refreshed the rooms on chunk packets to see block changes, chunk resends now arrive as block updates (D105)
     @SubscribeEvent
     public void onChunkUpdate(BlockUpdateEvent.Post post) {
         if (!SkyblockStatus.isOnDungeon()) return;

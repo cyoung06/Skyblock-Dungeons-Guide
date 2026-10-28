@@ -75,7 +75,6 @@ public class DungeonSecretItemDropState implements DungeonMechanicState, ISecret
         BlockPos pos = data.secretPoint.getBlockPos(dungeonRoom);
         boolean itemFound = false;
         for (ItemEntity entityItem : Minecraft.getInstance().level.getEntitiesOfClass(ItemEntity.class, new AABB(-4, -4, -4, 4, 4, 4).expandTowards(pos.getX(), pos.getY(), pos.getZ()))) {
-            // 1.8.9's dye item covered every dye and ink sac, cocoa beans, lapis and bone meal
             ItemStack dropped = entityItem.getItem();
             if (dropped.getItem() instanceof DyeItem || dropped.is(Items.INK_SAC) || dropped.is(Items.COCOA_BEANS) || dropped.is(Items.LAPIS_LAZULI) || dropped.is(Items.BONE_MEAL)) continue;
             itemFound = true;

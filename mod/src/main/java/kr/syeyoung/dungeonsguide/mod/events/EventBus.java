@@ -19,7 +19,6 @@
 package kr.syeyoung.dungeonsguide.mod.events;
 
 public interface EventBus {
-    // returns true if the event got canceled
     <T extends DGEvent> boolean fireEvent(T t);
     <T extends DGEvent> boolean fireEvent(T t, ListenerPriority priority);
     <T extends DGEvent> ListenerRegistration<T> registerListener(Class<T> clazz, ListenerPriority priority, EventListener<T> invoke);

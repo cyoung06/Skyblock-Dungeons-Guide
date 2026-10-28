@@ -1,6 +1,5 @@
 #version 330
 
-// same block as roundrect
 layout(std140) uniform RoundRect {
     float radius;
     vec2 halfSize;

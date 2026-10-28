@@ -31,10 +31,6 @@ import net.minecraft.resources.Identifier;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Through-wall versions of vanilla's world render types (D81): 1.8.9 drew these with the depth test off.
- * Depth tested draws use vanilla's render types as they are.
- */
 public class DGRenderTypes {
     private static final DepthStencilState NO_DEPTH = new DepthStencilState(CompareOp.ALWAYS_PASS, false);
 
@@ -60,7 +56,6 @@ public class DGRenderTypes {
     private static final RenderType BEACON_BEAM_SEE_THROUGH = RenderType.create("dungeonsguide_beacon_beam_see_through",
             RenderSetup.builder(BEACON_BEAM_SEE_THROUGH_PIPELINE).withTexture("Sampler0", BeaconRenderer.BEAM_LOCATION).sortOnUpload().createRenderSetup());
 
-    // DG gui images are premultiplied (see StencilImage)
     private static final RenderPipeline IMAGE_PIPELINE = RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET)
             .withLocation(Identifier.fromNamespaceAndPath("dungeonsguide", "pipeline/image"))
             .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT_PREMULTIPLIED_ALPHA))
@@ -73,7 +68,6 @@ public class DGRenderTypes {
             .withCull(false)
             .withDepthStencilState(NO_DEPTH)
             .build();
-    // plain (straight alpha) textures
     private static final RenderPipeline TEXTURED_QUAD_PIPELINE = RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET)
             .withLocation(Identifier.fromNamespaceAndPath("dungeonsguide", "pipeline/textured_quad"))
             .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))

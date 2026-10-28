@@ -30,9 +30,6 @@ import org.joml.Matrix3x2f;
 
 import java.awt.*;
 
-/**
- * A quad drawn with one of DG's shaders (D78) and that shader's uniforms (D103). Corners and colors in order.
- */
 @AllArgsConstructor
 public class ShaderShapeState implements DGRenderState {
     private final Matrix3x2f pose;

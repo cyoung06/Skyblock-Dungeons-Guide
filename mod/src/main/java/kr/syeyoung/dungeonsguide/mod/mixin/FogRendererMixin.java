@@ -31,7 +31,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(FogRenderer.class)
 public class FogRendererMixin {
-    // 1.8.9: EntityViewRenderEvent.FogColors
     @Inject(method = "computeFogColor", at = @At("TAIL"))
     private void dungeonsguide$onFogColor(Camera camera, float partialTicks, ClientLevel level, int renderDistance, float darkenWorldAmount, Vector4f color, CallbackInfo ci) {
         FogColorsEvent event = new FogColorsEvent(color.x, color.y, color.z);

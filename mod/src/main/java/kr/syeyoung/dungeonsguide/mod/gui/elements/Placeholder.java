@@ -40,7 +40,6 @@ public class Placeholder extends AnnotatedExportOnlyWidget implements Renderer {
     public void doRender(float partialTicks, RenderingContext context, DomElement buildContext) {
         double w = buildContext.getSize().getWidth(), h = buildContext.getSize().getHeight();
         context.drawRect(0,0,w,h, 0xFFFFFFFF);
-        // 1px lines, 1.8.9 drew them with GL_LINE_LOOP / GL_LINES
         double lineWidth = buildContext.getSize().getWidth() / buildContext.getAbsBounds().getWidth();
         context.drawLine(0, 0, w, 0, lineWidth, 0xFF000000);
         context.drawLine(w, 0, w, h, lineWidth, 0xFF000000);

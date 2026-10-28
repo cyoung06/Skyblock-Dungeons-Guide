@@ -86,7 +86,6 @@ public class FeatureChangeAllToSameColorSolver extends SimpleFeature {
             for (int x = 0; x < 3; x++) {
                 Slot toChk = cc.getSlot(y * 9 + x + 12);
                 if (toChk.hasItem() && !toChk.getItem().isEmpty()) {
-                    // 1.8.9's stained glass pane metadata, the colored pane items on 26.1 (D125)
                     ItemStack pane = toChk.getItem();
                     int idx = y * 3 + x;
                     if (pane.is(Items.RED_STAINED_GLASS_PANE)) {
@@ -159,7 +158,6 @@ public class FeatureChangeAllToSameColorSolver extends SimpleFeature {
             int ySize = j + (inventory.getContainerSize() / 9) * 18;
             int left = (rendered.gui.width - 176) / 2;
             int top = (rendered.gui.height - ySize ) / 2;
-            // D126: drawn through the event's RenderingContext
             RenderingContext context = rendered.context;
             context.pose().pushMatrix();
             context.pose().translate(left, top);

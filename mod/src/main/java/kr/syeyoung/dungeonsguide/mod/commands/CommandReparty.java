@@ -40,7 +40,6 @@ public class CommandReparty {
         command = command.replace(" ", "");
     }
 
-    // only registered while the reparty feature is enabled, like 1.8.9
     @SubscribeEvent
     public void onRegisterCommand(RegisterCommandEvent event) {
         if (!FeatureRegistry.ETC_REPARTY.isEnabled()) return;

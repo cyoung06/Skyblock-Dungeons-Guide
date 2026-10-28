@@ -30,7 +30,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GuiGraphicsExtractor.class)
 public class GuiGraphicsExtractorMixin {
-    // 1.8.9: GuiScreen.handleComponentHover
     @Inject(method = "componentHoverEffect", at = @At("HEAD"))
     private void dungeonsguide$onComponentHover(Font font, Style hoveredStyle, int xMouse, int yMouse, CallbackInfo ci) {
         FabricEventBridge.fire(new ComponentHoverEvent(hoveredStyle, xMouse, yMouse));

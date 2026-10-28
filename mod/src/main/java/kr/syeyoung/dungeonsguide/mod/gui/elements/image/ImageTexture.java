@@ -64,7 +64,6 @@ public class ImageTexture {
 
     private int delayTime;
 
-    // drawn straight from the texture view, an url can't be an identifier
     public void buildGLThings() {
         NativeImage nativeImage = new NativeImage(image.getWidth(), image.getHeight(), false);
         for (int y = 0; y < image.getHeight(); y++) {
@@ -133,7 +132,6 @@ public class ImageTexture {
 
         int frame = (int) (((System.currentTimeMillis() - startedPlayingAt) / delayTime) % frames);
 
-        // frames are stacked vertically in the texture
         context.drawScaledCustomSizeModalRect(previewTexture::getTextureView, previewTexture::getSampler,
                 x, y, 0, frame * this.height, this.width, this.height, width, height, this.width, (float) this.height * frames, 0xFFFFFFFF);
     }

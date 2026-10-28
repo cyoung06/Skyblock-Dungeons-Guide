@@ -15,8 +15,6 @@ import net.minecraft.nbt.NbtIo;
 @With
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class AlgorithmSetting implements Cloneable {
-    // 1.8.9 tools only exist as saved values now (D125): the tool's registry name stays for compatibility,
-    // speed and harvest level are a stub at the highest of both versions
     @Data @AllArgsConstructor
     public static class ToolSettings {
         private final String tool;
@@ -41,14 +39,12 @@ public class AlgorithmSetting implements Cloneable {
 
         public double getSpeed(int haste) {
             int val2 = efficiency;
-            // 1.8.9's fastest tool material, gold
             double efficiency2 = 12.0;
             efficiency2 += val2 * val2 + 1;
             efficiency2 *= haste * 0.2 + 1;
             return efficiency2;
         }
 
-        // higher than any 1.8.9 or 26.1 tool material
         public int getHarvestLevel() {
             return 4;
         }

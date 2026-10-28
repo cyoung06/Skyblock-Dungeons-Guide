@@ -25,7 +25,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-// for core objects registered through DungeonsGuide.registerEventsForge. features use DGEventHandler
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface SubscribeEvent {

@@ -59,7 +59,6 @@ public class DungeonContext {
     @Getter @Setter
     private String dungeonName;
     @Getter
-    // the client level as MinecraftWorld, or a DRIWorld for offline contexts (D108)
     private final DGWorld world;
     @Getter
     private final MapPlayerProcessor mapPlayerMarkerProcessor;

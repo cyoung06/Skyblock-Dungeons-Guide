@@ -22,11 +22,9 @@ import kr.syeyoung.dungeonsguide.mod.events.DGEvent;
 import kr.syeyoung.dungeonsguide.mod.gui.renderer.RenderingContext;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 
-// fired once per frame for the whole hud (1.8.9: RenderGameOverlayEvent with ElementType.ALL)
 public abstract class RenderHUDEvent extends DGEvent {
     public final float partialTicks;
     public final GuiGraphicsExtractor graphics;
-    // handlers draw here, in gui units; rendered into an image after dispatch (D126)
     public final RenderingContext context;
 
     protected RenderHUDEvent(float partialTicks, GuiGraphicsExtractor graphics, RenderingContext context) {

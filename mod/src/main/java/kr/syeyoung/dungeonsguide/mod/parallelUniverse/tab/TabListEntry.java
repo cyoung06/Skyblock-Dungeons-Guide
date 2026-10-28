@@ -74,7 +74,6 @@ public class TabListEntry {
 
 
     private boolean playerTexturesLoaded = false;
-    // 1.8.9 kept the skin / cape locations and the model from SkinManager's callback, 26.1 gives one PlayerSkin
     private PlayerSkin skin;
 
     public boolean hasLocationSkin() {

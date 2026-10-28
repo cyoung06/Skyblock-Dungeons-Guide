@@ -41,10 +41,6 @@ import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
-/**
- * Color texture through Blaze3D, plus DG's own GL framebuffer with a DEPTH24_STENCIL8 renderbuffer (D74).
- * GlCommandEncoderMixin binds this framebuffer for render passes that target the color view (D75).
- */
 public class StencilImage implements AutoCloseable {
     private static final Map<GpuTextureView, StencilImage> IMAGES = Collections.synchronizedMap(new IdentityHashMap<>());
 
@@ -77,7 +73,6 @@ public class StencilImage implements AutoCloseable {
         colorTexture = RenderSystem.getDevice().createTexture(() -> label, GpuTexture.USAGE_RENDER_ATTACHMENT | GpuTexture.USAGE_TEXTURE_BINDING, TextureFormat.RGBA8, width, height, 1, 1);
         colorView = RenderSystem.getDevice().createTextureView(colorTexture);
 
-        // raw gl section (D74), the framebuffer binding goes through GlStateManager so its cache stays right
         fbo = GL30.glGenFramebuffers();
         GlStateManager._glBindFramebuffer(GL30.GL_FRAMEBUFFER, fbo);
         GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL30.GL_TEXTURE_2D, ((GlTexture) colorTexture).glId(), 0);
@@ -94,7 +89,6 @@ public class StencilImage implements AutoCloseable {
         IMAGES.put(colorView, this);
     }
 
-    // D80: the finished image goes back into vanilla's gui as one textured element covering the window
     public void extractComposite(GuiGraphicsExtractor graphics) {
         float guiScale = Minecraft.getInstance().getWindow().getGuiScale();
         graphics.guiRenderState.addGuiElement(new Composite(colorView, width / guiScale, height / guiScale));
@@ -103,14 +97,12 @@ public class StencilImage implements AutoCloseable {
     private record Composite(GpuTextureView view, float width, float height) implements GuiElementRenderState {
         @Override
         public void buildVertices(VertexConsumer consumer) {
-            // gl textures start at the bottom row
             consumer.addVertex(0, 0, 0).setUv(0, 1).setColor(-1);
             consumer.addVertex(0, height, 0).setUv(0, 0).setColor(-1);
             consumer.addVertex(width, height, 0).setUv(1, 0).setColor(-1);
             consumer.addVertex(width, 0, 0).setUv(1, 1).setColor(-1);
         }
 
-        // DG draws with translucent blending into a cleared image, so the image is premultiplied
         @Override
         public RenderPipeline pipeline() {
             return RenderPipelines.GUI_TEXTURED_PREMULTIPLIED_ALPHA;
@@ -126,7 +118,6 @@ public class StencilImage implements AutoCloseable {
             return null;
         }
 
-        // vanilla's GuiRenderState drops elements without bounds; the composite covers the whole window
         @Override
         public @Nullable ScreenRectangle bounds() {
             return new ScreenRectangle(0, 0, (int) Math.ceil(width), (int) Math.ceil(height));

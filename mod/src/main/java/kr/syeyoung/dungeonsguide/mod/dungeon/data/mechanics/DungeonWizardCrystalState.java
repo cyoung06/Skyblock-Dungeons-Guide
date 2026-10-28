@@ -96,7 +96,6 @@ public class DungeonWizardCrystalState implements DungeonMechanicState {
     public String getCurrentState() {
         for (ItemStack stack : Minecraft.getInstance().player.getInventory().getNonEquipmentItems()) {
             if (stack.isEmpty()) continue;
-            // 1.8.9's skull item, the crystal is a player head
             if (!stack.is(Items.PLAYER_HEAD)) continue;
             if (TextUtils.getFormattedName(stack).equals("§9Wizard's Crystal")) return "obtained-self";
         }

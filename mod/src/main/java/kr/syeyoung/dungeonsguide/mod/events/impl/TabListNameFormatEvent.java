@@ -22,7 +22,6 @@ import kr.syeyoung.dungeonsguide.mod.events.DGEvent;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.network.chat.Component;
 
-// the name the tab list shows for a player. displayName is vanilla's (PlayerTabOverlay.getNameForDisplay), replace it to change it
 public class TabListNameFormatEvent extends DGEvent {
     public final PlayerInfo playerInfo;
     public Component displayName;

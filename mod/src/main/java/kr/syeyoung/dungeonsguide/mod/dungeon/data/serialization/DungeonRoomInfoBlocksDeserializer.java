@@ -27,7 +27,6 @@ public class DungeonRoomInfoBlocksDeserializer extends StdDeserializer<int[][]> 
 
         int[][] arr = new int[length][width];
         if (node.size() > 3 && node.get(3).asInt() == 2) {
-            // format 2, 16 bit palette indices
             for (int i = 0; i < bytes.length / 2; i++) {
                 int value = (bytes[i * 2] & 0xFF) << 8 | (bytes[i * 2 + 1] & 0xFF);
                 arr[i / width][i % width] = value == 0xFFFF ? -1 : value;

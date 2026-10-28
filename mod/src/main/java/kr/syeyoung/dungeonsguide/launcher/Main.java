@@ -24,7 +24,6 @@ import lombok.Getter;
 
 import java.io.File;
 
-// only what mod uses from the loader's Main. the first 26.1 build has no loader
 public class Main {
     public static final String DOMAIN = "https://v2.dungeons.guide/api";
 

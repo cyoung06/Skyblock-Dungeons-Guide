@@ -99,7 +99,6 @@ public class FeatureEpicCountdown extends SimpleFeature {
     }
 
     private static final String GO_TEXT = "GO!!!";
-    // dungeonsguide/sounds.json
     private static final SoundEvent READY_SET_GO = SoundEvent.createVariableRangeEvent(Identifier.fromNamespaceAndPath("dungeonsguide", "readysetgo"));
     private String lastSec;
 

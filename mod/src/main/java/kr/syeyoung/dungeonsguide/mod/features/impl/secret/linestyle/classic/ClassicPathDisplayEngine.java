@@ -229,7 +229,7 @@ public class ClassicPathDisplayEngine implements IPathDisplayEngine<ClassicPathE
         float partialTicks = event.partialTicks;
         BlockPos blockpos = superBoom.getTarget().getOffsetPointList().get(0).getBlockPos(dungeonRoom);
 
-        // 1.8.9 rendered the tnt model with depth off
+        // TODO: 1.8.9 rendered the tnt model with depth off
         DGWorldRenderer.record(new BlockModelState(Blocks.TNT.defaultBlockState(),
                 new Matrix4f().translate(blockpos.getX(), blockpos.getY(), blockpos.getZ()), false));
 

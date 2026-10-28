@@ -29,7 +29,6 @@ import net.minecraft.network.chat.numbers.NumberFormat;
 public class Score {
     private final String playerName;
     private final int score;
-    // 26.1: the per score display name and number format, deep copied (D106)
     private final Component display;
     private final NumberFormat numberFormat;
 

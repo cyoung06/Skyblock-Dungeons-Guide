@@ -61,9 +61,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 
-// turns fabric callbacks and mixin hooks into dg events
 public class FabricEventBridge {
-    // fabric calls MODIFY_GAME right after ALLOW_GAME for the same message
     private static ChatReceivedEvent lastGameMessage;
 
     public static void register() {
@@ -88,7 +86,6 @@ public class FabricEventBridge {
         ItemTooltipCallback.EVENT.register((stack, tooltipContext, tooltipFlag, lines) ->
                 fire(new ItemTooltipEvent(stack, lines, tooltipFlag.isAdvanced())));
 
-        // these also run on the integrated server, and per hand. 1.8.9 only had the client main hand
         UseBlockCallback.EVENT.register((player, level, hand, hitResult) -> {
             if (!level.isClientSide() || hand != InteractionHand.MAIN_HAND) return InteractionResult.PASS;
             return fire(new PlayerInteractEvent(PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK, hitResult.getBlockPos(), hitResult.getDirection(), level, player))
@@ -129,7 +126,6 @@ public class FabricEventBridge {
         HudElementRegistry.addLast(Identifier.fromNamespaceAndPath("dungeonsguide", "hud_post"), (graphics, deltaTracker) ->
                 fireDrawing(hudPostImage, graphics, context -> new RenderHUDEvent.Post(deltaTracker.getGameTimeDeltaPartialTick(false), graphics, context)));
 
-        // fabric resets per screen events on every init, so they are registered here
         ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
             fire(new ScreenInitEvent.Post(screen, scaledWidth, scaledHeight));
 
@@ -160,8 +156,6 @@ public class FabricEventBridge {
         });
     }
 
-    // minecraft can call into the bridge (mixins) before dungeons guide is created
-    // D126: handlers of drawing events draw into a RenderingContext in gui units, rendered into an image after dispatch
     private static final StencilImage hudPreImage = new StencilImage("Dungeons Guide hud pre event");
     private static final StencilImage hudPostImage = new StencilImage("Dungeons Guide hud post event");
     private static final StencilImage screenImage = new StencilImage("Dungeons Guide screen render event");

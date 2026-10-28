@@ -55,7 +55,6 @@ public class MinecraftTooltip extends Widget implements Renderer, Layouter {
         return new Size(constraintBox.getMaxWidth(), constraintBox.getMaxHeight());
     }
 
-    // vanilla's GuiGraphicsExtractor.tooltip, with this element's size as the screen like 1.8.9's drawHoveringText call (D101)
     @Override
     public void doRender(float partialTicks, RenderingContext context, DomElement buildContext) {
         Font font = Minecraft.getInstance().font;

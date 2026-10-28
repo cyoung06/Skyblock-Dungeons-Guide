@@ -154,7 +154,6 @@ public class SurgicalReplacer {
         return list;
     }
 
-    // 1.8.9's EnumChatFormatting ordinal into "0123456789abcdef"; 26.1 colors are TextColors
     private static char legacyColorChar(TextColor color) {
         for (ChatFormatting formatting : ChatFormatting.values()) {
             if (formatting.isColor() && color.equals(TextColor.fromLegacyFormat(formatting))) return formatting.getChar();
@@ -162,8 +161,6 @@ public class SurgicalReplacer {
         return 'f';
     }
 
-    // 1.8.9's IChatComponent iterator: the component itself, then deep copies of its siblings depth first,
-    // each with its parent's style applied (1.8.9's setParentStyle)
     public static List<Component> iterate(Component component) {
         List<Component> list = new ArrayList<>();
         list.add(component);
@@ -184,7 +181,6 @@ public class SurgicalReplacer {
     public static LinkedList<Component> linearifyMoveColorCharToStyle(Component iChatComponent) {
         LinkedList<Component> chatComponents = new LinkedList<>();
         for (Component component : iterate(iChatComponent)) {
-            // 1.8.9's ChatComponentText
             if (component.getContents() instanceof PlainTextContents) {
                 chatComponents.addAll(getChatStyleOf(((PlainTextContents) component.getContents()).text(), component.getStyle()));
             } else {

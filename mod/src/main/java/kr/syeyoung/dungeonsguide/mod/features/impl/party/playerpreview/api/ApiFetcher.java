@@ -147,7 +147,6 @@ public class ApiFetcher {
 
     public static Optional<GameProfile> getSkinGameProfileByUUID(String uid, String nickname) throws IOException {
         GameProfile gameProfile = new GameProfile(UUID.fromString(uid), nickname);
-        // 1.8.9's fillProfileProperties returned the same profile when it failed
         ProfileResult result = Minecraft.getInstance().services().sessionService().fetchProfile(gameProfile.id(), true);
         return result == null ? Optional.empty() : Optional.of(result.profile());
     }

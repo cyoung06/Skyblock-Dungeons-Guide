@@ -84,7 +84,6 @@ public class FeatureCustomPartyFinder extends SimpleFeature {
         ChestMenu containerChest = (ChestMenu) chest.getMenu();
         Container lower = containerChest.getContainer();
         if (lower == null) return null;
-        // 1.8.9's chest inventory name is the screen title on 26.1 (D125)
         return chest.getTitle().getString();
     }
 
@@ -143,7 +142,6 @@ public class FeatureCustomPartyFinder extends SimpleFeature {
             }
             if (item.isEmpty()) return;
 
-            // 1.8.9's display.Lore, the lore component on 26.1 (D125)
             List<String> nbtTagList1 = TextUtils.getFormattedLore(item);
 
             for (int i = 0; i < nbtTagList1.size(); i++) {

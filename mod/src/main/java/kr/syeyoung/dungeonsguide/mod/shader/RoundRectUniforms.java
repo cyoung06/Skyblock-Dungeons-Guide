@@ -23,7 +23,6 @@ import com.mojang.blaze3d.buffers.Std140SizeCalculator;
 
 import java.nio.ByteBuffer;
 
-// roundrect and chromaroundrect
 public record RoundRectUniforms(float radius, float halfSizeX, float halfSizeY, float centerPosX, float centerPosY, float smoothness) implements ShaderUniforms {
     private static final int SIZE = new Std140SizeCalculator().putFloat().putVec2().putVec2().putFloat().get();
 

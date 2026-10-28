@@ -132,12 +132,10 @@ public class ChatRoutine {
 
         @Override
         public void execute(Runnable next) {
-            // 1.8.9 sent the disconnect packet, unloaded the world and opened the multiplayer screen over the main menu
             JoinMultiplayerScreen guiMultiplayer;
             Minecraft.getInstance().disconnect(guiMultiplayer = new JoinMultiplayerScreen(new TitleScreen()), false);
             ses.schedule(() -> {
                 Minecraft.getInstance().execute(() -> {
-                    // 1.8.9's selectServer(0) + connectToSelected, the first saved server
                     ServerList servers = new ServerList(Minecraft.getInstance());
                     servers.load();
                     guiMultiplayer.join(servers.get(0));

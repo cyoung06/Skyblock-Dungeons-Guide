@@ -56,7 +56,7 @@ public abstract class CatacombsDataProvider implements DungeonSpecificDataProvid
     }
 
     public static Collection<ArmorStand> getMorts(DGWorld w){
-        // the loaded chunk area around the player (D114)
+        // TODO: change into proper radius
         Minecraft mc = Minecraft.getInstance();
         ChunkPos center = mc.player.chunkPosition();
         int radius = mc.options.getEffectiveRenderDistance() * 16;

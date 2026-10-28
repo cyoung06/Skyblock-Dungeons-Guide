@@ -52,7 +52,6 @@ public class FeatureCustomLeapGui extends SimpleFeature {
         ChestMenu containerChest = (ChestMenu) chest.getMenu();
         Container lower = containerChest.getContainer();
         if (lower == null) return null;
-        // 1.8.9's chest inventory name is the screen title on 26.1 (D125)
         return chest.getTitle().getString();
     }
 

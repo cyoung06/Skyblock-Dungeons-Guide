@@ -56,7 +56,6 @@ public class FeatureTerracotaTimer extends TextHUDFeature {
         return actualBit;
     }
 
-    // 1.8.9's BossStatus.healthScale: the first boss bar (D115)
     private static float terracottaHealthScale() {
         BossBar bossBar = BossBarManager.INSTANCE.getFirst();
         return bossBar == null ? 0 : bossBar.getProgress();

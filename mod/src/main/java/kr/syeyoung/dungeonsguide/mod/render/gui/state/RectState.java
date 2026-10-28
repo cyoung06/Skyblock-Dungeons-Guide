@@ -28,9 +28,6 @@ import org.joml.Matrix3x2f;
 
 import java.awt.*;
 
-/**
- * Solid colored quad. Corners in order, transformed by pose.
- */
 @AllArgsConstructor
 public class RectState implements DGRenderState {
     private final Matrix3x2f pose;

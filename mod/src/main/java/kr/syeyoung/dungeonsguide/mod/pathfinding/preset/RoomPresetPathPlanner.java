@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Set;
 
 public class RoomPresetPathPlanner {
-    // sun.misc.Cleaner is gone after java 8
     private static final Cleaner CLEANER = Cleaner.create();
     private RoomPreset preset;
     private DungeonRoomInfo dungeonRoomInfo;

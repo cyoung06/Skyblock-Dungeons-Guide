@@ -24,7 +24,6 @@ import net.minecraft.world.inventory.Slot;
 import java.util.List;
 
 public interface TerminalSolutionProvider {
-    // the screen, since its title is 1.8.9's chest inventory name (D125)
     TerminalSolution provideSolution(ContainerScreen screen, List<Slot> clicked);
     boolean isApplicable(ContainerScreen screen);
 }

@@ -25,19 +25,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 
-/**
- * Something DG draws into a StencilImage. Recorded by RenderingContext, executed by DGGuiRenderer.
- */
 public interface DGRenderState {
     RenderPipeline pipeline();
 
-    // resolved when DGGuiRenderer executes, so the lightmap is the ui one
     TextureSetup textureSetup();
 
-    // gl coordinates (origin bottom left) in image pixels, null for no scissor
     @Nullable Rectangle scissor();
 
-    // drawn while a stencil mask is being written: no color output
     boolean stencilMask();
 
     void buildVertices(VertexConsumer consumer);

@@ -22,9 +22,6 @@ import com.mojang.blaze3d.pipeline.RenderPipeline;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-/**
- * A DG shader by name: its render pipeline (D78). Uniforms are given per draw (D103).
- */
 @AllArgsConstructor
 public class ShaderProgram {
     @Getter

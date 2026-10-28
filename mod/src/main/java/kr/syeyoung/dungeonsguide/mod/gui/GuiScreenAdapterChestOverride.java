@@ -39,7 +39,6 @@ public class GuiScreenAdapterChestOverride extends GuiScreenAdapter {
     public GuiScreenAdapterChestOverride(Widget widget) {
         super(widget);
     }
-    // framebuffer pixels from the bottom left, like 1.8.9's Mouse.setCursorPosition
     public GuiScreenAdapterChestOverride(Widget widget, int cursorX, int cursorY) {
         super(widget);
         this.cursorX = cursorX;
@@ -59,14 +58,12 @@ public class GuiScreenAdapterChestOverride extends GuiScreenAdapter {
     }
 
 
-    // mode is 1.8.9's click mode, the same ids as ContainerInput
     public void emulateClick(int slotId, int mouseButtonClicked, int mode) {
         Minecraft.getInstance().gameMode.handleContainerInput(guiChest.getMenu().containerId, slotId, mouseButtonClicked, ContainerInput.values()[mode], Minecraft.getInstance().player);
     }
 
     private boolean flag = false;
 
-    // 1.8.9 did the cursor in setWorldAndResolution and the rest in initGui, both run on open and resize
     @Override
     protected void init() {
         super.init();

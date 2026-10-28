@@ -107,7 +107,6 @@ public class FeatureTerminalSolvers extends SimpleFeature {
             int ySize = j + (((ChestMenu)(((ContainerScreen) Minecraft.getInstance().screen).getMenu())).getContainer().getContainerSize() / 9) * 18;
             int left = (rendered.gui.width - 176) / 2;
             int top = (rendered.gui.height - ySize ) / 2;
-            // D126: drawn through the event's RenderingContext
             RenderingContext context = rendered.context;
             context.pose().pushMatrix();
             context.pose().translate(left, top);

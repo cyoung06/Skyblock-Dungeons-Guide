@@ -25,7 +25,6 @@ import kr.syeyoung.dungeonsguide.mod.render.gui.StencilImage;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-// D75: render passes that target a DG StencilImage use DG's framebuffer, which has the stencil attachment
 @Mixin(targets = "com.mojang.blaze3d.opengl.GlCommandEncoder")
 public class GlCommandEncoderMixin {
     @ModifyExpressionValue(

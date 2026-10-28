@@ -32,7 +32,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-// 1.8.9: PacketInjector intercepted the outgoing C02PacketUseEntity
 @Mixin(MultiPlayerGameMode.class)
 public class MultiPlayerGameModeMixin {
     @Inject(method = "attack", at = @At("HEAD"), cancellable = true)

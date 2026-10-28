@@ -33,7 +33,6 @@ public class BasicEventBus implements EventBus {
         return (BasicEventListeners<T>) directEventListeners.computeIfAbsent(t, BasicEventListeners::new);
     }
 
-    // listeners of the event class and all of its superclasses
     private <T extends DGEvent> List<BasicEventListeners<? super T>> getFireTarget(Class<T> t) {
         return (List) fireCache.computeIfAbsent(t, a -> {
             List<BasicEventListeners<?>> listeners = new ArrayList<>();

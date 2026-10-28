@@ -96,7 +96,6 @@ public class DRIWorld implements DGWorld {
 
 
 
-    // 1.8.9 also overrode isSideSolid to ask the block, 26.1 decides face solidity from the block shape
 
 
     @Override

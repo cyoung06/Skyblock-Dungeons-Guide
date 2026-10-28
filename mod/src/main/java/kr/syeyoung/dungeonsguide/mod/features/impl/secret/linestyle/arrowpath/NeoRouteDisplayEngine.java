@@ -540,14 +540,11 @@ public class NeoRouteDisplayEngine implements IPathDisplayEngine<NeoRouteDisplay
     public static final Identifier arrow = Identifier.parse("dungeonsguide:textures/arrow.png");
     public static final Identifier abilities = Identifier.parse("dungeonsguide:textures/features/precalclist/abilities.png");
 
-    // the arrow repeated along the quad by the repeat shader. 1.8.9 passed the arrow sprite's rect in the block atlas,
-    // 26.1 binds the standalone texture (D128)
     private static void drawArrows(Vec3[] corners, float[][] uvs, int color, boolean depth) {
         DGWorldRenderer.record(new ShaderQuadState(ShaderManager.getShader("shaders/repeat"), new RepeatUniforms(0, 0, 1, 1),
                 arrow, corners, uvs, color, depth));
     }
 
-    // a point of 1.8.9's icon billboard: translate(from + (0, 0.5, 0)), rotate(-viewY, y), rotate(viewX, x), scale(1/32, -1/32, 1/32)
     private static Vec3 billboardCorner(Vec3 from, Matrix4f rotation, float u, float v) {
         Vector3f offset = rotation.transformPosition(new Vector3f(u, v, 0));
         return from.add(offset.x, offset.y + 0.5, offset.z);
@@ -573,7 +570,7 @@ public class NeoRouteDisplayEngine implements IPathDisplayEngine<NeoRouteDisplay
             double len = segment.to.subtract(segment.from).length();
             int i = RenderUtils.getColorAt(0, 0, 0, colour);
             Vec3 quadBL = fixedFrom.add(normal), quadBR = fixedFrom.subtract(normal), quadTL = segment.to.add(normal), quadTR = segment.to.subtract(normal);
-            // 1.8.9 turned depth off when the segment starts at the camera
+            // TODO: 1.8.9 turned depth off when the segment starts at the camera
             DGWorldRenderer.record(new QuadState(new Vec3[] {quadBL, quadBR, quadTR, quadTL}, i, flag));
 
             i = RenderUtils.getColorAt(0,0,0, texture);
@@ -598,7 +595,6 @@ public class NeoRouteDisplayEngine implements IPathDisplayEngine<NeoRouteDisplay
                 billboardCorner(segment.from, rotation, size /2 + 1, -size /2-1)
         }, 0x40000000, true));
 
-        // 1.8.9's drawScaledCustomSizeModalRect(-size/2, -size/2, u, v, 31, 31, size, size, 512, 512)
         float u = (iconIdx % 8)*32 + 0.5f, v = (iconIdx/8)*32 + 0.5f;
         DGWorldRenderer.record(new TexturedQuadState(abilities, new Vec3[] {
                 billboardCorner(segment.from, rotation, -size /2, size /2),

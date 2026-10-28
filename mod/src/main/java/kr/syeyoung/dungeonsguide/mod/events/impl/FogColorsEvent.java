@@ -20,7 +20,6 @@ package kr.syeyoung.dungeonsguide.mod.events.impl;
 
 import kr.syeyoung.dungeonsguide.mod.events.DGEvent;
 
-// change the fields to change the fog color
 public class FogColorsEvent extends DGEvent {
     public float red;
     public float green;

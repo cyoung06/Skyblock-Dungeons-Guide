@@ -72,7 +72,6 @@ public class ColorLeftProcessor extends GeneralDefuseChamberProcessor {
         if (solutionBuilt) return;
         DGWorld w = getChamber().getRoom().getContext().getWorld();
         c1 = w.getBlockState(b1p);
-        // 1.8.9 compared blocks without meta
         if (w1 != null && LegacyBlock.legacyId(c1) == LegacyBlock.legacyId(w1) && s1t < 7) {
             int semi = match(getChamber().getEntityAt(ArmorStand.class,b1p.offset(0, 1, 0)));
             if (s1 == semi) {
@@ -83,7 +82,6 @@ public class ColorLeftProcessor extends GeneralDefuseChamberProcessor {
             }
         }
         c2 = w.getBlockState(b2p);
-        // 1.8.9 compared blocks without meta
         if (w2 != null && LegacyBlock.legacyId(c2) == LegacyBlock.legacyId(w2) && s2t < 7) {
             int semi = match(getChamber().getEntityAt(ArmorStand.class,b2p.offset(0, 2, 0)));
             if (s2 == semi) {
@@ -94,7 +92,6 @@ public class ColorLeftProcessor extends GeneralDefuseChamberProcessor {
             }
         }
         c3 = w.getBlockState(b3p);
-        // 1.8.9 compared blocks without meta
         if (w3 != null && LegacyBlock.legacyId(c3) == LegacyBlock.legacyId(w3) && s3t < 7) {
             int semi = match(getChamber().getEntityAt(ArmorStand.class,b3p.offset(0, 1, 0)));
             if (s3== semi) {
@@ -173,7 +170,6 @@ public class ColorLeftProcessor extends GeneralDefuseChamberProcessor {
             return 0;
         }
         ItemStack item = armorStand.getItemBySlot(EquipmentSlot.HEAD);
-        // 1.8.9's SkullOwner.Properties.textures, the profile component on 26.1 (D125)
         ResolvableProfile profile = item.get(DataComponents.PROFILE);
         String str = profile.partialProfile().properties().get("textures").stream().findFirst().map(Property::value).orElse("");
         return (byte) (!integers.containsKey(str) ? 0 : integers.get(str));

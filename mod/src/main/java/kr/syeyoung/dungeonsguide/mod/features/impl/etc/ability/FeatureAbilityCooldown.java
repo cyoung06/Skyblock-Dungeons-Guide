@@ -348,7 +348,6 @@ public class FeatureAbilityCooldown extends TextHUDFeature {
 
     public void checkForCooldown(ItemStack itemStack) {
         if (itemStack.isEmpty()) return;
-        // 1.8.9's ExtraAttributes / display.Lore nbt, custom_data / lore components on 26.1 (D125)
         CompoundTag extra = SkyblockUtils.getExtraAttributes(itemStack);
         String id = extra.getStringOr("id", "");
         List<SkyblockAbility> skyblockAbility = skyblockAbilitiesByItemID.get(id);
@@ -391,7 +390,6 @@ public class FeatureAbilityCooldown extends TextHUDFeature {
     public void onTick(DGTickEvent event) {
         LocalPlayer sp = Minecraft.getInstance().player;
         if (sp == null) return;
-        // 1.8.9's armorInventory (feet to head) and mainInventory
         for (EquipmentSlot slot : new EquipmentSlot[] {EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD}) {
             checkForCooldown(sp.getItemBySlot(slot));
         }

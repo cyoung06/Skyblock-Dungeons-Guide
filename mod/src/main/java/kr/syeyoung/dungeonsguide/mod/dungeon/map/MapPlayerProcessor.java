@@ -84,11 +84,9 @@ public class MapPlayerProcessor {
         lim = lim * lim;
 
         if (context.getScaffoldParser() == null) return;
-        // decorations is widened by the class tweaker (D119)
         for (Map.Entry<String, MapDecoration> stringVec4bEntry : mapdata.decorations.entrySet()) {
             String mapDecString = stringVec4bEntry.getKey();
             MapDecoration vec4 = stringVec4bEntry.getValue();
-            // 1.8.9's icon type 1, the green one
             if (vec4.type().is(MapDecorationTypes.FRAME)) continue;
 
             if (!mapIconToPlayerMap.containsValue(mapDecString)) {

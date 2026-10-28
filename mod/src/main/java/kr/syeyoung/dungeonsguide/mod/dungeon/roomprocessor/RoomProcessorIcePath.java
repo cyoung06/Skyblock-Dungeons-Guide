@@ -66,7 +66,6 @@ public class RoomProcessorIcePath extends GeneralRoomProcessor {
         final BlockPos low = getDungeonRoom().getRoomBounds().getMin();
         final BlockPos high = getDungeonRoom().getRoomBounds().getMax();
         Level level = Minecraft.getInstance().level;
-        // the room's bounds (D114)
         AABB roomBox = new AABB(low.getX(), level.getMinY(), low.getZ(), high.getX() + 1, level.getMaxY() + 1, high.getZ() + 1);
         List<Silverfish> silverfishs = level.getEntitiesOfClass(Silverfish.class, roomBox, new Predicate<Silverfish>() {
             @Override

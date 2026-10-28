@@ -30,7 +30,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
 public class LivingEntityMixin {
-    // 1.8.9: LivingEvent.LivingUpdateEvent
     @Inject(method = "tick", at = @At("HEAD"))
     private void dungeonsguide$onTick(CallbackInfo ci) {
         LivingEntity self = (LivingEntity) (Object) this;
@@ -38,7 +37,6 @@ public class LivingEntityMixin {
         FabricEventBridge.fire(new LivingTickEvent(self));
     }
 
-    // 1.8.9: LivingDeathEvent. the client calls die when it handles the death entity event
     @Inject(method = "die", at = @At("HEAD"))
     private void dungeonsguide$onDie(DamageSource source, CallbackInfo ci) {
         LivingEntity self = (LivingEntity) (Object) this;

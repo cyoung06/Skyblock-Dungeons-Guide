@@ -26,9 +26,6 @@ import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 
-/**
- * One translucent colored quad, corners in order.
- */
 @AllArgsConstructor
 public class QuadState implements DGWorldRenderState {
     private final Vec3[] corners;

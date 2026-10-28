@@ -21,7 +21,6 @@ package kr.syeyoung.dungeonsguide.mod.events.impl;
 import kr.syeyoung.dungeonsguide.mod.events.DGEvent;
 import net.minecraft.network.chat.Style;
 
-// fired each frame vanilla shows the hover effect of the hovered text style (GuiGraphicsExtractor.componentHoverEffect)
 public class ComponentHoverEvent extends DGEvent {
     public final Style style;
     // gui scaled

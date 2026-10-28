@@ -111,10 +111,8 @@ public class SkyblockStatus {
     public static boolean isOnHypixel() {
         Minecraft mc = Minecraft.getInstance();
         if (mc == null || mc.player == null) return false;
-        // 1.8.9 kept the server brand on the player, 26.1 on the connection
         String clientBrand = mc.getConnection().serverBrand();
         if (clientBrand == null) return false;
-        // 1.8.9 also checked mc.loadingScreen != null, which is set once the game has started
         if (!mc.isSingleplayer()) {
             return clientBrand.startsWith("Hypixel BungeeCord");
         }

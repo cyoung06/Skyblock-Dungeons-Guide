@@ -175,7 +175,6 @@ public class PathfindRequest { // TODO: fix data flow.
                 for (int z = 0; z < dungeonRoomInfo.getLength(); z++) {
                     for (int x = 0; x < dungeonRoomInfo.getWidth(); x++) {
                         BlockState blockState = driWorld.getBlockState(new BlockPos(x, y, z));
-                        // the request format keeps 1.8.9 id / meta, converted rooms only hold states that came from them (D112)
                         int legacy = Math.max(0, LegacyBlock.legacy(blockState));
                         dataOutputStream.write((byte) (legacy >> 4));
                         dataOutputStream.write((byte) (legacy & 15));

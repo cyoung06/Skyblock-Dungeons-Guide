@@ -83,7 +83,6 @@ public class GoldenPathRightProcessor extends GeneralDefuseChamberProcessor {
                 blocksolution.add(getChamber().getBlockPos(lastLoc.getX(), 1, lastLoc.getZ()));
             }
 
-            // 1.8.9 wrote to the client world
             Level w = Minecraft.getInstance().level;
             for (int x = 0; x <9; x++) {
                 for (int z =0; z < 6; z++) {

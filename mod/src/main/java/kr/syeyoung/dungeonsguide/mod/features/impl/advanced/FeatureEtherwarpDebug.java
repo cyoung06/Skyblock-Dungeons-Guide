@@ -43,7 +43,6 @@ public class FeatureEtherwarpDebug extends SimpleFeature implements ShadowCast.C
     private List<BlockPos> toHighlight;
     @DGEventHandler(triggerOutOfSkyblock = true)
     public void onInteract(PlayerInteractEvent event) {
-        // 1.8.9's spawn egg item was every spawn egg
         if (event.entityPlayer.getMainHandItem().isEmpty() ||
                 !(event.entityPlayer.getMainHandItem().getItem() instanceof SpawnEggItem)) {
             return;

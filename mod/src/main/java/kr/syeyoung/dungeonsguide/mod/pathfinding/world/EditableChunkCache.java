@@ -30,7 +30,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import lombok.Getter;
 
-// the chunks of a region of the level. 1.8.9 extended vanilla's ChunkCache, 26.1 has none, so it keeps its own chunk array
 public class EditableChunkCache {
     @Getter
     private final Level level;
@@ -42,7 +41,6 @@ public class EditableChunkCache {
 
     public EditableChunkCache(Level worldIn, BlockPos posFromIn, BlockPos posToIn, int subIn) {
         this.level = worldIn;
-        // same bounds as 1.8.9's ChunkCache
         this.chunkX = posFromIn.getX() - subIn >> 4;
         this.chunkZ = posFromIn.getZ() - subIn >> 4;
         int maxX = posToIn.getX() + subIn >> 4;
@@ -82,7 +80,6 @@ public class EditableChunkCache {
         return this.chunkArray[localX][localZ];
     }
 
-    // what 1.8.9's ChunkCache.getBlockState did: air outside the cached chunks
     public BlockState getBlockState(BlockPos pos) {
         LevelChunk chunk = getChunk(pos);
         return chunk == null ? Blocks.AIR.defaultBlockState() : chunk.getBlockState(pos);

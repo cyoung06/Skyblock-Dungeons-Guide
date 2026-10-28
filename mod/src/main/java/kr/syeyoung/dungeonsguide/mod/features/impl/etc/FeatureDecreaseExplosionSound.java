@@ -42,7 +42,7 @@ public class FeatureDecreaseExplosionSound extends SimpleFeature {
     public void onSound(PlaySoundEvent soundEvent) {
         if (!SkyblockStatus.isOnSkyblock()) return;
 
-        // 1.8.9's random.explode; the instance isn't resolved yet, so the raw volume / pitch are read (class tweaker)
+        // TODO: find better way
         if (soundEvent.name.equalsIgnoreCase(SoundEvents.GENERIC_EXPLODE.value().location().getPath()) && soundEvent.result instanceof AbstractSoundInstance) {
             AbstractSoundInstance positionedSoundRecord = (AbstractSoundInstance) soundEvent.result;
             SimpleSoundInstance neweff = new SimpleSoundInstance(

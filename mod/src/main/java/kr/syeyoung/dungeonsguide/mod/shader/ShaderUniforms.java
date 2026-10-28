@@ -20,13 +20,8 @@ package kr.syeyoung.dungeonsguide.mod.shader;
 
 import net.minecraft.client.renderer.DynamicUniformStorage;
 
-/**
- * Values of one DG shader's uniform block (D103).
- */
 public interface ShaderUniforms extends DynamicUniformStorage.DynamicUniform {
-    // name of the block in the shader
     String blockName();
 
-    // std140 size of the block
     int blockSize();
 }

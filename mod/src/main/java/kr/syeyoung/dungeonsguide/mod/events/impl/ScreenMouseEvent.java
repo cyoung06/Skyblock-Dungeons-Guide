@@ -81,7 +81,6 @@ public abstract class ScreenMouseEvent extends DGEvent implements Cancelable {
         }
     }
 
-    // comes from MouseHandlerMixin, fabric has no event for mouse moves inside screens
     public static class Move extends ScreenMouseEvent {
         public Move(Screen gui, double mouseX, double mouseY) {
             super(gui, mouseX, mouseY);

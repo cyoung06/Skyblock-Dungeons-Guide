@@ -29,7 +29,6 @@ import java.util.UUID;
 public class BossBar {
     @Getter
     private final UUID id;
-    // the server's component, a deep copy (D106)
     @Getter @Setter
     private Component name;
     @Getter @Setter

@@ -39,7 +39,6 @@ public class TCKeybind implements FeatureTypeHandler<InputConstants.Key> {
     public static final TCKeybind INSTANCE = new TCKeybind();
     @Override
     public InputConstants.Key deserialize(JsonElement element) {
-        // configs before 26.1 saved a bare lwjgl2 key code
         if (element.isJsonPrimitive()) return fromLegacy(element.getAsInt());
 
         JsonObject object = element.getAsJsonObject();
@@ -64,7 +63,6 @@ public class TCKeybind implements FeatureTypeHandler<InputConstants.Key> {
         return object;
     }
 
-    // lwjgl2: keyboard codes, -100 + button for mouse, typed char + 256 for keys lwjgl2 didn't know
     private static InputConstants.Key fromLegacy(int legacy) {
         if (legacy < 0) return InputConstants.Type.MOUSE.getOrCreate(legacy + 100);
         if (legacy > 256) {
@@ -150,7 +148,6 @@ public class TCKeybind implements FeatureTypeHandler<InputConstants.Key> {
             if (keyEvent.isEscape()) {
                 currentKey = InputConstants.UNKNOWN;
             } else {
-                // keys glfw has no key code for come back as scancodes
                 currentKey = InputConstants.getKey(keyEvent);
             }
             listen = false;

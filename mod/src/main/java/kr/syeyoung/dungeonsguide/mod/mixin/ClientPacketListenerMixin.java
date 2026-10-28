@@ -42,7 +42,6 @@ import java.util.UUID;
 public class ClientPacketListenerMixin {
     @Shadow @Final private Map<UUID, PlayerInfo> playerInfoMap;
 
-    // players new to the map, Add fires for them once the packet's actions are applied
     @Inject(method = "handlePlayerInfoUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/social/PlayerSocialManager;addPlayer(Lnet/minecraft/client/multiplayer/PlayerInfo;)V"))
     private void dungeonsguide$onPlayerInfoAdded(ClientboundPlayerInfoUpdatePacket packet, CallbackInfo ci, @Local PlayerInfo playerInfo, @Share("dungeonsguide$added") LocalRef<Set<UUID>> added) {
         if (added.get() == null) added.set(new HashSet<>());

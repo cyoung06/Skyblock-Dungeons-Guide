@@ -146,7 +146,6 @@ public class FeatureDAGs extends RawRenderingGuiFeature {
 
         Font fr = Minecraft.getInstance().font;
         renderingContext.drawString("Black=Disabled / Pink=Current / Dark Green=Parent Completed / Green=Completed", 0 ,0, 0xFFFFFF00, false);
-        // 1.8.9's glLineWidth(5)
         float lineWidth = 5.0f;
 
         for (IPathDisplayEngine<?> value2 : roomRouteHandler.getPath().values()) {
@@ -199,7 +198,6 @@ public class FeatureDAGs extends RawRenderingGuiFeature {
             }
 
             if (!value.isCalculating()) {
-                // 1.8.9's line strip, segment by segment
                 int cnt = 0;
                 Point last = null;
                 for (ActionDAGNode actionDAGNode : value.getOrder()) {

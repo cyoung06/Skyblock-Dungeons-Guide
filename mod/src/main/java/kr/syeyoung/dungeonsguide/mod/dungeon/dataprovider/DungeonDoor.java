@@ -50,7 +50,6 @@ public class DungeonDoor {
                 for (int z = -1; z<=1; z++) {
                     BlockPos pos2 = pos.offset(x,y,z);
                     BlockState block = world.getBlockState(pos2);
-                    // 1.8.9 compared blocks without meta
                     if (LegacyBlock.legacyId(itShouldBeAll) != LegacyBlock.legacyId(block)) exist = false;
                 }
             }

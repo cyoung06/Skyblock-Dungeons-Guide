@@ -27,10 +27,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
-// client side, main hand only (1.8.9 had one hand). cancel to stop the interaction
 public class PlayerInteractEvent extends DGEvent implements Cancelable {
     public final Action action;
-    // null for RIGHT_CLICK_AIR
     public final BlockPos pos;
     public final Direction face;
     public final Level world;

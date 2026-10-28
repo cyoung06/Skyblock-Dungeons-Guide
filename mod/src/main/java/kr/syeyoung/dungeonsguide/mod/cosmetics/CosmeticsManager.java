@@ -68,7 +68,6 @@ public class CosmeticsManager {
     @Getter
     private Set<String> perms = new CopyOnWriteArraySet<>();
 
-    // 1.8.9's nameIdCache (name -> uuid of tab players) is the parallel universe TabList's getPlayer on 26.1
 
     public void requestActiveCosmetics() {
         StompManager.getInstance().send(new StompPayload()
@@ -197,7 +196,6 @@ public class CosmeticsManager {
                 activeCosmeticMap.put(cosmeticData.getActivityUID(), cosmeticData);
                 try {
                     if (Minecraft.getInstance().level != null) {
-                        // 1.8.9 refreshed Forge's cached display name; 26.1 builds it on every getDisplayName, nothing to refresh
 //                        Player entityPlayer = Minecraft.getInstance().level.getPlayerEntityByUUID(cosmeticData.getPlayerUID());
 //                        if (entityPlayer != null) entityPlayer.refreshDisplayName();
                     }
@@ -382,7 +380,6 @@ public class CosmeticsManager {
     }
 
 
-    // 1.8.9 replaced vanilla's tab entries with CustomNetworkPlayerInfo here; on 26.1 onTabListNameFormat decorates the tab names
     @SubscribeEvent
     public void onTabListAdd(TabListEntryEvent.Add event) {
         GameProfile profile = event.getPlayerInfo().getProfile();
@@ -401,8 +398,6 @@ public class CosmeticsManager {
         }
     }
 
-    // 1.8.9's CustomNetworkPlayerInfo.getDisplayName. its displayName was the packet's display name, formatted its text;
-    // vanilla's tab name covers both
     @SubscribeEvent
     public void onTabListNameFormat(TabListNameFormatEvent event) {
         String rawPlayerString = TextUtils.getFormattedText(event.displayName);
@@ -418,7 +413,6 @@ public class CosmeticsManager {
 
         if (actualName == null) return;
 
-        // 1.8.9's nameIdCache, the parallel universe tab list
         UUID uuid = TabList.INSTANCE.getPlayer(actualName);
         boolean dg = FeatureRegistry.DG_INDICATOR.isEnabled() && PlayerManager.INSTANCE.getOnlineStatus().getOrDefault(uuid, false);
 
@@ -454,7 +448,6 @@ public class CosmeticsManager {
     private void refresh(UUID uuid) {
         try {
             if (Minecraft.getInstance().level != null) {
-                // 1.8.9 refreshed Forge's cached display name; 26.1 builds it on every getDisplayName, nothing to refresh
 //                Player entityPlayer = Minecraft.getInstance().level.getPlayerEntityByUUID(uuid);
 //                if (entityPlayer != null) entityPlayer.refreshDisplayName();
             }
@@ -481,7 +474,6 @@ public class CosmeticsManager {
                 FeatureRegistry.DG_INDICATOR.isEnabled() &&
                 PlayerManager.INSTANCE.getOnlineStatus().getOrDefault(nameFormat.entityPlayer.getGameProfile().id(), false);
 
-        // 1.8.9 kept one MarkedChatComponent in Forge's prefix list and set its text; 26.1's event starts without prefixes on every call
         String formatted = "";
         if (dg) {
             formatted += "\ued01";

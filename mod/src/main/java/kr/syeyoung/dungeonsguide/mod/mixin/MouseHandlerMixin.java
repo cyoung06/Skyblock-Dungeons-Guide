@@ -41,8 +41,6 @@ public class MouseHandlerMixin {
         FabricEventBridge.fire(new MouseInputEvent(action == GLFW.GLFW_PRESS ? MouseInputEvent.Action.PRESS : MouseInputEvent.Action.RELEASE, buttonInfo));
     }
 
-    // 1.8.9: GuiScreenEvent.MouseInputEvent for moves
-    // 26.1 calls Screen.mouseMoved from handleAccumulatedMovement, not onMove
     @WrapOperation(method = "handleAccumulatedMovement", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;mouseMoved(DD)V"))
     private void dungeonsguide$onScreenMouseMove(Screen screen, double x, double y, Operation<Void> original) {
         if (FabricEventBridge.fire(new ScreenMouseEvent.Move(screen, x, y))) return;

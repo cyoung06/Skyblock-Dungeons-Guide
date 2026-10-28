@@ -55,7 +55,6 @@ public class FeatureGoodParties extends SimpleFeature {
         int ySize = j + (((ChestMenu)(((ContainerScreen) Minecraft.getInstance().screen).getMenu())).getContainer().getContainerSize() / 9) * 18;
         int left = (rendered.gui.width - 176) / 2;
         int top = (rendered.gui.height - ySize ) / 2;
-        // D126: drawn through the event's RenderingContext
         RenderingContext context = rendered.context;
         context.pose().pushMatrix();
         context.pose().translate(left, top);
@@ -66,8 +65,6 @@ public class FeatureGoodParties extends SimpleFeature {
                 Slot s = cont.slots.get(i1);
                 if (s.getItem().isEmpty()) continue;
                 if (!s.getItem().is(Items.PLAYER_HEAD)) continue;
-                // 1.8.9 skipped heads without nbt and stopped at one without a display compound:
-                // the custom name / lore components on 26.1 (D125)
                 if (s.getItem().getComponentsPatch().isEmpty()) continue;
                 if (!s.getItem().has(DataComponents.CUSTOM_NAME) && !s.getItem().has(DataComponents.LORE)) return;
 

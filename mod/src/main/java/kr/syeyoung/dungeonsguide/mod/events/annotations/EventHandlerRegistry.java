@@ -64,7 +64,6 @@ public class EventHandlerRegistry {
             for (Method declaredMethod : clazz.getDeclaredMethods()) {
                 DGEventHandler dgEventHandler = declaredMethod.getAnnotation(DGEventHandler.class);
                 if (dgEventHandler == null) continue;
-                // after the annotation check: the walk reaches java.lang.Object, whose methods Java 9+ modules don't open
                 declaredMethod.setAccessible(true);
                 if (declaredMethod.getParameterTypes().length != 1)
                     throw new RuntimeException("Too many or too few parameters: "+declaredMethod.getName()+" on "+clazz.getName());

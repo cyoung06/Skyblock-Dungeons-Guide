@@ -70,7 +70,6 @@ public class RoomProcessorCreeperSolver extends GeneralRoomProcessor {
             if (LegacyBlock.PRISMARINE.is(b) || LegacyBlock.SEA_LANTERN.is(b)) {
                 for (Direction face:Direction.values()) {
                     if (LegacyBlock.AIR.is(w.getBlockState(pos.relative(face)))) {
-                        // betweenClosed reuses one mutable pos, 1.8.9's getAllInBox didn't
                         prismarines.add(pos.immutable());
                         break;
                     }
@@ -113,7 +112,6 @@ public class RoomProcessorCreeperSolver extends GeneralRoomProcessor {
         }
     }
 
-    // 1.8.9's Vec3.getIntermediateWithXValue / Y / Z: the point on from -> to where the axis has that value
     private static Vec3 getIntermediateWithValue(Vec3 from, Vec3 to, Direction.Axis axis, double value) {
         double d = to.get(axis) - from.get(axis);
         if (d * d < 1.0000000116860974E-7) return null;

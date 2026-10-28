@@ -27,9 +27,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 
-/**
- * An element vanilla extraction code produced, drawn in DG's image with DG's clip (D102).
- */
 @AllArgsConstructor
 public class VanillaElementState implements DGRenderState {
     private final GuiElementRenderState element;

@@ -27,9 +27,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 
-/**
- * Translucent filled box, all six faces.
- */
 @AllArgsConstructor
 public class FilledBoxState implements DGWorldRenderState {
     private final AABB box;

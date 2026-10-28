@@ -26,9 +26,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 
-/**
- * One textured quad (straight alpha), corners in order with a uv per corner, tinted by color.
- */
 @AllArgsConstructor
 public class TexturedQuadState implements DGWorldRenderState {
     private final Identifier texture;

@@ -53,11 +53,9 @@ public class GuiScreenAdapter extends Screen {
 
     protected Screen parent;
     protected boolean allowEsc;
-    // 1.8.9 screens had no background, 26.1 draws the menu blur and darkening (D98)
     protected boolean vanillaBackground;
 
     private final StencilImage image = new StencilImage("Dungeons Guide screen");
-    // glfw doesn't tell screens whether a key press is a repeat
     private final Set<Integer> pressedKeys = new HashSet<>();
 
     public GuiScreenAdapter(Widget widget) {
@@ -78,7 +76,6 @@ public class GuiScreenAdapter extends Screen {
         view.getContext().CONTEXT.put("screenAdapter", this);
     }
 
-    // mouse in framebuffer pixels from the top left, what 1.8.9's Mouse.getEventX / displayHeight - getEventY gave
     public static int getMouseX() {
         return (int) (Minecraft.getInstance().mouseHandler.xpos() * Minecraft.getInstance().getWindow().getWidth() / Minecraft.getInstance().getWindow().getScreenWidth());
     }
@@ -150,14 +147,12 @@ public class GuiScreenAdapter extends Screen {
                 }
             }
 
-            // DG draws in framebuffer pixels into its own image (D74/D76), which goes back as one gui element
             RenderingContext context = new RenderingContext(displayHeight);
             view.getRenderer().doRender(partialTicks, context, view);
             image.ensureSize(displayWidth, displayHeight);
             DGGuiRenderer.INSTANCE.submit(image, context.getStates());
             image.extractComposite(graphics);
 
-            // 1.8.9's setNativeCursor(null) was the default cursor; 26.1 can't request null, vanilla's default stays
             CursorType cursor = GLCursors.getCursor(view.getCurrentCursor());
             if (cursor != null) graphics.requestCursor(cursor);
         } catch (Exception e) {
@@ -186,7 +181,6 @@ public class GuiScreenAdapter extends Screen {
             this.minecraft.setScreen(parent);
             return true;
         }
-        // unhandled keys go on to vanilla, like 1.8.9's dispatchKeypresses
         return false;
     }
 
@@ -306,7 +300,6 @@ public class GuiScreenAdapter extends Screen {
     @Override
     public boolean mouseScrolled(double x, double y, double scrollX, double scrollY) {
         int mouseX = getMouseX(), mouseY = getMouseY();
-        // D97: lwjgl2's dwheel was 120 per notch
         int wheel = (int) (scrollY * 120);
         if (wheel != 0) {
             try {

@@ -56,10 +56,6 @@ import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.List;
 
-/**
- * Executes DG render states into StencilImages with DG's own render passes (D77).
- * States are recorded while vanilla extracts the gui, and drawn in the render phase right before vanilla's gui (D71).
- */
 public class DGGuiRenderer implements AutoCloseable {
     public static final DGGuiRenderer INSTANCE = new DGGuiRenderer();
 
@@ -77,7 +73,6 @@ public class DGGuiRenderer implements AutoCloseable {
         queue.add(new Job(target, states));
     }
 
-    // called by GameRendererMixin with vanilla's gui fog
     public void renderQueued(GpuBufferSlice fog) {
         try {
             for (Job job : queue) {
@@ -92,7 +87,6 @@ public class DGGuiRenderer implements AutoCloseable {
         }
     }
 
-    // executes states into an image now: the gui queue above, and DGWorldRenderer's prepare for world images
     public void renderInto(StencilImage target, List<DGRenderState> states, GpuBufferSlice fog) {
         prepareItems(states);
 
@@ -109,7 +103,6 @@ public class DGGuiRenderer implements AutoCloseable {
                 steps.add(new Step(null, null, null, null, (StencilState) state, 0, null, null, null));
                 continue;
             }
-            // each shape has its own uniforms, so it's its own draw
             if (state instanceof ShaderShapeState) {
                 if (bufferBuilder != null) recordMesh(steps, bufferBuilder, batchPipeline, batchTextures, batchScissor);
                 bufferBuilder = null;
@@ -125,7 +118,6 @@ public class DGGuiRenderer implements AutoCloseable {
                 continue;
             }
 
-            // items that didn't fit the atlas are skipped, like vanilla does
             if (state instanceof ItemState && ((ItemState) state).getSlot() == null) continue;
 
             RenderPipeline pipeline = state.stencilMask() ? maskVariant(state.pipeline()) : state.pipeline();
@@ -145,7 +137,6 @@ public class DGGuiRenderer implements AutoCloseable {
         upload(steps);
 
         projection.setupOrtho(1000.0F, 11000.0F, target.getWidth(), target.getHeight(), true);
-        // written before the pass opens: buffer writes aren't allowed while a render pass is open
         GpuBufferSlice projectionSlice = projectionBuffer.getBuffer(projection);
         GpuBufferSlice dynamicTransforms = RenderSystem.getDynamicUniforms()
                 .writeTransform(new Matrix4f().setTranslation(0.0F, 0.0F, -11000.0F), new Vector4f(1.0F, 1.0F, 1.0F, 1.0F), new Vector3f(), new Matrix4f());
@@ -157,7 +148,6 @@ public class DGGuiRenderer implements AutoCloseable {
             renderPass.setUniform("Fog", fog);
             renderPass.setUniform("DynamicTransforms", dynamicTransforms);
 
-            // raw gl stencil (D74/D75), DG's framebuffer is bound now
             GlStateManager._disableScissorTest();
             GL11.glStencilMask(0xFF);
             GL11.glClearStencil(0);
@@ -181,7 +171,6 @@ public class DGGuiRenderer implements AutoCloseable {
         }
     }
 
-    // what vanilla GuiRenderer.prepareItemElements does, with DG's own atlas (D100)
     private void prepareItems(List<DGRenderState> states) {
         Set<Object> itemsInFrame = new HashSet<>();
         for (DGRenderState state : states) {
@@ -279,7 +268,6 @@ public class DGGuiRenderer implements AutoCloseable {
         renderPass.drawIndexed(step.baseVertex, 0, drawState.indexCount(), 1);
     }
 
-    // same gl calls the 1.8.9 Stencil / NegativeStencil elements made
     private void applyStencil(StencilState state) {
         switch (state.getAction()) {
             case BEGIN_MASK:
@@ -307,7 +295,6 @@ public class DGGuiRenderer implements AutoCloseable {
         }
     }
 
-    // same pipeline without color output, for draws that only write the stencil mask
     private RenderPipeline maskVariant(RenderPipeline base) {
         return maskPipelines.computeIfAbsent(base, pipeline -> {
             RenderPipeline.Builder builder = RenderPipeline.builder()

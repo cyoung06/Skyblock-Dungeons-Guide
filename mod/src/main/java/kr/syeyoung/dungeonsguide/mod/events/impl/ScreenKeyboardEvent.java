@@ -26,7 +26,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 
-// like 1.8.9 subscribers of an action get both Pre and Post
 public abstract class ScreenKeyboardEvent extends DGEvent implements Cancelable {
     public final Screen gui;
 

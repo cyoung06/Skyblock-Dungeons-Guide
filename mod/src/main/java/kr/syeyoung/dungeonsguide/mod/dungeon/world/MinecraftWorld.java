@@ -26,9 +26,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * The client level as a DGWorld (D108).
- */
 public class MinecraftWorld implements DGWorld {
     @Getter
     private final ClientLevel level;

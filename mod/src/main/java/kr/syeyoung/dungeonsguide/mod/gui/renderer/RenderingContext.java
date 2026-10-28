@@ -60,9 +60,6 @@ import java.util.Stack;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-/**
- * Records what DG draws as render states (D71/D94). Transforms live on the pose stack (D93).
- */
 public class RenderingContext {
     private final Matrix3x2fStack pose = new Matrix3x2fStack(64);
     @Getter
@@ -100,24 +97,20 @@ public class RenderingContext {
         drawQuad((float) left, (float) bottom, (float) right, (float) bottom, (float) right, (float) top, (float) left, (float) top, color);
     }
 
-    // corners in order
     public void drawQuad(float x0, float y0, float x1, float y1, float x2, float y2, float x3, float y3, int color) {
         if (isClipEmpty()) return;
         states.add(new RectState(new Matrix3x2f(pose), new float[] {x0, y0, x1, y1, x2, y2, x3, y3}, color, currentClip(), writingStencilMask));
     }
 
-    // core profile has no wide lines, a line is a quad of the given width (in local units)
     public void drawLine(double x0, double y0, double x1, double y1, double width, int color) {
         double dx = x1 - x0, dy = y1 - y0;
         double len = Math.sqrt(dx * dx + dy * dy);
         if (len == 0) return;
         double nx = -dy / len * width / 2, ny = dx / len * width / 2;
-        // same winding as drawRect, gui pipelines cull back faces
         drawQuad((float) (x0 - nx), (float) (y0 - ny), (float) (x0 + nx), (float) (y0 + ny),
                 (float) (x1 + nx), (float) (y1 + ny), (float) (x1 - nx), (float) (y1 - ny), color);
     }
 
-    // 1.8.9's RenderUtils.drawRect with an AColor
     public void drawRect(double left, double top, double right, double bottom, AColor color) {
         double i;
         if (left < right) {
@@ -141,7 +134,6 @@ public class RenderingContext {
         }
     }
 
-    // 1.8.9's RenderUtils.drawUnfilledBox with an int color and the rainbow chroma; width replaces the glLineWidth callers set beforehand
     public void drawUnfilledBox(double left, double top, double right, double bottom, double width, int color, boolean chroma) {
         double i;
         if (left < right) {
@@ -172,7 +164,6 @@ public class RenderingContext {
         }
     }
 
-    // 1.8.9's RenderUtils.drawUnfilledBox, a line loop; width replaces the glLineWidth callers set beforehand
     public void drawUnfilledBox(double left, double top, double right, double bottom, double width, AColor color) {
         double i;
         if (left < right) {
@@ -223,7 +214,6 @@ public class RenderingContext {
                 color, texture, sampler, currentClip(), writingStencilMask));
     }
 
-    // textured quad with normalized uvs
     public void drawTexture(Supplier<GpuTextureView> texture, Supplier<GpuSampler> sampler, double x0, double y0, double x1, double y1, double u0, double u1, double v0, double v1, int color) {
         if (isClipEmpty()) return;
         states.add(new TexturedRectState(new Matrix3x2f(pose),
@@ -236,7 +226,6 @@ public class RenderingContext {
         return () -> RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST);
     }
 
-    // glyphs from vanilla Font (D79), consecutive glyphs on the same pipeline and texture become one run
     public void drawGlyphs(List<TextRenderable> glyphs) {
         if (isClipEmpty() || glyphs.isEmpty()) return;
         List<TextRenderable> run = new ArrayList<>();
@@ -250,9 +239,7 @@ public class RenderingContext {
         states.add(new GlyphRunState(new Matrix3x2f(pose), run, currentClip(), writingStencilMask));
     }
 
-    // plain vanilla text, what 1.8.9's FontRenderer.drawString did (formatting codes included)
     public void drawString(String text, float x, float y, int color, boolean shadow) {
-        // 1.8.9's font renderer made colors without alpha opaque
         if ((color & 0xFC000000) == 0) color |= 0xFF000000;
         List<TextRenderable> glyphs = new ArrayList<>();
         Minecraft.getInstance().font.prepareText(text, x, y, color, shadow, 0).visit(new Font.GlyphVisitor() {
@@ -272,7 +259,6 @@ public class RenderingContext {
     private static final Identifier EXPERIENCE_BAR_BACKGROUND_SPRITE = Identifier.withDefaultNamespace("hud/experience_bar_background");
     private static final Identifier EXPERIENCE_BAR_PROGRESS_SPRITE = Identifier.withDefaultNamespace("hud/experience_bar_progress");
 
-    // 1.8.9's RenderUtils.renderBar: the xp bar's halves at 1:1 from 1.8.9's icons.png, here from vanilla's xp bar sprites
     public void renderBar(float x, float y, float xSize, float completed) {
         float fCompleted = (float)Math.round(completed / 0.05F) * 0.05F;
         float notCompleted = 1.0F - fCompleted;
@@ -306,7 +292,6 @@ public class RenderingContext {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, 182, 5, Math.round(u), 0, Math.round(x), Math.round(y), Math.round(width), 5);
     }
 
-    // what 1.8.9's FontRenderer.drawSplitString did, wrapped at wrapWidth with formatting carried to the next line
     public void drawSplitString(String text, float x, float y, int wrapWidth, int color) {
         if ((color & 0xFC000000) == 0) color |= 0xFF000000;
         Font font = Minecraft.getInstance().font;
@@ -328,7 +313,6 @@ public class RenderingContext {
         }
     }
 
-    // rect drawn with a DG shader, what 1.8.9 did with useShader + drawRect (D103)
     public void drawShape(ShaderProgram shader, ShaderUniforms uniforms, double left, double top, double right, double bottom, int color) {
         double i;
         if (left < right) {
@@ -346,7 +330,6 @@ public class RenderingContext {
                 color, color, color, color);
     }
 
-    // corners and their colors in order
     public void drawShape(ShaderProgram shader, ShaderUniforms uniforms, float x0, float y0, float x1, float y1, float x2, float y2, float x3, float y3,
                           int color0, int color1, int color2, int color3) {
         if (isClipEmpty()) return;
@@ -354,24 +337,20 @@ public class RenderingContext {
                 new int[] {color0, color1, color2, color3}, currentClip(), writingStencilMask));
     }
 
-    // the pipelines draw quads, a triangle is a quad with its last corner repeated
     private void drawShapeTriangle(ShaderProgram shader, ShaderUniforms uniforms, float x0, float y0, float x1, float y1, float x2, float y2, int color) {
         drawShape(shader, uniforms, x0, y0, x1, y1, x2, y2, x2, y2, color, color, color, color);
     }
 
-    // what GL_TRIANGLE_FAN did, xy pairs
     public void drawShapeTriangleFan(ShaderProgram shader, ShaderUniforms uniforms, int color, float... xy) {
         for (int i = 2; i + 3 < xy.length; i += 2)
             drawShapeTriangle(shader, uniforms, xy[0], xy[1], xy[i], xy[i + 1], xy[i + 2], xy[i + 3], color);
     }
 
-    // what GL_TRIANGLE_STRIP did, xy pairs
     public void drawShapeTriangleStrip(ShaderProgram shader, ShaderUniforms uniforms, int color, float... xy) {
         for (int i = 0; i + 5 < xy.length; i += 2)
             drawShapeTriangle(shader, uniforms, xy[i], xy[i + 1], xy[i + 2], xy[i + 3], xy[i + 4], xy[i + 5], color);
     }
 
-    // 16x16 gui item at x, y, like 1.8.9's renderItemAndEffectIntoGUI (D100)
     public void drawItem(ItemStack itemStack, float x, float y) {
         if (isClipEmpty() || itemStack.isEmpty()) return;
         Minecraft mc = Minecraft.getInstance();
@@ -380,7 +359,6 @@ public class RenderingContext {
         states.add(new ItemState(new Matrix3x2f(pose), item, x, y, currentClip(), writingStencilMask));
     }
 
-    // runs vanilla extraction code at DG's pose and records what it extracted (D102)
     public void drawVanilla(Consumer<GuiGraphicsExtractor> extraction) {
         if (isClipEmpty()) return;
         Minecraft mc = Minecraft.getInstance();
@@ -409,7 +387,6 @@ public class RenderingContext {
         renderState.forEachItem(item -> states.add(new ItemState(new Matrix3x2f(item.pose()), item.itemStackRenderState(), item.x(), item.y(), currentClip(), writingStencilMask)));
     }
 
-    // what Stencil / NegativeStencil did with raw gl in 1.8.9, now recorded (D74/D75)
     public void beginStencilMask() {
         states.add(new StencilState(StencilState.Action.BEGIN_MASK, 1, currentClip()));
         writingStencilMask = true;
@@ -431,7 +408,6 @@ public class RenderingContext {
         return clips.empty() ? null : clips.peek();
     }
 
-    // 1.8.9 turned off the color mask for an empty clip
     private boolean isClipEmpty() {
         Rectangle clip = currentClip();
         return clip != null && (clip.width <= 0 || clip.height <= 0);

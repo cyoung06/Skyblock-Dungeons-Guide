@@ -23,7 +23,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
-// client side only, fired when the client handles the death entity event
 public class LivingDeathEvent extends DGEvent {
     public final LivingEntity entityLiving;
     public final Entity entity;

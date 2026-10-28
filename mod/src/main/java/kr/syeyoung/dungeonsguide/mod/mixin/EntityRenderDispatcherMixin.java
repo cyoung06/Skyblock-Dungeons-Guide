@@ -36,7 +36,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EntityRenderDispatcher.class)
 public class EntityRenderDispatcherMixin {
-    // 1.8.9: RenderPlayerEvent.Pre / RenderLivingEvent.Pre, only for entities that are actually rendered
     @Inject(method = "shouldRender", at = @At("RETURN"), cancellable = true)
     private void dungeonsguide$shouldRender(Entity entity, Frustum frustum, double camX, double camY, double camZ, CallbackInfoReturnable<Boolean> cir) {
         if (!cir.getReturnValue() || !(entity instanceof LivingEntity living)) return;

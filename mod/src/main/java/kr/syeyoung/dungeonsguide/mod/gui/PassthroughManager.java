@@ -50,8 +50,6 @@ public class PassthroughManager {
     }
 
 
-    // 1.8.9 copied the world at RenderGameOverlayEvent.Pre. on 26.1 the hud is extracted before the world renders,
-    // so the copy happens in the render phase right before DG's gui draws (GameRendererMixin)
     public void captureWorld() {
         ProfilerFiller profiler = Profiler.get();
         profiler.push("Dungeons Guide - Passthrough");

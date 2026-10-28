@@ -32,7 +32,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Connection.class)
 public class ConnectionMixin {
-    // 1.8.9: PacketInjector was a netty handler before "packet_handler"
     @Inject(method = "channelRead0(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/protocol/Packet;)V", at = @At("HEAD"))
     private void dungeonsguide$beforeRead(ChannelHandlerContext ctx, Packet<?> _packet, CallbackInfo ci, @Local(argsOnly = true) LocalRef<Packet<?>> packet) {
         if (((Connection) (Object) this).getReceiving() != PacketFlow.CLIENTBOUND) return;

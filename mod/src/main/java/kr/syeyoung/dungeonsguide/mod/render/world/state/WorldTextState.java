@@ -25,16 +25,12 @@ import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.phys.Vec3;
 
-/**
- * Text facing the camera, centered on pos. 1.8.9's legacy formatting codes in the string still apply.
- */
 @AllArgsConstructor
 public class WorldTextState implements DGWorldRenderState {
     private final String text;
     private final Vec3 pos;
     private final int color;
     private final float scale;
-    // scale grows with distance, so the text keeps its size on screen
     private final boolean increase;
     private final boolean blackBox;
     private final boolean depth;

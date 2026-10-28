@@ -91,10 +91,8 @@ public class DungeonSecretEssenceState implements DungeonMechanicState, ISecret 
                         ItemStack itemStackIn = entity.getItemBySlot(EquipmentSlot.HEAD);
                         System.out.println(itemStackIn);
                         if (itemStackIn.isEmpty()) continue;
-                        // 1.8.9's skull item, a player head for the SkullOwner
                         if (!itemStackIn.is(Items.PLAYER_HEAD)) continue;
 
-                        // 1.8.9's SkullOwner nbt, the profile component on 26.1 (D125)
                         ResolvableProfile profile = itemStackIn.get(DataComponents.PROFILE);
                         if (profile != null) {
                             GameProfile gameprofile = profile.partialProfile();

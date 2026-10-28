@@ -21,6 +21,5 @@ package kr.syeyoung.dungeonsguide.mod.gui.elements.richtext.shaders;
 // how text gets colored (colors, chroma, ...)
 // TODO: meant to be a real gpu shader that does the coloring, for now the renderer asks it for a color
 public interface Shader {
-    // argb at a point of the text, in the element's local coordinates
     int getColor(double x, double y);
 }

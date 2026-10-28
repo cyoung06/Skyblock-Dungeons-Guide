@@ -124,7 +124,6 @@ public class FineGridStonkingBFS implements IPathfinder {
         if (LegacyBlock.WALL_SIGN.is(blockState)) return false;
         if (LegacyBlock.AIR.is(blockState)) return true;
         if (LegacyBlock.QUARTZ_ORE.is(blockState)) return true;
-        // 1.8.9's canCollideCheck: the outline shape, empty for air / liquids
         if (blockState.getShape(Minecraft.getInstance().level, new BlockPos(0,0,0)).isEmpty()) return true;
         if (blockState.getCollisionShape(Minecraft.getInstance().level, new BlockPos(0,0,0)).isEmpty()) return true;
         return false;

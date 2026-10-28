@@ -42,7 +42,6 @@ public class MazeRightProcessor extends GeneralDefuseChamberProcessor {
             for (int y =0; y< 6; y++) {
                 BlockState b = chamber.getBlock(x,0,y);
                 BlockPos pos = chamber.getBlockPos(x,0,y);
-                // 1.8.9 keyed by block, without meta
                 blockToBlockPosMap.put(LegacyBlock.legacyId(b), pos);
             }
         }

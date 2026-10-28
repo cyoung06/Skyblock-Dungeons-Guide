@@ -21,9 +21,7 @@ package kr.syeyoung.dungeonsguide.mod.events.impl;
 import kr.syeyoung.dungeonsguide.mod.events.DGEvent;
 import net.minecraft.client.resources.sounds.SoundInstance;
 
-// set result to play a different sound, or null to not play it. like 1.8.9 PlaySoundEvent
 public class PlaySoundEvent extends DGEvent {
-    // path of the sound identifier
     public final String name;
     public final SoundInstance sound;
     public SoundInstance result;

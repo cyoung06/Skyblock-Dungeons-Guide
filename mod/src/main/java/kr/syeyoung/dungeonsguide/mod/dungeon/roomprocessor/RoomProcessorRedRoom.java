@@ -109,11 +109,9 @@ public class RoomProcessorRedRoom extends GeneralRoomProcessor {
         }
     }
 
-    // the warning is gui rich text, drawn into an image that's put on a quad in the world
     private static final StencilImage warningImage = new StencilImage("Dungeons Guide red room warning");
     private static final Identifier WARNING_TEXTURE = Identifier.fromNamespaceAndPath("dungeonsguide", "dynamic/red_room_warning");
     private static boolean warningTextureRegistered = false;
-    // image pixels per rich text unit
     private static final int WARNING_RESOLUTION = 4;
 
     @Override
@@ -148,7 +146,6 @@ public class RoomProcessorRedRoom extends GeneralRoomProcessor {
                 }
             });
 
-            // 1.8.9: translate to basePt, rotate by dir (or against the view yaw), scale (-0.05, -0.05, 0.05), depth off
             double angle = Math.toRadians(dir == Integer.MIN_VALUE ? -Minecraft.getInstance().gameRenderer.getMainCamera().yRot() : dir);
             double textWidth = width / (double) WARNING_RESOLUTION, textHeight = height / (double) WARNING_RESOLUTION;
             Vec3[] corners = new Vec3[] {
@@ -161,7 +158,6 @@ public class RoomProcessorRedRoom extends GeneralRoomProcessor {
         }
     }
 
-    // a rich text point (u, v) after 1.8.9's rotate(angle around y) and scale(-0.05, -0.05, 0.05), from basePt
     private Vec3 warningCorner(double angle, double u, double v) {
         double x = -0.05 * u;
         return basePt.add(x * Math.cos(angle), -0.05 * v, -x * Math.sin(angle));

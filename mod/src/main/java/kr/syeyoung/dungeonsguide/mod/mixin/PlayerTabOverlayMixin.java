@@ -29,7 +29,6 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(PlayerTabOverlay.class)
 public class PlayerTabOverlayMixin {
-    // 1.8.9 replaced vanilla's tab entries with CustomNetworkPlayerInfo, 26.1 lets listeners replace the name vanilla built
     @ModifyReturnValue(method = "getNameForDisplay", at = @At("RETURN"))
     private Component dungeonsguide$tabName(Component name, @Local(argsOnly = true) PlayerInfo info) {
         TabListNameFormatEvent event = new TabListNameFormatEvent(info, name);

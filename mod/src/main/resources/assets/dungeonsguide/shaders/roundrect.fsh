@@ -1,6 +1,5 @@
 #version 330
 
-// 1.8.9: uniform float radius / vec2 halfSize / vec2 centerPos / float smoothness
 layout(std140) uniform RoundRect {
     float radius;
     vec2 halfSize;

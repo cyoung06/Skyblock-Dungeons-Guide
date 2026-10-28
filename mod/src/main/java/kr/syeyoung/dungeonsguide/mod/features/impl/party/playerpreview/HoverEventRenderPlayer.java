@@ -28,7 +28,6 @@ import java.util.Objects;
 
 public class HoverEventRenderPlayer implements HoverEvent {
     public static final MapCodec<HoverEventRenderPlayer> CODEC = ExtraCodecs.STORED_GAME_PROFILE.xmap(HoverEventRenderPlayer::new, HoverEventRenderPlayer::getGameProfile);
-    // added to HoverEvent.Action by HoverEventActionMixin
     private static HoverEvent.Action action;
 
     @Getter
@@ -57,5 +56,4 @@ public class HoverEventRenderPlayer implements HoverEvent {
         return Objects.hash(gameProfile.id());
     }
 
-    // 1.8.9's getValue (a text hover carrying the uuid) has no 26.1 counterpart: vanilla draws no tooltip for this action
 }

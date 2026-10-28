@@ -128,7 +128,6 @@ public class PlayerProfileParser {
         return NbtIo.readCompressed(new ByteArrayInputStream(Base64.getDecoder().decode(nbt)), NbtAccounter.unlimitedHeap());
     }
 
-    // the api still serves 1.8.9 item nbt: vanilla's DataFixer brings it from before 1.9 (99) to current, then the item codec reads it (D125)
     private static final int LEGACY_ITEM_DATA_VERSION = 99;
     public static ItemStack deserializeNBT(CompoundTag nbtTagCompound) {
         if (nbtTagCompound.isEmpty()) return null;

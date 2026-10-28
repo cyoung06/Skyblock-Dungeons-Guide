@@ -33,7 +33,6 @@ public abstract class RenderPlayerEvent extends DGEvent implements Cancelable {
     public final Entity entity;
     public final EntityRenderer<?, ?> renderer;
     public final float partialRenderTick;
-    // entity position relative to the camera
     public final double x;
     public final double y;
     public final double z;

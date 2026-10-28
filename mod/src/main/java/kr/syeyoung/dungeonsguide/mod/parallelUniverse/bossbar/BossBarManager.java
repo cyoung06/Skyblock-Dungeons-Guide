@@ -24,11 +24,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
-// 1.8.9 had a single BossStatus, 26.1 servers send any number of boss bars
 public class BossBarManager {
     public static final BossBarManager INSTANCE = new BossBarManager();
 
-    // insertion order is the order vanilla draws them in
     private Map<UUID, BossBar> bossBars = new LinkedHashMap<>();
 
     public void addBossBar(BossBar bossBar) {

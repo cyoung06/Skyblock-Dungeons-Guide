@@ -135,7 +135,6 @@ public class RaytraceHelper {
 
     public static List<PossibleClickingSpot> raycast(DGWorld w, BlockPos target, CalculateIsBlocked calculateIsBlocked) {
         BlockState targetBlockState = w.getBlockState(target);
-        // 1.8.9's selected bounding box is the outline shape, empty ones (air) were the full block
         VoxelShape targetShape = targetBlockState.getShape(w.asVanilla(), target);
         AABB bb = targetShape.isEmpty() ? new AABB(target) : targetShape.bounds().move(target);
 
@@ -194,7 +193,6 @@ public class RaytraceHelper {
                                         }
 
                                         int idx = 0;
-                                        // 1.8.9 also sorted by Material (rock / anvil / iron, wood / plants / vine), 26.1's mineable tags cover it
                                         if ("pickaxe".equals(breakData.toolClass)) {
                                             idx = 0;
                                         } else if ("axe".equals(breakData.toolClass)) {
@@ -230,7 +228,6 @@ public class RaytraceHelper {
                                         }
 
                                         int idx = 0;
-                                        // 1.8.9 also sorted by Material (rock / anvil / iron, wood / plants / vine), 26.1's mineable tags cover it
                                         if ("pickaxe".equals(breakData.toolClass)) {
                                             idx = 0;
                                         } else if ("axe".equals(breakData.toolClass)) {
@@ -715,7 +712,6 @@ public class RaytraceHelper {
                 BlockPos from_bpos = new BlockPos(from_x_floor, from_y_floor, from_z_floor);
                 {
                     BlockState from_state = driWorld.getBlockState(from_bpos);
-                    // 1.8.9's canCollideCheck + collisionRayTrace: a ray against the outline shape, which is empty for air / liquids
                     HitResult movingobjectposition2 = from_state.getShape(getter, from_bpos).clip(from, to, from_bpos);
                     if (movingobjectposition2 != null) {
                         blocks.add(from_bpos);

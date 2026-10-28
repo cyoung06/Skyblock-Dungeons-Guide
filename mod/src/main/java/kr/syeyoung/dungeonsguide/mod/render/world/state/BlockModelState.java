@@ -36,7 +36,6 @@ import org.joml.Matrix4f;
 @AllArgsConstructor
 public class BlockModelState {
     private final BlockState blockState;
-    // the model's block space (0..1) to world
     private final Matrix4f transform;
     // false: drawn over the world, tested only against other see-through block models
     private final boolean depth;

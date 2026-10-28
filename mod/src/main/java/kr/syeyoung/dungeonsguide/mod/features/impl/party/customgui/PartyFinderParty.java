@@ -52,7 +52,6 @@ public class PartyFinderParty {
         return party;
     }
 
-    // 1.8.9's display.Name / display.Lore, the name and lore components on 26.1 (D125)
     private static PartyFinderParty fromItemNbt(ItemStack itemStack) {
         if (itemStack.has(DataComponents.LORE)) {
             String name = TextUtils.getFormattedName(itemStack);

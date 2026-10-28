@@ -59,11 +59,9 @@ public class SkinFetcher {
         CompletableFuture<SkinSet> skinSet2 = new CompletableFuture<>();
         currentReq.put(gameProfile.id().toString(), skinSet2);
             ApiFetcher.ex.submit(() -> {
-                // 1.8.9's fillProfileProperties kept the profile as is when it failed
                 ProfileResult profileResult = Minecraft.getInstance().services().sessionService().fetchProfile(gameProfile.id(), true);
                 GameProfile gameProfile1 = profileResult == null ? gameProfile : profileResult.profile();
 
-                // 1.8.9's loadProfileTextures callback (only called when there was a skin), the skin manager's PlayerSkin on 26.1
                 Minecraft.getInstance().getSkinManager().get(gameProfile1).thenAccept(playerSkin -> playerSkin.ifPresent(skin -> {
                     if (skin.cape() != null)
                         skinSet.setCapeLoc(skin.cape().texturePath());

@@ -41,7 +41,6 @@ public class ChatDetectorProbablyUniversal implements IChatDetector {
         boolean correspondingEvFound = false;
         for (Component iChatComponent : SurgicalReplacer.iterate(chatComponent)) {
             ClickEvent ev = iChatComponent.getStyle().getClickEvent();
-            // 1.8.9's ClickEvent.getValue(), the command of the run / suggest command events on 26.1
             String value = ev instanceof ClickEvent.RunCommand runCommand ? runCommand.command()
                     : ev instanceof ClickEvent.SuggestCommand suggestCommand ? suggestCommand.command() : null;
             if (value != null) {

@@ -110,7 +110,6 @@ public class WidgetEtherwarpPreview extends AnnotatedExportOnlyWidget implements
                     40+lw*16, -64);
         }
 
-        // 1px gl lines
         double lineWidth = 1 / scaleFactor;
         context.drawLine(0, 8, 2*halfWidth/3, 8, lineWidth, 0xFFFFFFFF);
         context.drawLine(0, 0, 0, offset* 16, lineWidth, 0xFFFFFFFF);

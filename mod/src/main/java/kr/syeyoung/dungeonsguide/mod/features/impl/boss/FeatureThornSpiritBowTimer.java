@@ -96,7 +96,6 @@ public class FeatureThornSpiritBowTimer extends TextHUDFeature {
     @DGEventHandler
     public void onTitle(TitleEvent event) {
         if (!(SkyblockStatus.isOnDungeon() && DungeonsGuide.getDungeonsGuide().getDungeonFacade().getContext() != null && DungeonsGuide.getDungeonsGuide().getDungeonFacade().getContext().getBossfightProcessor() instanceof BossfightProcessorThorn)) return;
-        // 1.8.9's S45PacketTitle.getMessage(), the title / subtitle text packets on 26.1 (null for times / clear)
         Component text = event.getPacketTitle() instanceof ClientboundSetTitleTextPacket titleText ? titleText.text()
                 : event.getPacketTitle() instanceof ClientboundSetSubtitleTextPacket subtitleText ? subtitleText.text() : null;
         if (text != null && TextUtils.getFormattedText(text) != null && TextUtils.getFormattedText(text).contains("picked up")) {

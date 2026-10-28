@@ -29,7 +29,6 @@ public abstract class ScreenRenderEvent extends DGEvent {
     public final int mouseX;
     public final int mouseY;
     public final float renderPartialTicks;
-    // handlers draw here, in gui units; rendered into an image after dispatch (D126)
     public final RenderingContext context;
 
     protected ScreenRenderEvent(Screen gui, GuiGraphicsExtractor graphics, int mouseX, int mouseY, float renderPartialTicks, RenderingContext context) {

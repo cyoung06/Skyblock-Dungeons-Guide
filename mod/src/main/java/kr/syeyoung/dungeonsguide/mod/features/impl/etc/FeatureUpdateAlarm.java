@@ -41,7 +41,6 @@ public class FeatureUpdateAlarm extends SimpleFeature  {
         if (stompPayload != null) {
             ChatTransmitter.addToQueue(Component.literal(stompPayload));
             stompPayload = null;
-            // 1.8.9's random.successful_hit
             Minecraft.getInstance().player.playSound(SoundEvents.ARROW_HIT_PLAYER, 1f,1f);
         }
     }

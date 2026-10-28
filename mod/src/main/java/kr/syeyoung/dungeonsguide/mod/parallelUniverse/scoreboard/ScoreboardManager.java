@@ -64,7 +64,6 @@ public class ScoreboardManager {
     }
 
 
-    // 26.1's reset score packet without an objective
     public void removeScoreFromAll(String playerName) {
         for (Objective objective : objectiveMap.values()) {
             objective.removeScore(playerName);

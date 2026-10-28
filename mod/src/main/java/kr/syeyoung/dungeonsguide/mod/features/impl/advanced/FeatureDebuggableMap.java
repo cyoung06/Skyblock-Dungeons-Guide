@@ -56,7 +56,6 @@ public class FeatureDebuggableMap extends RawRenderingGuiFeature  {
     }
 
 
-    // drawn straight from the texture view, like ImageTexture
     DynamicTexture dynamicTexture = new DynamicTexture(() -> "dungeons/map/", 128, 128, false);
 
     @Override

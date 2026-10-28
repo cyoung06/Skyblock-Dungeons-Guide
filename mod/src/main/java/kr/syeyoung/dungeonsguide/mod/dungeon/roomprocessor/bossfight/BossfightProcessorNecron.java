@@ -236,7 +236,6 @@ public class BossfightProcessorNecron extends GeneralBossfightProcessor {
         if (entity instanceof EndCrystal) {
             return MarkerData.fromEntity(entity, MarkerData.MobType.CRYSTALS, 53);
         } else if (entity instanceof WitherSkeleton) {
-            // 1.8.9's skeleton type 1 is its own class on 26.1
             return MarkerData.fromEntity(entity, MarkerData.MobType.ENEMIES, 56);
         } else if (entity instanceof WitherBoss) {
             int idx = -1;

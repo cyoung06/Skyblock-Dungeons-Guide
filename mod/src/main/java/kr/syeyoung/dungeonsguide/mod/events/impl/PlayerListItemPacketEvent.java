@@ -28,6 +28,5 @@ import kr.syeyoung.dungeonsguide.mod.events.DGEvent;
 @EqualsAndHashCode(callSuper=false)
 @AllArgsConstructor
 public class PlayerListItemPacketEvent extends DGEvent {
-    // 1.8.9: S38PacketPlayerListItem. removals are a separate packet on 26.1
     private ClientboundPlayerInfoUpdatePacket packetPlayerListItem;
 }

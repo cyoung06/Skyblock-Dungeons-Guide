@@ -42,7 +42,6 @@ public class TextUtils {
 
     private static final Pattern INTEGER_CHARACTERS = Pattern.compile("[^0-9]");
 
-    // a copy that shares no mutable component with the original (Component.copy() shares the siblings). D106
     public static MutableComponent copyComponent(Component component) {
         ComponentContents contents = component.getContents();
         if (contents instanceof TranslatableContents translatable) {
@@ -96,7 +95,6 @@ public class TextUtils {
         }
     }
 
-    // 1.8.9's ChatStyle.getFormattingCode order
     private static String getFormattingCode(Style style) {
         StringBuilder sb = new StringBuilder();
         if (style.getColor() != null) {

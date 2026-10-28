@@ -42,7 +42,6 @@ public class WidgetToolEdit extends AnnotatedImportOnlyWidget {
         public Function<ToolMaterialType, String> converter;
     }
 
-    // tools are saved by their 1.8.9 registry names (D125)
     @AllArgsConstructor
     public enum ToolMaterialType {
         NONE(3, null, null, null),
@@ -58,7 +57,6 @@ public class WidgetToolEdit extends AnnotatedImportOnlyWidget {
         public String shovel;
         public String axe;
 
-        // 1.8.9 read the tool's material, the saved name has it
         public static ToolMaterialType of(String tool) {
             for (ToolMaterialType value : values()) {
                 if (tool.equals(value.pickaxe) || tool.equals(value.shovel) || tool.equals(value.axe)) return value;

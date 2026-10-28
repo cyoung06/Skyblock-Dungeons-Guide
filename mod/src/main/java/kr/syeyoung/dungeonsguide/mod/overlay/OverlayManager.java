@@ -60,10 +60,8 @@ public class OverlayManager {
     @Getter
     private final OverlayManagerRootWidget root = new OverlayManagerRootWidget();
 
-    // under the hud and over screens are drawn in the same frame, each needs its own image (D76)
     private final StencilImage hudImage = new StencilImage("Dungeons Guide hud");
     private final StencilImage screenImage = new StencilImage("Dungeons Guide overlay");
-    // glfw doesn't tell screens whether a key press is a repeat
     private final Set<Integer> pressedKeys = new HashSet<>();
 
 
@@ -162,16 +160,13 @@ public class OverlayManager {
             ));
             profiler.pop();
         }
-        // DG draws in framebuffer pixels into its own image (D74/D76), which goes back as one gui element
         RenderingContext context = new RenderingContext(displayHeight);
         view.getRenderer().doRender(partialTicks, context, view);
         image.ensureSize(displayWidth, displayHeight);
         DGGuiRenderer.INSTANCE.submit(image, context.getStates());
         image.extractComposite(graphics);
 
-        // 1.8.9 only set the native cursor when the overlay changed it, so vanilla's own cursor stays otherwise
         if (view.getCurrentCursor() != EnumCursor.DEFAULT) {
-            // 1.8.9's setNativeCursor(null) was the default cursor; 26.1 can't request null, vanilla's default stays
             CursorType cursor = GLCursors.getCursor(view.getCurrentCursor());
             if (cursor != null) graphics.requestCursor(cursor);
         }
@@ -338,7 +333,6 @@ public class OverlayManager {
         int i = GuiScreenAdapter.getMouseX();
         int j = GuiScreenAdapter.getMouseY();
 
-        // D97: lwjgl2's dwheel was 120 per notch
         int wheel = (int) (mouseInputEvent.scrollY * 120);
         if (wheel != 0) {
             try {

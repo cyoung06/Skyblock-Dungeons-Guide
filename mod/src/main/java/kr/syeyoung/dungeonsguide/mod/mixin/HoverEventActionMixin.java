@@ -22,13 +22,10 @@ import kr.syeyoung.dungeonsguide.mod.features.impl.party.playerpreview.HoverEven
 import net.minecraft.network.chat.HoverEvent;
 import org.spongepowered.asm.mixin.Mixin;
 
-// 1.8.9 subclassed HoverEvent for HoverEventRenderPlayer; 26.1's actions are a closed enum, DG's action is added here.
-// not allowed from the server, so the action codec rejects it
 @Mixin(HoverEvent.Action.class)
 public enum HoverEventActionMixin {
     DUNGEONSGUIDE_RENDER_PLAYER("dungeonsguide:render_player", false, HoverEventRenderPlayer.CODEC);
 
-    // shadows HoverEvent.Action's constructor
     HoverEventActionMixin(String name, boolean allowFromServer, MapCodec<? extends HoverEvent> codec) {
     }
 }

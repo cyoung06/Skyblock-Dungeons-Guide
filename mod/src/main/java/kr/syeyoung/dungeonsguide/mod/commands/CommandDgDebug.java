@@ -395,7 +395,6 @@ public class CommandDgDebug {
 
     @DGCommand("dgdebug brand")
     public void brandCommand() {
-        // 1.8.9 kept the server brand on the player, 26.1 on the connection
         String serverBrand = Minecraft.getInstance().getConnection().serverBrand();
         ChatTransmitter.addToQueue(Component.literal("§eDungeons Guide §7:: §e" + serverBrand));
     }
@@ -1428,7 +1427,6 @@ public class CommandDgDebug {
         }).start();
     }
 
-    // D109: converts the loaded 1.8.9 room data to format 2 and writes it with the legacy block table, to be copied into the resources
     @DGCommand("dgdebug convertroomdata")
     public void convertRoomDataCommand() {
         try {
@@ -1449,8 +1447,6 @@ public class CommandDgDebug {
     @DGCommand("dgdebug itemcapture")
     public void itemCaptureCommand() {
         try {
-            // writes the held item and the open container's slots as their component json, to measure Hypixel's 26.1
-            // item layout (custom_data, profile, lore) for D125
             Minecraft mc = Minecraft.getInstance();
             DynamicOps<JsonElement> ops = mc.level.registryAccess().createSerializationContext(JsonOps.INSTANCE);
 
@@ -1502,7 +1498,6 @@ public class CommandDgDebug {
     @DGCommand("dgdebug fullbright {gamma}")
     @DGCommand("dgdebug gimmebright {gamma}")
     public void fullBrightCommand(int gamma) {
-        // 1.8.9 took any gamma; 26.1's option validates 0..1, so the value is written directly (class tweaker)
         Minecraft.getInstance().options.gamma().value = (double) gamma;
     }
 

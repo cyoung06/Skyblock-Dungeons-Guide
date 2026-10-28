@@ -61,7 +61,6 @@ public class WidgetPresetList extends AnnotatedImportOnlyWidget {
         this.mapConfiguration = configuration;
 
         List<Preset> foundPresets = new ArrayList<>();
-        // 1.8.9's getAllResources threw IOException, getResourceStack doesn't
         for (Resource allResource : Minecraft.getInstance().getResourceManager().getResourceStack(Identifier.parse("dungeonsguide:map/presets.json"))) {
             try (InputStream inputStream = allResource.open();
                  JsonReader jsonReader = new JsonReader(new InputStreamReader(inputStream))) {
@@ -112,8 +111,6 @@ public class WidgetPresetList extends AnnotatedImportOnlyWidget {
             this.name.setValue(preset.getName());
             this.description.setValue(preset.getDescription());
             this.icon.setValue("dungeonsguide:textures/dglogox128.png");
-            // 1.8.9's pack names are file names, 26.1's pack ids are prefixed with "file/".
-            // the icon is loaded the way vanilla's pack screen does, under a dungeonsguide identifier
             for (Pack pack : Minecraft.getInstance().getResourcePackRepository().getAvailablePacks()) {
                 if (pack.getId().equals("file/" + preset.getTexturePack())) {
                     try (PackResources packResources = pack.open()) {

@@ -22,7 +22,6 @@ import kr.syeyoung.dungeonsguide.mod.events.DGEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
-// client side only. 1.8.9: LivingEvent.LivingUpdateEvent
 public class LivingTickEvent extends DGEvent {
     public final LivingEntity entityLiving;
     public final Entity entity;

@@ -32,7 +32,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(SoundManager.class)
 public class SoundManagerMixin {
-    // 1.8.9: PlaySoundEvent
     @Inject(method = "play", at = @At("HEAD"), cancellable = true)
     private void dungeonsguide$onPlay(SoundInstance _sound, CallbackInfoReturnable<SoundEngine.PlayResult> cir, @Local(argsOnly = true) LocalRef<SoundInstance> sound) {
         PlaySoundEvent event = new PlaySoundEvent(sound.get().getIdentifier().getPath(), sound.get());

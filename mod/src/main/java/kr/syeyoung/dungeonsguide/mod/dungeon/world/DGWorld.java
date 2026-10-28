@@ -24,9 +24,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * Every world DG reads blocks from: the client level or one of DG's own (D108).
- */
 public interface DGWorld extends ICoordinateMap<BlockState> {
     default BlockState getBlockState(BlockPos pos) {
         return getBlock(pos.getX(), pos.getY(), pos.getZ());
@@ -41,7 +38,6 @@ public interface DGWorld extends ICoordinateMap<BlockState> {
         return blockState == null || blockState.isAir();
     }
 
-    // for vanilla's collision / hardness / raytrace / block model calls
     default BlockAndTintGetter asVanilla() {
         return new DGWorldVanillaAdapter(this);
     }

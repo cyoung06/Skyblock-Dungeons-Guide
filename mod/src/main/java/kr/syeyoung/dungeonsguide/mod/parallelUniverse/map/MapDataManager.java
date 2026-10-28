@@ -29,7 +29,6 @@ public class MapDataManager {
     public static final MapDataManager INSTANCE = new MapDataManager();
     private Map<Integer, MapItemSavedData> mapDataMap = new HashMap<>();
 
-    // 26.1 maps are created with the packet's scale / lock and the current dimension, like the client does
     public MapItemSavedData createMapData(int mapId, byte scale, boolean locked) {
         if (!mapDataMap.containsKey(mapId))
             mapDataMap.put(mapId, MapItemSavedData.createForClient(scale, locked, Minecraft.getInstance().level.dimension()));

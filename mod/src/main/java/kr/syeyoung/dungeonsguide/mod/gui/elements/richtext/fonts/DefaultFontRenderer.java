@@ -31,10 +31,6 @@ import net.minecraft.util.FormattedCharSequence;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * DG's rich text on top of vanilla's Font: glyph metrics and drawing come from vanilla (D79).
- * Vanilla's font is 8 units tall at text size 8.
- */
 public class DefaultFontRenderer implements FontRenderer {
     public static DefaultFontRenderer DEFAULT_RENDERER = new DefaultFontRenderer();
 
@@ -72,7 +68,6 @@ public class DefaultFontRenderer implements FontRenderer {
 
     private void render(RenderingContext context, FlatTextSpan lineElement, double x, double y, boolean isShadow) {
         ITextStyle textStyle = lineElement.textStyle;
-        // the shadow pass draws everything in the shadow color
         Shader textShader = isShadow ? textStyle.getShadowShader() : textStyle.getTextShader();
 
         List<TextRenderable> glyphs = new ArrayList<>();
@@ -91,7 +86,6 @@ public class DefaultFontRenderer implements FontRenderer {
 
         double scale = textStyle.getSize() / 8.0;
         context.pose().pushMatrix();
-        // 1.8.9 drew glyphs one unit down
         context.pose().translate((float) x, (float) (y + 1));
         context.pose().scale((float) scale, (float) scale);
         context.drawGlyphs(glyphs);

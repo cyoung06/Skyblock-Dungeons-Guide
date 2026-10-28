@@ -24,7 +24,6 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
 
-// same startup order as the 1.8.9 loader's preInit -> init
 public class FabricEntrypoint implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
@@ -35,9 +34,6 @@ public class FabricEntrypoint implements ClientModInitializer {
 
         FabricEventBridge.register();
 
-        // the client entrypoint runs inside Minecraft's constructor, before the window, render device, resources and
-        // font exist (1.8.9's init ran after them); DG starts once the client has started. FabricEventBridge's own
-        // CLIENT_STARTED listener (cursors, D86) was registered first, so it still runs before auth and DG
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
             try {
                 AuthManager.getInstance().init();

@@ -33,7 +33,6 @@ import java.util.List;
 
 @Mixin(Player.class)
 public class PlayerMixin {
-    // 1.8.9: PlayerEvent.NameFormat
     @ModifyExpressionValue(method = "getDisplayName", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;getName()Lnet/minecraft/network/chat/Component;"))
     private Component dungeonsguide$formatName(Component name, @Share("dungeonsguide$prefixes") LocalRef<List<Component>> prefixes) {
         Player self = (Player) (Object) this;
@@ -44,7 +43,6 @@ public class PlayerMixin {
         return event.displayname;
     }
 
-    // 1.8.9: Forge's getDisplayName put the player's prefixes before the team-formatted name
     @ModifyExpressionValue(method = "getDisplayName", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/scores/PlayerTeam;formatNameForTeam(Lnet/minecraft/world/scores/Team;Lnet/minecraft/network/chat/Component;)Lnet/minecraft/network/chat/MutableComponent;"))
     private MutableComponent dungeonsguide$prefixName(MutableComponent formatted, @Share("dungeonsguide$prefixes") LocalRef<List<Component>> prefixes) {
         if (prefixes.get() == null || prefixes.get().isEmpty()) return formatted;

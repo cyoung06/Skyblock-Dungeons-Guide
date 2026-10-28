@@ -36,11 +36,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * 1.8.9's blocks as groups of 26.1 block states (D110 / D112). In 1.8.9 `block == Blocks.stone` also matched granite,
- * so code checks keep that meaning through these instead of comparing 26.1 blocks.
- * The table is /legacy_blocks.json, written by dgdebug convertroomdata from vanilla's flattening data.
- */
 @AllArgsConstructor
 public enum LegacyBlock {
     AIR(0), STONE(1), PLANKS(5), BEDROCK(7), SPONGE(19), DISPENSER(23), WOOL(35), DOUBLE_STONE_SLAB(43), STONE_SLAB(44),
@@ -60,7 +55,6 @@ public enum LegacyBlock {
 
     public static final String TABLE = "/legacy_blocks.json";
 
-    // legacy id << 4 | meta for each 26.1 state, and the state for each legacy id << 4 | meta
     private static Map<BlockState, Integer> legacyByState;
     private static Map<Block, Integer> legacyByBlock;
     private static BlockState[] stateByLegacy;
@@ -78,7 +72,7 @@ public enum LegacyBlock {
                 int legacy = entry.get("id").getAsInt() << 4 | entry.get("meta").getAsInt();
                 BlockState state = parse(entry.get("state").getAsString());
                 byLegacy[legacy] = state;
-                // ids / metas 1.8.9 didn't have came out as air, they don't map back
+                // CLAUDE: ids / metas 1.8.9 didn't have came out as air, they don't map back
                 if (state.isAir() && legacy >> 4 != 0) continue;
                 byState.putIfAbsent(state, legacy);
                 byBlock.putIfAbsent(state.getBlock(), legacy);
@@ -131,7 +125,6 @@ public enum LegacyBlock {
         return state(legacyId, meta);
     }
 
-    // null is no block, like 1.8.9's null == Blocks.x
     public boolean is(BlockState state) {
         return state != null && legacyId(state) == legacyId;
     }

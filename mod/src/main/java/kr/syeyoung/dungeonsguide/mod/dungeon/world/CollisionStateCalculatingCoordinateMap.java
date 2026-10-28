@@ -56,7 +56,6 @@ public class CollisionStateCalculatingCoordinateMap implements ICoordinateMap<Co
         this.roomBounds = roomBounds;
     }
 
-    // 1.8.9's Block.canCollideCheck(state, true): everything but air, and liquid sources
     private static boolean canCollideCheck(BlockState state) {
         if (!state.getFluidState().isEmpty()) return state.getFluidState().isSource();
         return !state.isAir();
@@ -84,7 +83,6 @@ public class CollisionStateCalculatingCoordinateMap implements ICoordinateMap<Co
         int maxZ = Mth.floor(bb.maxZ + 1.0D);
 
         AABB testBox = bb.move(0, -0.5, 0);
-        // 26.1: the blocks' collision shapes against the player box (D: VoxelShape ops), 1.8.9 collected box lists
         VoxelShape playerShape = Shapes.create(bb);
         VoxelShape testShape = Shapes.create(testBox);
         BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos();
@@ -107,7 +105,6 @@ public class CollisionStateCalculatingCoordinateMap implements ICoordinateMap<Co
                     Block block = state.getBlock();
                     VoxelShape shape = state.getCollisionShape(world, blockPos).move(k1, i2, l1);
 
-                    // on ground: a box under the player box moved down, ending at or below the feet
                     if (!isOnGround) {
                         for (AABB box : Shapes.join(shape, testShape, BooleanOp.AND).toAabbs()) {
                             if (box.maxY <= bb.minY) {

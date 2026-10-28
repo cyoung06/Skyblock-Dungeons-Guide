@@ -65,12 +65,9 @@ public class DungeonRoomInfo {
     private short shape;
     private byte color;
 
-    // D111: version 1 is 1.8.9's legacy ids, version 2 indexes `palette` (converted by dgdebug convertroomdata)
     private int formatVersion = 1;
-    // version 2: block state strings
     private List<String> palette;
 
-    // the matching layer. version 1: legacy block ids, version 2: palette indices. -1 is ignored
     @JsonDeserialize(using = DungeonRoomInfoBlocksDeserializer.class)
     @JsonSerialize(using = DungeonRoomInfoBlocksSerializer.class)
     private int[][] blocks;
@@ -165,7 +162,6 @@ public class DungeonRoomInfo {
         return index;
     }
 
-    // state at a palette index, null for -1 (ignored in the matching layer)
     public BlockState getPaletteState(int index) {
         return index == -1 ? null : getPaletteStates()[index];
     }
@@ -179,7 +175,6 @@ public class DungeonRoomInfo {
         return getBlock(offsetPoint.getX(), offsetPoint.getY(), offsetPoint.getZ(), rot);
     }
 
-    // 1.8.9 rotated a block's first direction property, unless it pointed up or down
     private static EnumProperty<Direction> directionProperty(BlockState blockState) {
         for (Property<?> property : blockState.getProperties()) {
             if (property instanceof EnumProperty<?> enumProperty && enumProperty.getValueClass() == Direction.class)

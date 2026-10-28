@@ -24,7 +24,6 @@ import lombok.AllArgsConstructor;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.commands.CommandBuildContext;
 
-// fired whenever minecraft builds the client command dispatcher (on joining a server)
 @AllArgsConstructor
 public class RegisterCommandEvent extends DGEvent {
     public final CommandDispatcher<FabricClientCommandSource> dispatcher;

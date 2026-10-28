@@ -57,7 +57,6 @@ public class ChatProcessor {
     private Queue<Tuple<String, Runnable>> chatQueue = new ConcurrentLinkedQueue<>();
 
 
-    // 1.8.9's EntityPlayerSP.sendChatMessage sent commands as chat, 26.1 sends them separately
     public static void sendChatMessage(String message) {
         if (message.startsWith("/"))
             Minecraft.getInstance().getConnection().sendCommand(message.substring(1));

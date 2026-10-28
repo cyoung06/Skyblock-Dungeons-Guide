@@ -33,9 +33,6 @@ import org.joml.Matrix3x2f;
 
 import java.awt.*;
 
-/**
- * A 16x16 gui item (D100). DGGuiRenderer renders it into its item atlas and sets the slot before drawing.
- */
 public class ItemState implements DGRenderState {
     private final Matrix3x2f pose;
     @Getter
@@ -55,7 +52,6 @@ public class ItemState implements DGRenderState {
         this.stencilMask = stencilMask;
     }
 
-    // the atlas holds premultiplied colors
     @Override
     public RenderPipeline pipeline() {
         return RenderPipelines.GUI_TEXTURED_PREMULTIPLIED_ALPHA;

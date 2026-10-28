@@ -35,20 +35,17 @@ public class InstaBreakFactorCalculatingCoordinateMap implements ICoordinateMap<
         BlockState iBlockState = map.getBlock(x, y, z);
         BlockPos.MutableBlockPos pos = blockPosThreadLocal.get();
         pos.set(x, y, z);
-        // 1.8.9 only had one air
         if (iBlockState.isAir()) return BreakFactor.INSTABREAK;
         BlockAndTintGetter getter = world.asVanilla();
         float hardness = iBlockState.getDestroySpeed(getter, pos);
         if (hardness < 0) {
             return BreakFactor.NO;
         } else if (algorithmSetting.getPickaxeSpeed() > 0 &&
-                // the stub pickaxe is the highest level, so it's the correct tool for anything mineable with a pickaxe (D125)
                 ((iBlockState.is(BlockTags.MINEABLE_WITH_PICKAXE) &&
                         hardness <= algorithmSetting.getPickaxeSpeed() / 30.0) ||
                         (hardness <= algorithmSetting.getPickaxeSpeed() / 100.0))
         ) {
         } else if (algorithmSetting.getShovelSpeed() > 0
-                // forge's isToolEffective("shovel") / ("axe") is vanilla's mineable tags on 26.1
                 && iBlockState.is(BlockTags.MINEABLE_WITH_SHOVEL)
                 && hardness <= algorithmSetting.getShovelSpeed()) {
         } else if (algorithmSetting.getAxeSpeed() > 0 && iBlockState.is(BlockTags.MINEABLE_WITH_AXE) && hardness <= algorithmSetting.getAxeSpeed()) {

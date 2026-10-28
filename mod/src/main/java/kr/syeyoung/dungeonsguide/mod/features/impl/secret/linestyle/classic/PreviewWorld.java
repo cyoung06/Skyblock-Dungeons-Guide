@@ -58,7 +58,6 @@ public class PreviewWorld implements DGWorld {
         return Integer.MIN_VALUE;
     }
 
-    // 1.8.9 worlds were 256 high
     @Override
     public int getMinY() {
         return 0;

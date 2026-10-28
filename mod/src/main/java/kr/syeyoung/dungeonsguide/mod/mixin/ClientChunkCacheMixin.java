@@ -41,8 +41,6 @@ import java.util.function.Consumer;
 
 @Mixin(ClientChunkCache.class)
 public class ClientChunkCacheMixin {
-    // D105: a chunk the client already has, sent again. 1.8.9 dg listened to the chunk packet to see these block changes,
-    // here the new sections are decoded from a copy of the buffer and compared with the loaded chunk
     @WrapOperation(method = "replaceWithPacketData", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/chunk/LevelChunk;replaceWithPacketData(Lnet/minecraft/network/FriendlyByteBuf;Ljava/util/Map;Ljava/util/function/Consumer;)V", ordinal = 1))
     private void dungeonsguide$onChunkResend(LevelChunk chunk, FriendlyByteBuf buffer, Map<Heightmap.Types, long[]> heightmaps,
                                               Consumer<ClientboundLevelChunkPacketData.BlockEntityTagOutput> blockEntities, Operation<Void> original) {

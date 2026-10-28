@@ -27,9 +27,6 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 
-/**
- * 1.8.9's GL_LINE_STRIP / GL_LINE_LOOP: a color per point. 26.1 only draws line segments, so each pair of points is one.
- */
 @AllArgsConstructor
 public class LineStripState implements DGWorldRenderState {
     private final List<Vec3> points;

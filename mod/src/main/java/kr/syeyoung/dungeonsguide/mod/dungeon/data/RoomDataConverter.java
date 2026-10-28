@@ -42,14 +42,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * One time conversion of 1.8.9 room data to format 2 (D109 / D111), run in a dev client by dgdebug convertroomdata.
- */
 public class RoomDataConverter {
-    // the data version vanilla's flattening produces
     private static final int FLATTENING_DATA_VERSION = 1451;
 
-    // legacy id << 4 | meta -> 26.1 state, through vanilla's 1.13 flattening table and the DataFixer
     @SuppressWarnings("unchecked")
     public static BlockState[] buildLegacyTable() {
         int current = SharedConstants.getCurrentVersion().dataVersion().version();
@@ -62,7 +57,6 @@ public class RoomDataConverter {
         return table;
     }
 
-    // what LegacyBlock reads
     public static void writeTable(BlockState[] table, File file) throws IOException {
         JsonArray entries = new JsonArray();
         for (int legacy = 0; legacy < table.length; legacy++) {
@@ -89,7 +83,6 @@ public class RoomDataConverter {
             }
         }
 
-        // the matching layer has block ids without meta, matching compares legacy ids (D110), so meta 0 stands in
         int[][] blocks = dungeonRoomInfo.getBlocks();
         for (int[] row : blocks) {
             for (int i = 0; i < row.length; i++) {

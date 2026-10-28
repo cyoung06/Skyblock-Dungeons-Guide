@@ -91,7 +91,6 @@ public class FeatureSimonSaysSolver extends SimpleFeature {
         if (!wasButton) {
             for (BlockPos allInBox : BlockPos.betweenClosed(new BlockPos(111, 120, 92), new BlockPos(111, 123, 95))) {
                 if (LegacyBlock.SEA_LANTERN.is(w.getBlockState(allInBox)) && !orderBuild.contains(allInBox)) {
-                    // betweenClosed reuses one mutable pos, 1.8.9's getAllInBox didn't
                     orderBuild.add(allInBox.immutable());
                 }
             }

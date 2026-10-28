@@ -25,7 +25,6 @@ import lombok.Setter;
 import net.minecraft.network.chat.Component;
 
 public class ChatReceivedEvent extends DGEvent implements Cancelable {
-    // same meaning as 1.8.9: 0 chat, 1 system, 2 action bar
     public final byte type;
     public Component message;
 

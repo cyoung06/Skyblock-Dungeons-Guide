@@ -356,7 +356,6 @@ public class WidgetPartyFinder extends AnnotatedImportOnlyWidget {
     }
     public void extractPage(ItemStack itemStack) {
         int page = -1;
-        // 1.8.9's display.Lore, the lore component on 26.1 (D125)
         List<String> nbtTagList1 = TextUtils.getFormattedLore(itemStack);
 
         for (int i = 0; i < nbtTagList1.size(); i++) {
@@ -394,7 +393,6 @@ public class WidgetPartyFinder extends AnnotatedImportOnlyWidget {
     public void extractSearch(ItemStack itemStack) {
         String dungeon="", floor="", text="", classLv="", dungeonLv="", sort="";
         {
-            // 1.8.9's display.Lore, the lore component on 26.1 (D125)
             List<String> nbtTagList1 = TextUtils.getFormattedLore(itemStack);
 
             for (int i = 0; i < nbtTagList1.size(); i++) {

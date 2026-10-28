@@ -23,10 +23,6 @@ import com.mojang.blaze3d.textures.GpuTexture;
 import com.mojang.blaze3d.textures.GpuTextureView;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 
-/**
- * A StencilImage as a vanilla texture, so render types can sample it by Identifier. Follows the image's resizes,
- * and doesn't close it: the image belongs to whoever renders into it.
- */
 public class StencilImageTexture extends AbstractTexture {
     private final StencilImage image;
 

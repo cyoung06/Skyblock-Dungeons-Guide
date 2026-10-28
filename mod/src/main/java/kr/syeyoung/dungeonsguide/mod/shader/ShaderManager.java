@@ -32,10 +32,6 @@ import net.minecraft.resources.Identifier;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * DG's shaders as render pipelines, one per shader (D78). Sources are assets/dungeonsguide/shaders/*.vsh / *.fsh,
- * shaders that only had a fragment part use vanilla's gui vertex shader, which does what the fixed function pipeline did.
- */
 public class ShaderManager {
     private static final Map<String, ShaderProgram> shaders = new HashMap<>();
 
@@ -73,14 +69,12 @@ public class ShaderManager {
                 .withFragmentShader(Identifier.fromNamespaceAndPath("dungeonsguide", shaderName))
                 .withUniform(uniformBlock, UniformType.UNIFORM_BUFFER)
                 .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
-                // shapes like the etherwarp preview's triangle fans come in any winding
                 .withCull(false)
                 .withVertexFormat(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS)
                 .build();
         shaders.put(name, new ShaderProgram(name, pipeline));
     }
 
-    // dgdebug reloadshader. vanilla reloads shader sources with resources, this drops the compiled programs
     public static void onResourceReload() {
         RenderSystem.getDevice().clearPipelineCache();
     }

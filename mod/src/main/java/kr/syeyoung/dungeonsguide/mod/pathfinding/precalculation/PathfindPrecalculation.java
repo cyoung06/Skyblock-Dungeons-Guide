@@ -153,7 +153,6 @@ public class PathfindPrecalculation {
             }
         }
 
-        // 1.8.9 freed the direct buffer through DirectByteBuffer.cleaner() by reflection, which java 25 doesn't allow
         private void cleanup() {
             if (killed.compareAndSet(false, true))
                 arena.close();
@@ -190,7 +189,6 @@ public class PathfindPrecalculation {
 //            byte[] b = new byte[xLen * yLen * zLen * 8];
 //            dataInputStream.readFully(b);
 
-            // use off-heap buffer. shared, the pathfinders read it from their own threads
             Arena arena = Arena.ofShared();
             ByteBuffer buffer;
             try {

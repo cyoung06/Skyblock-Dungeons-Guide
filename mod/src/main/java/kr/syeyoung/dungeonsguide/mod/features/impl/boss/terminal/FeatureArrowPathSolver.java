@@ -105,7 +105,6 @@ public class FeatureArrowPathSolver extends SimpleFeature {
         if (Minecraft.getInstance().player.blockPosition().distToLowCornerSqr(-2,120,75) > 400) return;
 
         if (System.currentTimeMillis() < nextUpdate) return;
-        // the frames' blocks: x -2, y 121..125, z 75..79 (D114)
         List<ItemFrame> frames = Minecraft.getInstance().level.getEntitiesOfClass(ItemFrame.class, new AABB(-2, 121, 75, -1, 126, 80), filter -> {
             // TODO: 1.8.9's getPosition() floored (x, y + 0.5, z), (x + 0.5, y + 0.5, z + 0.5) for the local player; blockPosition() floors (x, y, z)
             BlockPos pos = filter.blockPosition();
@@ -114,7 +113,6 @@ public class FeatureArrowPathSolver extends SimpleFeature {
             if (pos.getY() < 121 || pos.getY() > 125) return false;
             ItemStack itemStack = filter.getItem();
             if (itemStack.isEmpty()) return false;
-            // 1.8.9's wool item was every color
             if (itemStack.is(ItemTags.WOOL) || itemStack.is(Items.ARROW)) return true;
             return false;
         });
@@ -132,7 +130,6 @@ public class FeatureArrowPathSolver extends SimpleFeature {
             if (frame.getItem().is(Items.ARROW)) {
                 mapping[y][x] = frame.getRotation()+1;
                 bfsAble[y][x] = 9999;
-            // 1.8.9's lime wool metadata
             } else if (frame.getItem().is(Items.LIME_WOOL)) {
                 mapping[y][x] = 10; // starting
                 bfsAble[y][x] = 99999;

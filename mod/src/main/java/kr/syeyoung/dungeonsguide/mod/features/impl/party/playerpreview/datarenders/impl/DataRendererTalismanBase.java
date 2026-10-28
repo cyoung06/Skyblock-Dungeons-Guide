@@ -54,7 +54,6 @@ public abstract class DataRendererTalismanBase implements IDataRenderer {
     }
 
     private static DataRendererTalismans.Rarity getRarity(ItemStack itemStack) {
-        // 1.8.9's display.Lore, the lore component on 26.1 (D125)
         List<String> lore = TextUtils.getFormattedLore(itemStack);
         for (int i = 0; i < lore.size(); i++) {
             String line = lore.get(i);

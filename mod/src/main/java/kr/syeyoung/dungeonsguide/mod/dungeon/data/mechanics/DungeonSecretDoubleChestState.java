@@ -64,7 +64,6 @@ public class DungeonSecretDoubleChestState implements DungeonMechanicState, ISec
         if (LegacyBlock.CHEST.is(blockState) || LegacyBlock.TRAPPED_CHEST.is(blockState)) {
             ChestBlockEntity chest = (ChestBlockEntity) dungeonRoom.getContext().getWorld().getBlockEntity(pos);
             if (chest != null) {
-                // 1.8.9 read the open count, 26.1 only exposes the lid animation (D118)
                 if (chest.getOpenNess(1.0f) > 0) {
                     lastMeasuredChestStatus = DungeonSecretChestState.LastMeasuredChestStatus.OPENED;
                 } else {
@@ -94,7 +93,6 @@ public class DungeonSecretDoubleChestState implements DungeonMechanicState, ISec
             return SecretStatus.ERROR;
         } else {
             ChestBlockEntity chest = (ChestBlockEntity) dungeonRoom.getContext().getWorld().getBlockEntity(pos);
-            // 1.8.9 read the open count, 26.1 only exposes the lid animation (D118)
             if (chest != null && chest.getOpenNess(1.0f) > 0) {
                 return SecretStatus.FOUND;
             } else {

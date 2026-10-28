@@ -30,9 +30,6 @@ import net.minecraft.world.level.lighting.LevelLightEngine;
 import net.minecraft.world.level.material.FluidState;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * A DGWorld as vanilla's BlockAndTintGetter. No light (1.8.9's fake worlds returned 0) and no tint.
- */
 @AllArgsConstructor
 public class DGWorldVanillaAdapter implements BlockAndTintGetter {
     private final DGWorld world;
