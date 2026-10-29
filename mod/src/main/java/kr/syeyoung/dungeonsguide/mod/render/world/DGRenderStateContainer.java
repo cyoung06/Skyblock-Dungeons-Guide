@@ -19,6 +19,7 @@
 package kr.syeyoung.dungeonsguide.mod.render.world;
 
 import kr.syeyoung.dungeonsguide.mod.render.world.state.BeaconBeamRenderState;
+import kr.syeyoung.dungeonsguide.mod.render.world.state.BlockHighlightRenderState;
 import kr.syeyoung.dungeonsguide.mod.render.world.state.DGBlockModelRenderState;
 import kr.syeyoung.dungeonsguide.mod.render.world.state.FilledBoxRenderState;
 import kr.syeyoung.dungeonsguide.mod.render.world.state.LineStripRenderState;
@@ -44,4 +45,5 @@ public class DGRenderStateContainer {
     public final List<BeaconBeamRenderState> beaconBeamRenderStates = new ArrayList<>();
     public final List<DGBlockModelRenderState> blockModelRenderStates = new ArrayList<>();
     public final List<WorldImageRenderState> worldImageRenderStates = new ArrayList<>();
+    public final List<BlockHighlightRenderState> blockHighlightRenderStates = new ArrayList<>();
 }

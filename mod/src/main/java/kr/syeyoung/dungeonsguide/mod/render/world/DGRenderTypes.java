@@ -22,16 +22,19 @@ import com.mojang.blaze3d.pipeline.ColorTargetState;
 import com.mojang.blaze3d.pipeline.DepthStencilState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.CompareOp;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormatElement;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.client.renderer.rendertype.RenderSetup;
 import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.resources.Identifier;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class DGRenderTypes {
     private static final DepthStencilState NO_DEPTH = new DepthStencilState(CompareOp.ALWAYS_PASS, false);
@@ -109,6 +112,47 @@ public class DGRenderTypes {
             .withVertexFormat(REPEAT_FORMAT, VertexFormat.Mode.QUADS)
             .withDepthStencilState(NO_DEPTH)
             .build();
+    private static final DepthStencilState HIGHLIGHT_DEPTH_TESTED = new DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, false, -1.0F, -10.0F);
+    private static final DepthStencilState HIGHLIGHT_DEPTH_WRITE = new DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, true);
+    private static final DepthStencilState HIGHLIGHT_DEPTH_EQUAL = new DepthStencilState(CompareOp.EQUAL, false);
+    private static final ColorTargetState NO_COLOR = new ColorTargetState(Optional.empty(), ColorTargetState.WRITE_NONE);
+
+    private static RenderPipeline blockHighlightPipeline(String name, ColorTargetState color, DepthStencilState depth) {
+        return RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET)
+                .withLocation(Identifier.fromNamespaceAndPath("dungeonsguide", "pipeline/" + name))
+                .withVertexShader(Identifier.fromNamespaceAndPath("dungeonsguide", "highlight"))
+                .withFragmentShader(Identifier.fromNamespaceAndPath("dungeonsguide", "highlight"))
+                .withSampler("Sampler0")
+                .withColorTargetState(color)
+                .withVertexFormat(DefaultVertexFormat.POSITION_TEX_COLOR, VertexFormat.Mode.QUADS)
+                .withDepthStencilState(depth)
+                .build();
+    }
+
+    private static RenderPipeline modelHighlightPipeline(String name, ColorTargetState color, DepthStencilState depth) {
+        return RenderPipeline.builder(RenderPipelines.DEBUG_FILLED_SNIPPET)
+                .withLocation(Identifier.fromNamespaceAndPath("dungeonsguide", "pipeline/" + name))
+                .withColorTargetState(color)
+                .withDepthStencilState(depth)
+                .build();
+    }
+
+    private static RenderType blockHighlightType(String name, ColorTargetState color, DepthStencilState depth) {
+        return RenderType.create("dungeonsguide_" + name,
+                RenderSetup.builder(blockHighlightPipeline(name, color, depth)).withTexture("Sampler0", TextureAtlas.LOCATION_BLOCKS).createRenderSetup());
+    }
+
+    private static RenderType modelHighlightType(String name, ColorTargetState color, DepthStencilState depth) {
+        return RenderType.create("dungeonsguide_" + name, RenderSetup.builder(modelHighlightPipeline(name, color, depth)).createRenderSetup());
+    }
+
+    private static final RenderType BLOCK_HIGHLIGHT = blockHighlightType("block_highlight", new ColorTargetState(BlendFunction.TRANSLUCENT), HIGHLIGHT_DEPTH_TESTED);
+    private static final RenderType MODEL_HIGHLIGHT = modelHighlightType("model_highlight", new ColorTargetState(BlendFunction.TRANSLUCENT), HIGHLIGHT_DEPTH_TESTED);
+    private static final RenderType BLOCK_HIGHLIGHT_DEPTH = blockHighlightType("block_highlight_depth", NO_COLOR, HIGHLIGHT_DEPTH_WRITE);
+    private static final RenderType MODEL_HIGHLIGHT_DEPTH = modelHighlightType("model_highlight_depth", NO_COLOR, HIGHLIGHT_DEPTH_WRITE);
+    private static final RenderType BLOCK_HIGHLIGHT_SEE_THROUGH = blockHighlightType("block_highlight_see_through", new ColorTargetState(BlendFunction.TRANSLUCENT), HIGHLIGHT_DEPTH_EQUAL);
+    private static final RenderType MODEL_HIGHLIGHT_SEE_THROUGH = modelHighlightType("model_highlight_see_through", new ColorTargetState(BlendFunction.TRANSLUCENT), HIGHLIGHT_DEPTH_EQUAL);
+
     private static final Map<Identifier, RenderType> IMAGE = new HashMap<>();
     private static final Map<Identifier, RenderType> IMAGE_SEE_THROUGH = new HashMap<>();
     private static final Map<Identifier, RenderType> TEXTURED_QUAD = new HashMap<>();
@@ -156,5 +200,29 @@ public class DGRenderTypes {
     public static RenderType repeatSeeThrough(Identifier texture) {
         return REPEAT_SEE_THROUGH.computeIfAbsent(texture, t -> RenderType.create("dungeonsguide_repeat_see_through",
                 RenderSetup.builder(REPEAT_SEE_THROUGH_PIPELINE).withTexture("Sampler0", t).sortOnUpload().createRenderSetup()));
+    }
+
+    public static RenderType blockHighlight() {
+        return BLOCK_HIGHLIGHT;
+    }
+
+    public static RenderType modelHighlight() {
+        return MODEL_HIGHLIGHT;
+    }
+
+    public static RenderType blockHighlightDepth() {
+        return BLOCK_HIGHLIGHT_DEPTH;
+    }
+
+    public static RenderType modelHighlightDepth() {
+        return MODEL_HIGHLIGHT_DEPTH;
+    }
+
+    public static RenderType blockHighlightSeeThrough() {
+        return BLOCK_HIGHLIGHT_SEE_THROUGH;
+    }
+
+    public static RenderType modelHighlightSeeThrough() {
+        return MODEL_HIGHLIGHT_SEE_THROUGH;
     }
 }

@@ -20,6 +20,7 @@ package kr.syeyoung.dungeonsguide.mod.render.world;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import kr.syeyoung.dungeonsguide.mod.render.world.state.BeaconBeamRenderState;
+import kr.syeyoung.dungeonsguide.mod.render.world.state.BlockHighlightRenderState;
 import kr.syeyoung.dungeonsguide.mod.render.world.state.DGBlockModelRenderState;
 import kr.syeyoung.dungeonsguide.mod.render.world.state.FilledBoxRenderState;
 import kr.syeyoung.dungeonsguide.mod.render.world.state.LineStripRenderState;
@@ -45,5 +46,8 @@ public class MainPhaseSubmitter implements PhaseSubmitter {
         for (BeaconBeamRenderState state : container.beaconBeamRenderStates) state.submit(state, camera, poseStack, collector);
         for (DGBlockModelRenderState state : container.blockModelRenderStates) state.submit(state, camera, poseStack, collector);
         for (WorldImageRenderState state : container.worldImageRenderStates) state.submit(state, camera, poseStack, collector);
+        for (BlockHighlightRenderState state : container.blockHighlightRenderStates) {
+            if (state.depth) state.submit(state, camera, poseStack, collector);
+        }
     }
 }

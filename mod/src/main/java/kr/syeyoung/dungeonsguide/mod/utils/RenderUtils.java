@@ -22,6 +22,7 @@ import kr.syeyoung.dungeonsguide.mod.render.world.DGRenderStateContainer;
 import kr.syeyoung.dungeonsguide.mod.config.types.AColor;
 import kr.syeyoung.dungeonsguide.mod.dungeon.dataprovider.DungeonDoor;
 import kr.syeyoung.dungeonsguide.mod.render.world.state.BeaconBeamRenderState;
+import kr.syeyoung.dungeonsguide.mod.render.world.state.BlockHighlightRenderState;
 import kr.syeyoung.dungeonsguide.mod.render.world.state.FilledBoxRenderState;
 import kr.syeyoung.dungeonsguide.mod.render.world.state.LineStripRenderState;
 import kr.syeyoung.dungeonsguide.mod.render.world.state.QuadRenderState;
@@ -292,13 +293,10 @@ public class RenderUtils {
     }
 
 
-    // TODO: D72, 1.8.9 masked the highlight to the block's model with the stencil buffer, 26.1 draws the box
     public static AABB highlightBlockStencil(DGRenderStateContainer container, BlockPos blockPos, float partialTicks, Color color, boolean depth) {
-        AABB bb = new AABB(blockPos);
-        RenderUtils.highlightBox(container, bb, color, partialTicks, false);
-        return bb;
+        container.blockHighlightRenderStates.add(new BlockHighlightRenderState(List.of(blockPos), color.getRGB(), depth));
+        return new AABB(blockPos);
     }
-    // TODO: D72, 1.8.9 masked the highlight to the blocks' models with the stencil buffer, 26.1 draws the box
     public static AABB highlightBlocksStencil(DGRenderStateContainer container, List<BlockPos> blockPos, float partialTicks, Color color, boolean depth) {
         double minX = 1e9, minY = 1e9, minZ = 1e9, maxX = -1e9, maxY = -1e9, maxZ = -1e9;
         for (BlockPos pos : blockPos) {
@@ -309,9 +307,8 @@ public class RenderUtils {
             minZ = Math.min(minZ, pos.getZ());
             maxZ = Math.max(maxZ, pos.getZ() + 1);
         }
-        AABB bb= new AABB(minX, minY, minZ, maxX, maxY, maxZ);
-        RenderUtils.highlightBox(container, bb, color, partialTicks, false);
-        return bb;
+        container.blockHighlightRenderStates.add(new BlockHighlightRenderState(new ArrayList<>(blockPos), color.getRGB(), depth));
+        return new AABB(minX, minY, minZ, maxX, maxY, maxZ);
     }
 
     public static void highlightBox(DGRenderStateContainer container, AABB  axisAlignedBB, Color c, float partialTicks, boolean depth) {
