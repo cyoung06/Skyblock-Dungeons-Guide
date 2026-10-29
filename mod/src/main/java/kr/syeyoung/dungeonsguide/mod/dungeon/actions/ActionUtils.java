@@ -228,7 +228,7 @@ public class ActionUtils {
                 .collect(Collectors.toList());
 
         List<PossibleClickingSpot> spots = RaytraceHelper.chooseMinimalY(RaytraceHelper.raycast(
-                dungeonRoom.getDungeonRoomInfo().getWorld() != null ?
+                dungeonRoom.getDungeonRoomInfo().hasSchematic() ?
                         new DRIWorld(dungeonRoom.getDungeonRoomInfo(), openBlockers) : dungeonRoom.getCachedWorld(), new BlockPos(target.getX(), target.getY(), target.getZ())
         ));
         return buildActionMoveAndClick(builder, dungeonRoom, spots, new OffsetPoint[]{target}, eachBuild, false, algorithmSetting);

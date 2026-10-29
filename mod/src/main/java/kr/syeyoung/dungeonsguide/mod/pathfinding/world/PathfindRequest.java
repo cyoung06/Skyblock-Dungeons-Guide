@@ -168,7 +168,7 @@ public class PathfindRequest { // TODO: fix data flow.
 
         // export world itself first.
         dataOutputStream.writeBytes("WRLD");
-        if (dungeonRoomInfo.getWidth() == 0 || dungeonRoomInfo.getLength() == 0 || dungeonRoomInfo.getWorld() == null) throw new IllegalStateException("World doesnot have blocks");
+        if (dungeonRoomInfo.getWidth() == 0 || dungeonRoomInfo.getLength() == 0 || !dungeonRoomInfo.hasSchematic()) throw new IllegalStateException("World doesnot have blocks");
         // write data
 
             for (int y = 0; y < 256; y++) {

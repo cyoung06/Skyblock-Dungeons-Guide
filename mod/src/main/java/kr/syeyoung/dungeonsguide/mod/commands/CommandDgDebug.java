@@ -1150,7 +1150,7 @@ public class CommandDgDebug {
     @DGCommand("dgdebug check2")
     public void check2command() {
         for (DungeonRoomInfo dungeonRoomInfo : DungeonRoomInfoRegistry.getRegistered()) {
-            if (dungeonRoomInfo.getWorld() == null) {
+            if (!dungeonRoomInfo.hasSchematic()) {
                 System.out.println("world null for " + dungeonRoomInfo.getName());
                 continue;
             }
@@ -1441,6 +1441,21 @@ public class CommandDgDebug {
         } catch (Exception e) {
             e.printStackTrace();
             ChatTransmitter.addToQueue(Component.literal("§eDungeons Guide §7:: §cRoom data conversion failed: " + e));
+        }
+    }
+
+    @DGCommand("dgdebug persistroomupgrade")
+    public void persistRoomUpgradeCommand() {
+        try {
+            File out = new File(Main.getConfigDir(), "upgradedroomdata");
+            for (DungeonRoomInfo dungeonRoomInfo : DungeonRoomInfoRegistry.getRegistered()) {
+                if (dungeonRoomInfo.hasSchematic()) dungeonRoomInfo.setSchematicEdited(true);
+            }
+            DungeonRoomInfoRegistry.saveAll(new File(out, "roomdata"));
+            ChatTransmitter.addToQueue(Component.literal("§eDungeons Guide §7:: §fWrote upgraded room data to " + out.getAbsolutePath()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            ChatTransmitter.addToQueue(Component.literal("§eDungeons Guide §7:: §cPersisting room upgrade failed: " + e));
         }
     }
 

@@ -30,7 +30,6 @@ import kr.syeyoung.dungeonsguide.mod.dungeon.data.mechanics.dunegonmechanic.Dung
 import kr.syeyoung.dungeonsguide.mod.dungeon.data.serialization.DungeonRoomInfoBlocksDeserializer;
 import kr.syeyoung.dungeonsguide.mod.dungeon.data.serialization.DungeonRoomInfoBlocksSerializer;
 import kr.syeyoung.dungeonsguide.mod.dungeon.data.serialization.DungeonRoomInfoWorldDeserializer;
-import kr.syeyoung.dungeonsguide.mod.dungeon.data.serialization.DungeonRoomInfoWorldSerializer;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,6 +40,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.core.Direction;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -126,16 +127,45 @@ public class DungeonRoomInfo {
     private Map<String, DungeonMechanicData> mechanics = new HashMap<>();
     private int totalSecrets = -1;
 
-    @Getter
+    // format 1 only, read by dgdebug convertroomdata
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @JsonDeserialize(using = DungeonRoomInfoWorldDeserializer.class)
-    @JsonSerialize(using = DungeonRoomInfoWorldSerializer.class)
     private char[] world;
     private int width, length;
+
+    private byte[] schematic;
+    @JsonIgnore
+    private transient SpongeSchematic spongeSchematic;
+    @JsonIgnore
+    private transient boolean schematicEdited;
+
+    public void setSchematic(byte[] schematic) {
+        this.schematic = schematic;
+        try {
+            this.spongeSchematic = schematic == null ? null : SpongeSchematic.read(schematic);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        this.schematicEdited = false;
+    }
+
+    public byte[] getSchematic() {
+        if (schematicEdited && spongeSchematic != null) {
+            try {
+                schematic = spongeSchematic.write();
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+            schematicEdited = false;
+        }
+        return schematic;
+    }
 
     public void setSize(int width, int length, int height) {
         this.width = width;
         this.length = length;
-        this.world = new char[width * length * 256];
+        this.spongeSchematic = new SpongeSchematic(width, 256, length, new int[] {0, -70, 0});
+        this.schematicEdited = true;
     }
 
     @JsonIgnore
@@ -167,8 +197,9 @@ public class DungeonRoomInfo {
     }
 
     public void setBlock(OffsetPoint offsetPoint, BlockState iBlockState) {
-        int index = offsetPoint.getX() + ((offsetPoint.getY()+70) * length + offsetPoint.getZ()) * width;
-        world[index] = (char) getPaletteIndex(iBlockState);
+        int[] offset = spongeSchematic.getOffset();
+        spongeSchematic.setBlock(offsetPoint.getX() - offset[0], offsetPoint.getY() - offset[1], offsetPoint.getZ() - offset[2], iBlockState);
+        schematicEdited = true;
     }
 
     public BlockState getBlock(OffsetPoint offsetPoint, int rot) {
@@ -188,8 +219,9 @@ public class DungeonRoomInfo {
         if (x <= 0 || x >= width) return Blocks.BEDROCK.defaultBlockState();
         if (z <= 0 || z >= length) return Blocks.BEDROCK.defaultBlockState();
 
-        int index = x + ((y + 70) * length + z) * width;
-        BlockState blockState = getPaletteStates()[world[index]];
+        if (spongeSchematic == null) throw new IllegalStateException("Room data " + uuid + " has no schematic, run dgdebug convertroomdata");
+        int[] offset = spongeSchematic.getOffset();
+        BlockState blockState = spongeSchematic.getBlock(x - offset[0], y - offset[1], z - offset[2]);
         if (rot != 0) {
             EnumProperty<Direction> directions = directionProperty(blockState);
 
@@ -209,6 +241,6 @@ public class DungeonRoomInfo {
         return blockState == null ? Blocks.AIR.defaultBlockState() : blockState;
     }
     public boolean hasSchematic() {
-        return world != null;
+        return spongeSchematic != null;
     }
 }

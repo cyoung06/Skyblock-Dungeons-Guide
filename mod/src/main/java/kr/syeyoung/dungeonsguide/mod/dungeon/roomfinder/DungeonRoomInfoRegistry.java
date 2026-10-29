@@ -36,6 +36,8 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 import net.fabricmc.loader.api.FabricLoader;
 
 
@@ -107,7 +109,7 @@ public class DungeonRoomInfoRegistry {
         for (DungeonRoomInfo dungeonRoomInfo : registered) {
             try {
                 if (!dungeonRoomInfo.isUserMade() && !isDev) continue;
-                objectMapper.writeValue(new File(dir, dungeonRoomInfo.getUuid().toString() + ".roomdata.cbor"), dungeonRoomInfo);
+                objectMapper.writeValue(new GZIPOutputStream(new FileOutputStream(new File(dir, dungeonRoomInfo.getUuid().toString() + ".roomdata.cbor"))), dungeonRoomInfo);
 
                 nameIDString.append("\n").append(dungeonRoomInfo.getName()).append(",").append(dungeonRoomInfo.getUuid()).append(",").append(dungeonRoomInfo.getProcessorId()).append(",").append(dungeonRoomInfo.getTotalSecrets());
                 ids.append("roomdata/").append(dungeonRoomInfo.getUuid()).append(".roomdata.cbor\n");
@@ -132,7 +134,7 @@ public class DungeonRoomInfoRegistry {
             for (String name : lines) {
                 if (!name.endsWith(".roomdata.cbor")) continue;
                 try (InputStream is = DungeonsGuide.class.getResourceAsStream("/"+name)){
-                    DungeonRoomInfo dri = objectMapper.readValue(is, DungeonRoomInfo.class);
+                    DungeonRoomInfo dri = objectMapper.readValue(roomDataStream(is), DungeonRoomInfo.class);
                     register(dri);
                 } catch (Exception e) {
                     System.out.println(name);
@@ -144,12 +146,20 @@ public class DungeonRoomInfoRegistry {
         }
         for (File f : dir.listFiles()) {
             if (!f.getName().endsWith(".roomdata.cbor")) continue;
-            try {
-                DungeonRoomInfo dri = objectMapper.readValue(f, DungeonRoomInfo.class);
+            try (InputStream is = new FileInputStream(f)) {
+                DungeonRoomInfo dri = objectMapper.readValue(roomDataStream(is), DungeonRoomInfo.class);
                 register(dri);
             } catch (Exception e) {
                 System.out.println(f.getName());e.printStackTrace();}
         }
+    }
+
+    private static InputStream roomDataStream(InputStream is) throws IOException {
+        BufferedInputStream buffered = new BufferedInputStream(is);
+        buffered.mark(2);
+        boolean gzip = buffered.read() == 0x1F && buffered.read() == 0x8B;
+        buffered.reset();
+        return gzip ? new GZIPInputStream(buffered) : buffered;
     }
 
 }
