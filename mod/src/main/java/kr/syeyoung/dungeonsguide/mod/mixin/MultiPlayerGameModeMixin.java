@@ -40,10 +40,9 @@ public class MultiPlayerGameModeMixin {
             ci.cancel();
     }
 
-    // TODO: 1.8.9 sent INTERACT_AT then INTERACT, 26.1 has one interact call. fired as plain interact
     @Inject(method = "interact", at = @At("HEAD"), cancellable = true)
     private void dungeonsguide$onInteract(Player player, Entity entity, EntityHitResult hitResult, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         if (FabricEventBridge.fire(new PlayerInteractEntityEvent(false, false, entity)))
-            cir.setReturnValue(InteractionResult.FAIL);
+            cir.setReturnValue(InteractionResult.CONSUME);
     }
 }

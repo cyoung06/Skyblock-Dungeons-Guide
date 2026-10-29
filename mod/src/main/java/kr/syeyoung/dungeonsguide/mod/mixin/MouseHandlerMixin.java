@@ -20,6 +20,7 @@ package kr.syeyoung.dungeonsguide.mod.mixin;
 
 import kr.syeyoung.dungeonsguide.launcher.FabricEventBridge;
 import kr.syeyoung.dungeonsguide.mod.events.impl.MouseInputEvent;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.input.MouseButtonInfo;
 import org.lwjgl.glfw.GLFW;
@@ -34,10 +35,9 @@ import net.minecraft.client.gui.screens.Screen;
 
 @Mixin(MouseHandler.class)
 public class MouseHandlerMixin {
-    // 1.8.9: InputEvent.MouseInputEvent
-    // TODO: fires even while a screen is open, check against what 1.8.9 forge did
     @Inject(method = "onButton", at = @At("HEAD"))
     private void dungeonsguide$onButton(long window, MouseButtonInfo buttonInfo, int action, CallbackInfo ci) {
+        if (Minecraft.getInstance().screen != null) return;
         FabricEventBridge.fire(new MouseInputEvent(action == GLFW.GLFW_PRESS ? MouseInputEvent.Action.PRESS : MouseInputEvent.Action.RELEASE, buttonInfo));
     }
 
