@@ -38,7 +38,6 @@ import java.util.regex.Pattern;
 public class TextUtils {
     private static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("§.");
 
-    private static final Pattern SCOREBOARD_CHARACTERS = Pattern.compile("[^a-z A-Z:0-9/'.]");
 
     private static final Pattern INTEGER_CHARACTERS = Pattern.compile("[^0-9]");
 
@@ -113,8 +112,17 @@ public class TextUtils {
         return STRIP_COLOR_PATTERN.matcher(input).replaceAll("");
     }
 
-    public static String keepScoreboardCharacters(String text) {
-        return SCOREBOARD_CHARACTERS.matcher(text).replaceAll("");
+    public static String getVisibleText(Component component) {
+        StringBuilder sb = new StringBuilder();
+        component.visit(text -> {
+            for (int i = 0, length = text.length(); i < length; i++) {
+                char ch = text.charAt(i);
+                if (ch == '§') i++;
+                else sb.append(ch);
+            }
+            return Optional.empty();
+        });
+        return sb.toString();
     }
 
     public static String keepIntegerCharactersOnly(String text) {

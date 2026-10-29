@@ -117,7 +117,7 @@ public class FeatureDungeonDeaths extends TextHUDFeature {
         for (TabListEntry tabListEntry : TabList.INSTANCE.getTabListEntries()) {
             String name = tabListEntry.getEffectiveName();
             if (name.contains("Deaths")) {
-                String whatever = TextUtils.keepIntegerCharactersOnly(TextUtils.keepScoreboardCharacters(TextUtils.stripColor(name)));
+                String whatever = TextUtils.keepIntegerCharactersOnly(TextUtils.stripColor(name));
                 if (whatever.isEmpty()) break;
                 return Integer.parseInt(whatever);
             }

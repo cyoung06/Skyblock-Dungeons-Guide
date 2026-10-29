@@ -19,6 +19,8 @@
 package kr.syeyoung.dungeonsguide.mod.features.impl.dungeon;
 
 
+import net.minecraft.network.chat.Component;
+import kr.syeyoung.dungeonsguide.mod.utils.string.ComponentMatcher;
 import kr.syeyoung.dungeonsguide.mod.SkyblockStatus;
 import kr.syeyoung.dungeonsguide.mod.config.types.AColor;
 import kr.syeyoung.dungeonsguide.mod.config.types.TCInteger;
@@ -36,6 +38,9 @@ import kr.syeyoung.dungeonsguide.mod.utils.string.TextUtils;
 
 
 public class FeatureWarnLowHealth extends TextHUDFeature {
+    private static final ComponentMatcher BRACKET = ComponentMatcher.compile("§?[");
+    private static final ComponentMatcher HEART_END = ComponentMatcher.compile("§?❤$");
+
     public FeatureWarnLowHealth() {
         super("Dungeon HUD.Alerts", "Low Health Warning", "Warn if someone is on low health", "dungeon.lowhealthwarn");
         addParameter("threshold", new FeatureParameter<Integer>("threshold", "Health Threshold", "Health Threshold for this feature to be toggled. default to 500", 500, TCInteger.INSTANCE));
@@ -70,9 +75,11 @@ public class FeatureWarnLowHealth extends TextHUDFeature {
         Objective objective = ScoreboardManager.INSTANCE.getSidebarObjective();
         if (objective == null) return new TextSpan(new NullTextStyle(), "");
         for (Score sc : objective.getScores()) {
-            String line = sc.getVisibleName();
-            String stripped = TextUtils.keepScoreboardCharacters(TextUtils.stripColor(line));
-            if (line.contains("[") && line.endsWith("❤")) {
+            Component line = sc.getLine();
+            // old: line.contains("[") && line.endsWith("❤"), line = sc.getVisibleName()
+            if (BRACKET.matches(line) && HEART_END.matches(line)) {
+                String visible = TextUtils.getVisibleText(line);
+                String stripped = visible.substring(0, visible.length() - 1).replace(",", "").trim();
                 String name = stripped.split(" ")[stripped.split(" ").length - 2];
                 int health = Integer.parseInt(stripped.split(" ")[stripped.split(" ").length - 1]);
                 if (health < lowestHealth) {

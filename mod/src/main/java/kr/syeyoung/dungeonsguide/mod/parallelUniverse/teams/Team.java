@@ -28,9 +28,9 @@ import java.util.*;
 public class Team {
     @Getter
     private final String teamName;
-    @Getter @Setter
+    @Getter
     private Component prefix;
-    @Getter @Setter
+    @Getter
     private Component suffix;
     @Getter @Setter
     private Component displayName;
@@ -42,16 +42,31 @@ public class Team {
 
     private Set<String> players = new HashSet<>();
 
+    @Getter
+    private int version;
+
+    public void setPrefix(Component prefix) {
+        this.prefix = prefix;
+        version++;
+    }
+
+    public void setSuffix(Component suffix) {
+        this.suffix = suffix;
+        version++;
+    }
+
     public Set<String> getPlayers() {
         return Collections.unmodifiableSet(players);
     }
 
     public void addTeamMember(String player) {
         players.add(player);
+        version++;
         TeamManager.INSTANCE.registerTeamMember(this, player);
     }
     public void removeTeamMember(String player) {
         players.remove(player);
+        version++;
         TeamManager.INSTANCE.unregisterTeamMember( player);
     }
 }

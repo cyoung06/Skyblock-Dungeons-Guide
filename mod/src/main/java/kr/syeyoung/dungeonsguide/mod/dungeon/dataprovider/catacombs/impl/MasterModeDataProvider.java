@@ -30,7 +30,7 @@ public class MasterModeDataProvider extends CatacombsDataProvider {
 
     @Override
     public BossfightProcessor createBossfightProcessor(DGWorld w, String dungeonName) {
-        String floor = dungeonName.substring(14).trim();
+        String floor = dungeonName.substring(dungeonName.indexOf('(') + 1, dungeonName.indexOf(')'));
         ChatTransmitter.sendDebugChat(Component.literal("Floor: Master mode " +floor+ " Building boss fight processor"));
         if (floor.equals("M5")) {
             return new BossfightProcessorLivid(true);
@@ -50,7 +50,7 @@ public class MasterModeDataProvider extends CatacombsDataProvider {
 
     @Override
     public boolean isTrapSpawn(String dungeonName) {
-        String floor = dungeonName.substring(14).trim();
+        String floor = dungeonName.substring(dungeonName.indexOf('(') + 1, dungeonName.indexOf(')'));
         switch (floor) {
             case "M3":
             case "M4":

@@ -18,6 +18,7 @@
 
 package kr.syeyoung.dungeonsguide.mod.features.impl.dungeon;
 
+import kr.syeyoung.dungeonsguide.mod.utils.string.ComponentMatcher;
 import kr.syeyoung.dungeonsguide.mod.SkyblockStatus;
 import kr.syeyoung.dungeonsguide.mod.features.FeatureRegistry;
 import kr.syeyoung.dungeonsguide.mod.features.richtext.DefaultTextHUDFeatureStyleFeature;
@@ -32,6 +33,8 @@ import kr.syeyoung.dungeonsguide.mod.utils.string.TextUtils;
 import java.util.Collection;
 
 public class FeatureDungeonSBTime extends TextHUDFeature {
+    private static final ComponentMatcher TIME_ELAPSED = ComponentMatcher.compile("^§?Time Elapsed: ");
+
 
 
     public FeatureDungeonSBTime() {
@@ -50,9 +53,8 @@ public class FeatureDungeonSBTime extends TextHUDFeature {
             Collection<Score> scores = scoreboardManager.getSidebarObjective().getScores();
 
             for (Score sc : scores) {
-                String strippedLine = TextUtils.keepScoreboardCharacters(TextUtils.stripColor(sc.getVisibleName())).trim();
-                if (strippedLine.startsWith("Time Elapsed: ")) {
-                    time = strippedLine.substring(14);
+                if (TIME_ELAPSED.matches(sc.getLine())) {
+                    time = TextUtils.getVisibleText(sc.getLine()).substring(14).trim();
                 }
             }
         }
@@ -98,9 +100,8 @@ public class FeatureDungeonSBTime extends TextHUDFeature {
 
 
             for (Score sc : scores) {
-                String strippedLine = TextUtils.keepScoreboardCharacters(TextUtils.stripColor(sc.getVisibleName())).trim();
-                if (strippedLine.startsWith("Time Elapsed: ")) {
-                    time = strippedLine.substring(14);
+                if (TIME_ELAPSED.matches(sc.getLine())) {
+                    time = TextUtils.getVisibleText(sc.getLine()).substring(14).trim();
                 }
             }
         }

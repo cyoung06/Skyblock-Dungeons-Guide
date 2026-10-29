@@ -30,7 +30,7 @@ public class NormalModeDataProvider extends CatacombsDataProvider {
 
     @Override
     public BossfightProcessor createBossfightProcessor(DGWorld w, String dungeonName) {
-        String floor = dungeonName.substring(14).trim();
+        String floor = dungeonName.substring(dungeonName.indexOf('(') + 1, dungeonName.indexOf(')'));
         ChatTransmitter.sendDebugChat(Component.literal("Floor: " +floor+ " Building boss fight processor"));
         switch (floor) {
             case "F1":
@@ -54,7 +54,7 @@ public class NormalModeDataProvider extends CatacombsDataProvider {
 
     @Override
     public boolean isTrapSpawn(String dungeonName) {
-        String floor = dungeonName.substring(14).trim();
+        String floor = dungeonName.substring(dungeonName.indexOf('(') + 1, dungeonName.indexOf(')'));
         switch (floor) {
             case "F3":
             case "F4":
@@ -68,7 +68,7 @@ public class NormalModeDataProvider extends CatacombsDataProvider {
 
     @Override
     public double secretPercentage(String dungeonName) {
-        String floor = dungeonName.substring(14).trim();
+        String floor = dungeonName.substring(dungeonName.indexOf('(') + 1, dungeonName.indexOf(')'));
         switch (floor) {
             case "F1":
             case "E":
@@ -90,7 +90,7 @@ public class NormalModeDataProvider extends CatacombsDataProvider {
 
     @Override
     public int speedSecond(String dungeonName) {
-        String floor = dungeonName.substring(14).trim();
+        String floor = dungeonName.substring(dungeonName.indexOf('(') + 1, dungeonName.indexOf(')'));
         switch (floor) {
             case "F5":
             case "F7":

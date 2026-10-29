@@ -18,6 +18,7 @@
 
 package kr.syeyoung.dungeonsguide.mod.features.impl.etc;
 
+import kr.syeyoung.dungeonsguide.mod.utils.string.ComponentMatcher;
 import kr.syeyoung.dungeonsguide.mod.DungeonsGuide;
 import kr.syeyoung.dungeonsguide.mod.SkyblockStatus;
 import kr.syeyoung.dungeonsguide.mod.config.types.TCBoolean;
@@ -41,6 +42,8 @@ import java.util.Objects;
  * CREDITS FOR THE COUNTDOWN SOUNDTRACK: <a href="https://www.youtube.com/watch?v=acCqrA-JxAw">...</a>
  */
 public class FeatureEpicCountdown extends SimpleFeature {
+    private static final ComponentMatcher STARTING_IN = ComponentMatcher.compile("§?Starting in:");
+
 
     static long updatedAt;
     static int secondsLeft;
@@ -110,9 +113,8 @@ public class FeatureEpicCountdown extends SimpleFeature {
         Objective objective = ScoreboardManager.INSTANCE.getSidebarObjective();
         if (objective != null) {
             for (Score score : objective.getScores()) {
-                String line = TextUtils.stripColor(score.getJustTeam());
-                if(line.contains("Starting in:")){
-                    String time = line.replace("Starting in: ", "").replace("§r", "");
+                if (STARTING_IN.matches(score.getLine())) {
+                    String time = TextUtils.getVisibleText(score.getLine()).replace("Starting in: ", "");
                     if (time.contains(":")) {
                         secondsLeft = Integer.parseInt(time.split(":")[0]) * 60 + Integer.parseInt(time.split(":")[1]);
                         updatedAt = System.currentTimeMillis();

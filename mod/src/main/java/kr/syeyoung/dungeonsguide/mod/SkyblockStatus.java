@@ -18,6 +18,10 @@
 
 package kr.syeyoung.dungeonsguide.mod;
 
+import java.util.List;
+import java.util.ArrayList;
+import net.minecraft.network.chat.Component;
+import kr.syeyoung.dungeonsguide.mod.utils.string.ComponentMatcher;
 import kr.syeyoung.dungeonsguide.mod.events.impl.ClientTickEvent;
 import com.google.common.collect.Sets;
 import kr.syeyoung.dungeonsguide.mod.dungeon.DungeonContext;
@@ -120,6 +124,12 @@ public class SkyblockStatus {
     }
 
     private static final Set<String> SKYBLOCK_IN_ALL_LANGUAGES = Sets.newHashSet("SKYBLOCK");
+    private static final List<ComponentMatcher> SKYBLOCK_TITLES = new ArrayList<>();
+    static {
+        for (String skyblock : SKYBLOCK_IN_ALL_LANGUAGES) SKYBLOCK_TITLES.add(ComponentMatcher.compile("^§?" + skyblock));
+    }
+    private static final ComponentMatcher CLEARED = ComponentMatcher.compile("§?Cleared: ");
+    private static final ComponentMatcher LOCATION = ComponentMatcher.compile("^ §7\uE067");
 
     public void updateStatus() {
         // TODO: fakeserver is not in the first 26.1 build. was: DungeonServerLaunchUtils.isDungeonIntegratedServerRunning() && Minecraft.getInstance().player != null && Minecraft.getInstance().level != null || forceIsOnDungeon2
@@ -137,10 +147,10 @@ public class SkyblockStatus {
         Objective objective = ScoreboardManager.INSTANCE.getSidebarObjective();
         if (objective == null) return;
 
-        String objectiveName = TextUtils.stripColor(TextUtils.getFormattedText(objective.getDisplayName()));
         boolean skyblockFound = false;
-        for (String skyblock : SKYBLOCK_IN_ALL_LANGUAGES) {
-            if (objectiveName.startsWith(skyblock)) {
+        for (ComponentMatcher skyblock : SKYBLOCK_TITLES) {
+            // old: TextUtils.stripColor(TextUtils.getFormattedText(objective.getDisplayName())).startsWith(skyblock)
+            if (skyblock.matches(objective.getDisplayName())) {
                 skyblockFound = true;
                 isOnSkyblock = true;
                 break;
@@ -157,18 +167,20 @@ public class SkyblockStatus {
 
         Collection<Score> scores = objective.getScores();
         for (Score sc : scores) {
-            String strippedLine = TextUtils.keepScoreboardCharacters(
-                    TextUtils.stripColor(sc.getJustTeam())).trim();
-            if (strippedLine.contains("Cleared: ")) {
+            Component line = sc.getLine();
+            // old: TextUtils.keepScoreboardCharacters(TextUtils.stripColor(sc.getJustTeam())).trim().contains("Cleared: ")
+            if (CLEARED.matches(line)) {
                 foundDungeon = true;
                 DungeonContext context = DungeonsGuide.getDungeonsGuide().getDungeonFacade().getContext();
                 if(context != null){
-                    context.setPercentage(Integer.parseInt(
-                            strippedLine.substring(9).split(" ")[0]));
+                    String visible = TextUtils.getVisibleText(line);
+                    int start = visible.indexOf("Cleared: ") + 9;
+                    context.setPercentage(Integer.parseInt(visible.substring(start, visible.indexOf('%', start))));
                 }
             }
-            if (sc.getJustTeam().startsWith(" §7\uE067")) {
-                setLocationName(strippedLine.trim());
+            // old: sc.getJustTeam().startsWith(" §7\uE067")
+            if (LOCATION.matches(line)) {
+                setLocationName(TextUtils.getVisibleText(line).substring(2).trim());
             }
         }
 

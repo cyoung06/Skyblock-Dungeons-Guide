@@ -29,8 +29,8 @@ public class DungeonSpecificDataProviderRegistry {
     public static final Map<Pattern, DungeonSpecificDataProvider> doorFinders = new HashMap<>();
 
     static {
-        doorFinders.put(Pattern.compile("The Catacombs (?:F[0-9]|E)"), new NormalModeDataProvider());
-        doorFinders.put(Pattern.compile("The Catacombs (?:M[0-9])"), new MasterModeDataProvider());
+        doorFinders.put(Pattern.compile("The Catacombs \\((?:F[0-9]|E)\\)"), new NormalModeDataProvider());
+        doorFinders.put(Pattern.compile("The Catacombs \\((?:M[0-9])\\)"), new MasterModeDataProvider());
         doorFinders.put(Pattern.compile("TEST DG"), new TESTDGProvider());
     }
 
