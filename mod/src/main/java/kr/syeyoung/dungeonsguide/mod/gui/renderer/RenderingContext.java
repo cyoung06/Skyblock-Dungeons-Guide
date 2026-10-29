@@ -53,6 +53,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix3x2f;
+import org.joml.Matrix3x2fc;
 import org.joml.Matrix3x2fStack;
 
 import java.awt.*;
@@ -230,15 +231,19 @@ public class RenderingContext {
 
     public void drawGlyphs(List<TextRenderable> glyphs) {
         if (isClipEmpty() || glyphs.isEmpty()) return;
+        addGlyphRuns(pose, glyphs);
+    }
+
+    private void addGlyphRuns(Matrix3x2fc runPose, List<TextRenderable> glyphs) {
         List<TextRenderable> run = new ArrayList<>();
         for (TextRenderable glyph : glyphs) {
             if (!run.isEmpty() && (run.get(0).guiPipeline() != glyph.guiPipeline() || run.get(0).textureView() != glyph.textureView())) {
-                states.add(new GlyphRunState(new Matrix3x2f(pose), run, currentClip(), writingStencilMask));
+                states.add(new GlyphRunState(new Matrix3x2f(runPose), run, currentClip(), writingStencilMask));
                 run = new ArrayList<>();
             }
             run.add(glyph);
         }
-        states.add(new GlyphRunState(new Matrix3x2f(pose), run, currentClip(), writingStencilMask));
+        states.add(new GlyphRunState(new Matrix3x2f(runPose), run, currentClip(), writingStencilMask));
     }
 
     public void drawString(String text, float x, float y, int color, boolean shadow) {
@@ -385,7 +390,7 @@ public class RenderingContext {
                 }
             });
             if (!glyphs.isEmpty())
-                states.add(new GlyphRunState(new Matrix3x2f(text.pose), glyphs, currentClip(), writingStencilMask));
+                addGlyphRuns(text.pose, glyphs);
         });
         renderState.forEachItem(item -> states.add(new ItemState(new Matrix3x2f(item.pose()), item.itemStackRenderState(), item.x(), item.y(), currentClip(), writingStencilMask)));
     }

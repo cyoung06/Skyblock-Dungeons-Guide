@@ -18,6 +18,7 @@
 
 package kr.syeyoung.dungeonsguide.mod.features.impl.party.playerpreview;
 
+import kr.syeyoung.dungeonsguide.mod.gui.GuiScreenAdapter;
 import kr.syeyoung.dungeonsguide.mod.events.impl.ScreenOpenEvent;
 import kr.syeyoung.dungeonsguide.mod.events.impl.ComponentHoverEvent;
 import com.mojang.authlib.GameProfile;
@@ -128,8 +129,8 @@ public class FeatureViewPlayerStatsOnJoin extends SimpleFeature {
             gameProfile = ((HoverEventRenderPlayer) hoveredStyle.getHoverEvent()).getGameProfile();
         }
         if (gameProfile != null && widget == null) {
-            int mouseX = (int) mc.mouseHandler.xpos();
-            int mouseY = (int) mc.mouseHandler.ypos();
+            int mouseX = GuiScreenAdapter.getMouseX();
+            int mouseY = GuiScreenAdapter.getMouseY();
 
             double width = 220 * mc.getWindow().getGuiScale();
             double height = 220 * mc.getWindow().getGuiScale();

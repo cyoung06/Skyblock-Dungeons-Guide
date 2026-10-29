@@ -19,9 +19,11 @@
 package kr.syeyoung.dungeonsguide.mod.gui.elements.popups;
 
 import kr.syeyoung.dungeonsguide.mod.gui.DomElement;
+import kr.syeyoung.dungeonsguide.mod.gui.GuiScreenAdapter;
 import kr.syeyoung.dungeonsguide.mod.gui.Widget;
 import kr.syeyoung.dungeonsguide.mod.gui.layouter.Layouter;
 import kr.syeyoung.dungeonsguide.mod.gui.primitive.ConstraintBox;
+import kr.syeyoung.dungeonsguide.mod.gui.primitive.Rect;
 import kr.syeyoung.dungeonsguide.mod.gui.primitive.Size;
 import kr.syeyoung.dungeonsguide.mod.gui.renderer.Renderer;
 import kr.syeyoung.dungeonsguide.mod.gui.renderer.RenderingContext;
@@ -55,6 +57,15 @@ public class MinecraftTooltip extends Widget implements Renderer, Layouter {
         return new Size(constraintBox.getMaxWidth(), constraintBox.getMaxHeight());
     }
 
+    private double mouseX = Double.NaN, mouseY = Double.NaN;
+
+    @Override
+    public boolean mouseMoved(int absMouseX, int absMouseY, double relMouseX0, double relMouseY0, boolean childHandled) {
+        mouseX = relMouseX0;
+        mouseY = relMouseY0;
+        return false;
+    }
+
     @Override
     public void doRender(float partialTicks, RenderingContext context, DomElement buildContext) {
         Font font = Minecraft.getInstance().font;
@@ -72,9 +83,14 @@ public class MinecraftTooltip extends Widget implements Renderer, Layouter {
         }
         int w = textWidth;
         int h = tempHeight;
+        if (Double.isNaN(mouseX)) {
+            Rect abs = buildContext.getAbsBounds();
+            mouseX = (GuiScreenAdapter.getMouseX() - abs.getX()) * buildContext.getRelativeBound().getWidth() / abs.getWidth();
+            mouseY = (GuiScreenAdapter.getMouseY() - abs.getY()) * buildContext.getRelativeBound().getHeight() / abs.getHeight();
+        }
         Vector2ic positioned = DefaultTooltipPositioner.INSTANCE.positionTooltip(
                 (int) buildContext.getRelativeBound().getWidth(),
-                (int) buildContext.getRelativeBound().getHeight(), 0, 0, w, h);
+                (int) buildContext.getRelativeBound().getHeight(), (int) mouseX, (int) mouseY, w, h);
         int x = positioned.x();
         int y = positioned.y();
 

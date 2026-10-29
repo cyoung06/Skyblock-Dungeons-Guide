@@ -18,6 +18,13 @@
 
 package kr.syeyoung.dungeonsguide.mod.commands;
 
+import kr.syeyoung.dungeonsguide.mod.utils.string.TextUtils;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.component.ItemLore;
+import java.util.concurrent.TimeUnit;
+import kr.syeyoung.dungeonsguide.mod.features.impl.party.playerpreview.api.playerprofile.PlayerProfile;
+import kr.syeyoung.dungeonsguide.mod.features.impl.party.playerpreview.api.PlayerSkyblockData;
+import kr.syeyoung.dungeonsguide.mod.features.impl.party.playerpreview.api.ApiFetcher;
 import com.fasterxml.jackson.dataformat.cbor.databind.CBORMapper;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
@@ -57,10 +64,6 @@ import kr.syeyoung.dungeonsguide.mod.parallelUniverse.scoreboard.Objective;
 import kr.syeyoung.dungeonsguide.mod.parallelUniverse.teams.Team;
 import kr.syeyoung.dungeonsguide.mod.parallelUniverse.teams.TeamManager;
 import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.decoration.ArmorStand;
-import net.minecraft.core.registries.BuiltInRegistries;
-import kr.syeyoung.dungeonsguide.mod.utils.string.TextUtils;
 import net.minecraft.network.chat.numbers.NumberFormatTypes;
 import kr.syeyoung.dungeonsguide.mod.parallelUniverse.tab.TabList;
 import kr.syeyoung.dungeonsguide.mod.parallelUniverse.tab.TabListEntry;
@@ -72,8 +75,6 @@ import kr.syeyoung.dungeonsguide.mod.wsresource.StaticResourceCache;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import kr.syeyoung.dungeonsguide.mod.dungeon.data.LegacyBlock;
-import kr.syeyoung.dungeonsguide.mod.dungeon.dataprovider.DungeonDoor;
-import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.CompoundTag;
@@ -152,18 +153,48 @@ public class CommandDgDebug {
 
     @DGCommand("dgdebug randomroutine")
     public void randomRoutine() {
-        int changed = 0;
-        for (DungeonRoomInfo dungeonRoomInfo : DungeonRoomInfoRegistry.getRegistered()) {
-            Object warningDir = dungeonRoomInfo.getProperties().get("warning-dir");
-            if (warningDir instanceof String dir && !dir.equals(dir.toLowerCase(Locale.ROOT))) {
-                dungeonRoomInfo.getProperties().put("warning-dir", dir.toLowerCase(Locale.ROOT));
-                changed++;
-                ChatTransmitter.addToQueue("warning-dir of " + dungeonRoomInfo.getName() + ": " + dir + " -> " + dir.toLowerCase(Locale.ROOT));
+        try {
+            Minecraft mc = Minecraft.getInstance();
+            DynamicOps<JsonElement> ops = mc.level.registryAccess().createSerializationContext(JsonOps.INSTANCE);
+            Optional<PlayerSkyblockData> data = ApiFetcher.fetchMostRecentProfileAsync(mc.player.getUUID().toString()).get(30, TimeUnit.SECONDS);
+            JsonArray items = new JsonArray();
+            if (data.isPresent()) {
+                for (PlayerProfile profile : data.get().getPlayerProfiles()) {
+                    if (profile == null || profile.getInventory() == null) continue;
+                    for (ItemStack stack : profile.getInventory()) {
+                        if (stack == null || stack.isEmpty()) continue;
+                        ItemLore lore = stack.get(DataComponents.LORE);
+                        if (lore == null) continue;
+                        boolean mythic = false;
+                        for (Component line : lore.lines()) mythic |= line.getString().contains("MYTHIC") || line.getString().contains("LEGENDARY");
+                        if (!mythic) continue;
+                        JsonObject item = new JsonObject();
+                        item.add("name", ComponentSerialization.CODEC.encodeStart(ops, stack.getHoverName()).getOrThrow());
+                        JsonArray lines = new JsonArray();
+                        for (Component line : lore.lines()) {
+                            JsonObject entry = new JsonObject();
+                            entry.add("component", ComponentSerialization.CODEC.encodeStart(ops, line).getOrThrow());
+                            entry.addProperty("formatted", TextUtils.getFormattedText(line));
+                            lines.add(entry);
+                        }
+                        item.add("lore", lines);
+                        items.add(item);
+                        if (items.size() >= 3) break;
+                    }
+                    if (items.size() >= 3) break;
+                }
             }
+            File dir = new File(Main.getConfigDir(), "lorecapture");
+            dir.mkdirs();
+            File file = new File(dir, System.currentTimeMillis() + ".json");
+            try (Writer writer = new FileWriter(file, StandardCharsets.UTF_8)) {
+                writer.write(new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(items));
+            }
+            ChatTransmitter.addToQueue("captured " + items.size() + " items to " + file.getAbsolutePath());
+        } catch (Throwable t) {
+            t.printStackTrace();
+            ChatTransmitter.addToQueue("failed: " + t);
         }
-        File out = new File(Main.getConfigDir(), "updatedroomdata");
-        DungeonRoomInfoRegistry.saveAll(new File(out, "roomdata"));
-        ChatTransmitter.addToQueue("changed " + changed + " rooms, saved all to " + out.getAbsolutePath());
     }
 
     @DGCommand("dgdebug mockdungeonstart")

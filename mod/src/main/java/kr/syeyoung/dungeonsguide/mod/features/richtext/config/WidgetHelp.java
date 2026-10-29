@@ -19,7 +19,6 @@
 package kr.syeyoung.dungeonsguide.mod.features.richtext.config;
 
 import kr.syeyoung.dungeonsguide.mod.gui.elements.popups.MinecraftTooltip;
-import kr.syeyoung.dungeonsguide.mod.gui.elements.popups.MouseTooltip;
 import kr.syeyoung.dungeonsguide.mod.gui.elements.popups.PopupMgr;
 import kr.syeyoung.dungeonsguide.mod.gui.xml.AnnotatedImportOnlyWidget;
 import net.minecraft.resources.Identifier;
@@ -31,40 +30,42 @@ public class WidgetHelp extends AnnotatedImportOnlyWidget {
         super(Identifier.parse("dungeonsguide:gui/config/text/help.gui"));
     }
 
-    private MinecraftTooltip actualTooltip = new MinecraftTooltip();
-    private MouseTooltip tooltip = null;
+    private final MinecraftTooltip tooltip = new MinecraftTooltip();
+    private boolean tooltipOpen;
 
     @Override
     public void mouseEntered(int absMouseX, int absMouseY, double relMouseX, double relMouseY) {
-        if (this.tooltip == null) {
-            actualTooltip.setTooltip(Arrays.asList("Sorry, I tried my best designing this gui to be as intuitive as possible, but it seems like I failed doing so",
+        if (!tooltipOpen) {
+            tooltip.setTooltip(Arrays.asList("Sorry, I tried my best designing this gui to be as intuitive as possible, but it seems like I failed doing so",
                     "Toggling the checkbox on the left overrides the inherited settings",
                     "And the checkbox on right is actual settings to override as",
                     "If checkbox is disabled, the shown value is the value that is currently applied to text",
                     "MC Default: means that the color will be calculated based on visible textColor automatically"));
 
+            tooltipOpen = true;
+
             PopupMgr.getPopupMgr(getDomElement())
-                    .openPopup(this.tooltip = new MouseTooltip(actualTooltip), (a) -> {
-                        this.tooltip = null;
+                    .openPopup(tooltip, (a) -> {
+                        tooltipOpen = false;
                     });
         }
     }
 
     @Override
     public void mouseExited(int absMouseX, int absMouseY, double relMouseX, double relMouseY) {
-        if (this.tooltip != null) {
+        if (tooltipOpen) {
             PopupMgr.getPopupMgr(getDomElement())
-                    .closePopup(this.tooltip, null);
-            this.tooltip = null;
+                    .closePopup(tooltip, null);
+            tooltipOpen = false;
         }
     }
 
     @Override
     public void onUnmount() {
-        if (this.tooltip != null) {
+        if (tooltipOpen) {
             PopupMgr.getPopupMgr(getDomElement())
-                    .closePopup(this.tooltip, null);
-            this.tooltip = null;
+                    .closePopup(tooltip, null);
+            tooltipOpen = false;
         }
         super.onUnmount();
     }

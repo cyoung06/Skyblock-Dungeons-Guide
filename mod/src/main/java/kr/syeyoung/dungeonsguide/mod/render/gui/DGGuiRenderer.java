@@ -82,7 +82,6 @@ public class DGGuiRenderer implements AutoCloseable {
     private final Map<Class<?>, Function<MultiBufferSource.BufferSource, PictureInPictureRenderer<?>>> pictureInPictureFactories = new HashMap<>();
     private final Map<Class<?>, List<PictureInPictureRenderer<?>>> pictureInPictureRenderers = new HashMap<>();
     private final Map<Class<?>, Integer> pictureInPictureUsed = new HashMap<>();
-    private final MultiBufferSource.BufferSource pictureInPictureBufferSource = MultiBufferSource.immediate(new ByteBufferBuilder(786432));
 
     private DGGuiRenderer() {
         pictureInPictureFactories.put(GuiEntityRenderState.class, bufferSource -> new GuiEntityRenderer(bufferSource, Minecraft.getInstance().getEntityRenderDispatcher()));
@@ -259,7 +258,7 @@ public class DGGuiRenderer implements AutoCloseable {
         if (factory == null) return null;
         List<PictureInPictureRenderer<?>> renderers = pictureInPictureRenderers.computeIfAbsent(stateClass, c -> new ArrayList<>());
         int index = pictureInPictureUsed.merge(stateClass, 1, Integer::sum) - 1;
-        if (index == renderers.size()) renderers.add(factory.apply(pictureInPictureBufferSource));
+        if (index == renderers.size()) renderers.add(factory.apply(Minecraft.getInstance().renderBuffers().bufferSource()));
         return renderers.get(index);
     }
 
