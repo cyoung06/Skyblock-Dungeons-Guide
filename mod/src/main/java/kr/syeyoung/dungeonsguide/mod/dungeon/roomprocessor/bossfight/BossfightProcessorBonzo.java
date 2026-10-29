@@ -18,6 +18,7 @@
 
 package kr.syeyoung.dungeonsguide.mod.dungeon.roomprocessor.bossfight;
 
+import kr.syeyoung.dungeonsguide.mod.utils.string.ComponentMatcher;
 import kr.syeyoung.dungeonsguide.mod.events.impl.LivingTickEvent;
 
 
@@ -90,12 +91,18 @@ public class BossfightProcessorBonzo extends GeneralBossfightProcessor {
     private static final Identifier UNDEAD = Identifier.parse("dungeonsguide:map/bossfight/f1/undead.png");
     private static final Identifier BONZO = Identifier.parse("dungeonsguide:map/bossfight/f1/bonzo.png");
 
+    private static final ComponentMatcher UNDEAD_NAME = ComponentMatcher.compile("^Undead $");
+    private static final ComponentMatcher BONZO_NAME = ComponentMatcher.compile("^Bonzo $");
+    private static final ComponentMatcher BONZO_STAND = ComponentMatcher.compile("^§e﴾ §[cl]Bonzo");
+
     @Override
     public MarkerData convertToMarker(Entity entity) {
         if (entity instanceof RemotePlayer) {
-            if ("Undead ".equals(TextUtils.getFormattedText(entity.getName()))) {
+            // old: "Undead ".equals(TextUtils.getFormattedText(entity.getName()))
+            if (UNDEAD_NAME.matches(entity.getName())) {
                 return MarkerData.fromEntity(entity, MarkerData.MobType.ENEMIES, 4);
-            } else if ("Bonzo ".equals(TextUtils.getFormattedText(entity.getName()))){
+            // old: "Bonzo ".equals(TextUtils.getFormattedText(entity.getName()))
+            } else if (BONZO_NAME.matches(entity.getName())){
                 return MarkerData.fromEntity(entity, MarkerData.MobType.ENEMIES, Arrays.asList("start", "fight-1", "first-defeat").contains(getCurrentPhase()) ? 0 : 1);
             }
         }
@@ -107,7 +114,8 @@ public class BossfightProcessorBonzo extends GeneralBossfightProcessor {
     // §e﴾ §c§lBonzo§r §a250k§c❤ §e﴿
     // Now I'm convinced name format is always the same
     public void onEntityUpdate(LivingTickEvent updateEvent) {
-        if (TextUtils.getFormattedText(updateEvent.entityLiving.getName()).startsWith("§e﴾ §c§lBonzo§r") && updateEvent.entityLiving instanceof ArmorStand) {
+        // old: TextUtils.getFormattedText(updateEvent.entityLiving.getName()).startsWith("§e﴾ §c§lBonzo§r")
+        if (BONZO_STAND.matches(updateEvent.entityLiving.getName()) && updateEvent.entityLiving instanceof ArmorStand) {
             bonzoStand = (ArmorStand) updateEvent.entityLiving;
         }
     }

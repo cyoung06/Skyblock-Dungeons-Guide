@@ -18,6 +18,7 @@
 
 package kr.syeyoung.dungeonsguide.mod.dungeon.roomprocessor.bossfight;
 
+import kr.syeyoung.dungeonsguide.mod.utils.string.ComponentMatcher;
 import kr.syeyoung.dungeonsguide.mod.events.impl.LivingTickEvent;
 import kr.syeyoung.dungeonsguide.mod.utils.TextUtils;
 import net.minecraft.client.player.RemotePlayer;
@@ -135,18 +136,31 @@ public class BossfightProcessorSadan extends GeneralBossfightProcessor {
     private ArmorStand laserGiant;
     private ArmorStand bigfootGiant;
     private ArmorStand boulderGiant;
+    private static final ComponentMatcher SADAN_STAND = ComponentMatcher.compile("^§e﴾ §[cl]Sadan");
+    private static final ComponentMatcher JOLLY_PINK_GIANT = ComponentMatcher.compile("^§[dl]Jolly Pink Giant");
+    private static final ComponentMatcher LASR = ComponentMatcher.compile("^§[4l]L.A.S.R.");
+    private static final ComponentMatcher DIAMOND_GIANT = ComponentMatcher.compile("^§[3l]The Diamond Giant");
+    private static final ComponentMatcher BIGFOOT = ComponentMatcher.compile("^§[cl]Bigfoot");
+
+    private static final ComponentMatcher TERRACOTTA = ComponentMatcher.compile("^Terracotta $");
+    private static final ComponentMatcher SADAN = ComponentMatcher.compile("^Sadan $");
     @Override
     public void onEntityUpdate(LivingTickEvent updateEvent) {
         if (updateEvent.entityLiving instanceof ArmorStand) {
-            if (TextUtils.getFormattedText(updateEvent.entityLiving.getName()).startsWith("§e﴾ §c§lSadan§r"))
+            // old: TextUtils.getFormattedText(updateEvent.entityLiving.getName()).startsWith("§e﴾ §c§lSadan§r")
+            if (SADAN_STAND.matches(updateEvent.entityLiving.getName()))
                 sadanStand = (ArmorStand) updateEvent.entityLiving;
-            else if (TextUtils.getFormattedText(updateEvent.entityLiving.getName()).startsWith("§c§d§lJolly Pink Giant"))
+            // old: TextUtils.getFormattedText(updateEvent.entityLiving.getName()).startsWith("§c§d§lJolly Pink Giant")
+            else if (JOLLY_PINK_GIANT.matches(updateEvent.entityLiving.getName()))
                 boulderGiant = (ArmorStand) updateEvent.entityLiving;
-            else if (TextUtils.getFormattedText(updateEvent.entityLiving.getName()).startsWith("§c§4§lL.A.S.R."))
+            // old: TextUtils.getFormattedText(updateEvent.entityLiving.getName()).startsWith("§c§4§lL.A.S.R.")
+            else if (LASR.matches(updateEvent.entityLiving.getName()))
                 laserGiant = (ArmorStand) updateEvent.entityLiving;
-            else if (TextUtils.getFormattedText(updateEvent.entityLiving.getName()).startsWith("§c§3§lThe Diamond Giant"))
+            // old: TextUtils.getFormattedText(updateEvent.entityLiving.getName()).startsWith("§c§3§lThe Diamond Giant")
+            else if (DIAMOND_GIANT.matches(updateEvent.entityLiving.getName()))
                 diamondGiant = (ArmorStand) updateEvent.entityLiving;
-            else if (TextUtils.getFormattedText(updateEvent.entityLiving.getName()).startsWith("§c§c§lBigfoot"))
+            // old: TextUtils.getFormattedText(updateEvent.entityLiving.getName()).startsWith("§c§c§lBigfoot")
+            else if (BIGFOOT.matches(updateEvent.entityLiving.getName()))
                 bigfootGiant = (ArmorStand) updateEvent.entityLiving;
         } else if (updateEvent.entityLiving instanceof Giant) {
 
@@ -192,10 +206,11 @@ public class BossfightProcessorSadan extends GeneralBossfightProcessor {
             if (map == null) return null;
             return MarkerData.fromEntity(entity, MarkerData.MobType.MINIBOSS, map);
         } else if (entity instanceof RemotePlayer) {
-            String name = TextUtils.getFormattedText(entity.getName());
-            if ("Terracotta ".equals(name)) {
+            // old: "Terracotta ".equals(TextUtils.getFormattedText(entity.getName()))
+            if (TERRACOTTA.matches(entity.getName())) {
                 return MarkerData.fromEntity(entity, MarkerData.MobType.TERRACOTA, 41);
-            } else if ("Sadan ".equals(name)) {
+            // old: "Sadan ".equals(TextUtils.getFormattedText(entity.getName()))
+            } else if (SADAN.matches(entity.getName())) {
                 return MarkerData.fromEntity(entity, MarkerData.MobType.TERRACOTA, 40);
             }
         }

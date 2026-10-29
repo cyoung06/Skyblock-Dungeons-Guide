@@ -21,7 +21,7 @@ package kr.syeyoung.dungeonsguide.mod.dungeon.dataprovider.catacombs;
 import com.google.common.collect.Sets;
 import kr.syeyoung.dungeonsguide.mod.dungeon.dataprovider.DungeonSpecificDataProvider;
 import kr.syeyoung.dungeonsguide.mod.dungeon.data.LegacyBlock;
-import kr.syeyoung.dungeonsguide.mod.utils.TextUtils;
+import kr.syeyoung.dungeonsguide.mod.utils.string.ComponentMatcher;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.level.ChunkPos;
@@ -55,6 +55,8 @@ public abstract class CatacombsDataProvider implements DungeonSpecificDataProvid
         return null;
     }
 
+    private static final ComponentMatcher MORT = ComponentMatcher.compile("^§bMort$");
+
     public static Collection<ArmorStand> getMorts(DGWorld w){
         // TODO: change into proper radius
         Minecraft mc = Minecraft.getInstance();
@@ -62,8 +64,7 @@ public abstract class CatacombsDataProvider implements DungeonSpecificDataProvid
         int radius = mc.options.getEffectiveRenderDistance() * 16;
         AABB loaded = new AABB(center.getMinBlockX() - radius, mc.level.getMinY(), center.getMinBlockZ() - radius,
                 center.getMaxBlockX() + 1 + radius, mc.level.getMaxY() + 1, center.getMaxBlockZ() + 1 + radius);
-        // TODO: D5 entity name stopgap (D116)
-        return mc.level.getEntitiesOfClass(ArmorStand.class, loaded, input -> TextUtils.getFormattedText(input.getName()).equals("§bMort"));
+        return mc.level.getEntitiesOfClass(ArmorStand.class, loaded, input -> MORT.matches(input.getName()));
     }
 
     /**

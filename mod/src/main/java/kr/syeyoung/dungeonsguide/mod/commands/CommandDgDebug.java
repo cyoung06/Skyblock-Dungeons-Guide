@@ -53,6 +53,15 @@ import kr.syeyoung.dungeonsguide.mod.gui.elements.GlobalHUDScale;
 import kr.syeyoung.dungeonsguide.mod.gui.view.TestView;
 import kr.syeyoung.dungeonsguide.mod.parallelUniverse.scoreboard.Score;
 import kr.syeyoung.dungeonsguide.mod.parallelUniverse.scoreboard.ScoreboardManager;
+import kr.syeyoung.dungeonsguide.mod.parallelUniverse.scoreboard.Objective;
+import kr.syeyoung.dungeonsguide.mod.parallelUniverse.teams.Team;
+import kr.syeyoung.dungeonsguide.mod.parallelUniverse.teams.TeamManager;
+import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.core.registries.BuiltInRegistries;
+import kr.syeyoung.dungeonsguide.mod.utils.TextUtils;
+import net.minecraft.network.chat.numbers.NumberFormatTypes;
 import kr.syeyoung.dungeonsguide.mod.parallelUniverse.tab.TabList;
 import kr.syeyoung.dungeonsguide.mod.parallelUniverse.tab.TabListEntry;
 import kr.syeyoung.dungeonsguide.mod.party.PartyContext;
@@ -141,7 +150,37 @@ public class CommandDgDebug {
 
     @DGCommand("dgdebug randomroutine")
     public void randomRoutine() {
-        DiscordIntegrationManager.INSTANCE.requestAuth();
+        try {
+            Minecraft mc = Minecraft.getInstance();
+            DynamicOps<JsonElement> ops = mc.level.registryAccess().createSerializationContext(JsonOps.INSTANCE);
+            JsonArray entities = new JsonArray();
+            for (Entity entity : mc.level.entitiesForRendering()) {
+                if (!entity.hasCustomName() && !(entity instanceof ArmorStand)) continue;
+                JsonObject json = new JsonObject();
+                json.addProperty("type", BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString());
+                json.addProperty("pos", entity.getX() + ", " + entity.getY() + ", " + entity.getZ());
+                json.addProperty("distance", Math.sqrt(entity.distanceToSqr(mc.player)));
+                json.addProperty("customNameVisible", entity.isCustomNameVisible());
+                if (entity.getCustomName() != null)
+                    json.add("customName", ComponentSerialization.CODEC.encodeStart(ops, entity.getCustomName()).getOrThrow());
+                json.add("name", ComponentSerialization.CODEC.encodeStart(ops, entity.getName()).getOrThrow());
+                json.addProperty("formatted", TextUtils.getFormattedText(entity.getName()));
+                entities.add(json);
+            }
+            JsonObject capture = new JsonObject();
+            capture.addProperty("time", System.currentTimeMillis());
+            capture.add("entities", entities);
+
+            File dir = new File(Main.getConfigDir(), "entitycapture");
+            dir.mkdirs();
+            File file = new File(dir, System.currentTimeMillis() + ".json");
+            try (Writer writer = new FileWriter(file, StandardCharsets.UTF_8)) {
+                writer.write(new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(capture));
+            }
+            ChatTransmitter.addToQueue(Component.literal("§eDungeons Guide §7:: §fEntities captured to " + file.getAbsolutePath()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @DGCommand("dgdebug mockdungeonstart")
@@ -263,6 +302,7 @@ public class CommandDgDebug {
         for (Score score : ScoreboardManager.INSTANCE.getSidebarObjective().getScores()) {
             ChatTransmitter.addToQueue("LINE: " + score.getVisibleName() + ": " + score.getScore());
         }
+        captureSidebar();
     }
 
     @DGCommand("dgdebug scoreboardclean")
@@ -270,6 +310,7 @@ public class CommandDgDebug {
         for (Score score : ScoreboardManager.INSTANCE.getSidebarObjective().getScores()) {
             ChatTransmitter.addToQueue("LINE: " + score.getJustTeam() + ": " + score.getScore());
         }
+        captureSidebar();
     }
 
     @DGCommand("dgdebug tablist")
@@ -278,6 +319,7 @@ public class CommandDgDebug {
             ChatTransmitter.addToQueue(entry.getFormatted() + " " + entry.getEffectiveName() + "(" + entry.getPing() + ")" + entry.getGameMode());
         }
         ChatTransmitter.addToQueue("VS");
+        captureTabList();
     }
 
     @DGCommand("dgdebug mockdungeonstart {time}")
@@ -1490,6 +1532,89 @@ public class CommandDgDebug {
                 writer.write(new Gson().toJson(capture));
             }
             ChatTransmitter.addToQueue(Component.literal("§eDungeons Guide §7:: §fItems captured to " + file.getAbsolutePath()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void captureSidebar() {
+        try {
+            Minecraft mc = Minecraft.getInstance();
+            DynamicOps<JsonElement> ops = mc.level.registryAccess().createSerializationContext(JsonOps.INSTANCE);
+            Objective objective = ScoreboardManager.INSTANCE.getSidebarObjective();
+
+            JsonObject capture = new JsonObject();
+            capture.addProperty("time", System.currentTimeMillis());
+            if (objective != null) {
+                capture.addProperty("objective", objective.getObjectiveName());
+                capture.add("title", ComponentSerialization.CODEC.encodeStart(ops, objective.getDisplayName()).getOrThrow());
+                if (objective.getNumberFormat() != null)
+                    capture.add("numberFormat", NumberFormatTypes.CODEC.encodeStart(ops, objective.getNumberFormat()).getOrThrow());
+                JsonArray lines = new JsonArray();
+                for (Score score : objective.getScores()) {
+                    JsonObject line = new JsonObject();
+                    line.addProperty("holder", score.getPlayerName());
+                    line.addProperty("score", score.getScore());
+                    if (score.getDisplay() != null)
+                        line.add("display", ComponentSerialization.CODEC.encodeStart(ops, score.getDisplay()).getOrThrow());
+                    if (score.getNumberFormat() != null)
+                        line.add("numberFormat", NumberFormatTypes.CODEC.encodeStart(ops, score.getNumberFormat()).getOrThrow());
+                    Team team = TeamManager.INSTANCE.getPlayerTeam(score.getPlayerName());
+                    if (team != null) {
+                        line.addProperty("team", team.getTeamName());
+                        line.add("prefix", ComponentSerialization.CODEC.encodeStart(ops, team.getPrefix()).getOrThrow());
+                        line.add("suffix", ComponentSerialization.CODEC.encodeStart(ops, team.getSuffix()).getOrThrow());
+                    }
+                    lines.add(line);
+                }
+                capture.add("lines", lines);
+            }
+
+            File dir = new File(Main.getConfigDir(), "sidebarcapture");
+            dir.mkdirs();
+            File file = new File(dir, System.currentTimeMillis() + ".json");
+            try (Writer writer = new FileWriter(file, StandardCharsets.UTF_8)) {
+                writer.write(new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(capture));
+            }
+            ChatTransmitter.addToQueue(Component.literal("§eDungeons Guide §7:: §fSidebar captured to " + file.getAbsolutePath()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void captureTabList() {
+        try {
+            Minecraft mc = Minecraft.getInstance();
+            DynamicOps<JsonElement> ops = mc.level.registryAccess().createSerializationContext(JsonOps.INSTANCE);
+
+            JsonObject capture = new JsonObject();
+            capture.addProperty("time", System.currentTimeMillis());
+            JsonArray entries = new JsonArray();
+            for (TabListEntry entry : TabList.INSTANCE.getTabListEntries()) {
+                JsonObject json = new JsonObject();
+                json.addProperty("name", entry.getGameProfile().name());
+                json.addProperty("id", entry.getGameProfile().id().toString());
+                json.addProperty("gameMode", String.valueOf(entry.getGameMode()));
+                json.addProperty("ping", entry.getPing());
+                if (entry.getDisplayName() != null)
+                    json.add("displayName", ComponentSerialization.CODEC.encodeStart(ops, entry.getDisplayName()).getOrThrow());
+                Team team = TeamManager.INSTANCE.getPlayerTeam(entry.getGameProfile().name());
+                if (team != null) {
+                    json.addProperty("team", team.getTeamName());
+                    json.add("prefix", ComponentSerialization.CODEC.encodeStart(ops, team.getPrefix()).getOrThrow());
+                    json.add("suffix", ComponentSerialization.CODEC.encodeStart(ops, team.getSuffix()).getOrThrow());
+                }
+                entries.add(json);
+            }
+            capture.add("entries", entries);
+
+            File dir = new File(Main.getConfigDir(), "tablistcapture");
+            dir.mkdirs();
+            File file = new File(dir, System.currentTimeMillis() + ".json");
+            try (Writer writer = new FileWriter(file, StandardCharsets.UTF_8)) {
+                writer.write(new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(capture));
+            }
+            ChatTransmitter.addToQueue(Component.literal("§eDungeons Guide §7:: §fTab list captured to " + file.getAbsolutePath()));
         } catch (IOException e) {
             e.printStackTrace();
         }

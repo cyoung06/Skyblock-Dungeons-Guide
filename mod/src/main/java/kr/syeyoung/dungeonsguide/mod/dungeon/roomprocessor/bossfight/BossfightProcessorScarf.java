@@ -18,6 +18,7 @@
 
 package kr.syeyoung.dungeonsguide.mod.dungeon.roomprocessor.bossfight;
 
+import kr.syeyoung.dungeonsguide.mod.utils.string.ComponentMatcher;
 import kr.syeyoung.dungeonsguide.mod.events.impl.LivingTickEvent;
 import com.mojang.authlib.properties.Property;
 import kr.syeyoung.dungeonsguide.mod.utils.TextUtils;
@@ -123,18 +124,30 @@ public class BossfightProcessorScarf extends GeneralBossfightProcessor {
     private ArmorStand mageStand;
     private ArmorStand berserkStand;
     private ArmorStand archerStand;
+    private static final ComponentMatcher SCARF_STAND = ComponentMatcher.compile("^§e﴾ §[cl]Scarf");
+    private static final ComponentMatcher UNDEAD_ARCHER = ComponentMatcher.compile("§[4l]Undead Archer");
+    private static final ComponentMatcher UNDEAD_MAGE = ComponentMatcher.compile("§[4l]Undead Mage");
+    private static final ComponentMatcher UNDEAD_PRIEST = ComponentMatcher.compile("§[4l]Undead Priest");
+    private static final ComponentMatcher UNDEAD_WARRIOR = ComponentMatcher.compile("§[4l]Undead Warrior");
+    private static final ComponentMatcher SCARF = ComponentMatcher.compile("^Scarf $");
+
     @Override
     public void onEntityUpdate(LivingTickEvent updateEvent) {
         if (updateEvent.entityLiving instanceof ArmorStand) {
-            if (TextUtils.getFormattedText(updateEvent.entityLiving.getName()).startsWith("§e﴾ §c§lScarf§r"))
+            // old: TextUtils.getFormattedText(updateEvent.entityLiving.getName()).startsWith("§e﴾ §c§lScarf§r")
+            if (SCARF_STAND.matches(updateEvent.entityLiving.getName()))
                 scarfStand = (ArmorStand) updateEvent.entityLiving;
-            else if (TextUtils.getFormattedText(updateEvent.entityLiving.getName()).contains("§6§4§lUndead Archer"))
+            // old: TextUtils.getFormattedText(updateEvent.entityLiving.getName()).contains("§6§4§lUndead Archer")
+            else if (UNDEAD_ARCHER.matches(updateEvent.entityLiving.getName()))
                 archerStand = (ArmorStand) updateEvent.entityLiving;
-            else if (TextUtils.getFormattedText(updateEvent.entityLiving.getName()).contains("§6§4§lUndead Mage"))
+            // old: TextUtils.getFormattedText(updateEvent.entityLiving.getName()).contains("§6§4§lUndead Mage")
+            else if (UNDEAD_MAGE.matches(updateEvent.entityLiving.getName()))
                 mageStand = (ArmorStand) updateEvent.entityLiving;
-            else if (TextUtils.getFormattedText(updateEvent.entityLiving.getName()).contains("§6§4§lUndead Priest"))
+            // old: TextUtils.getFormattedText(updateEvent.entityLiving.getName()).contains("§6§4§lUndead Priest")
+            else if (UNDEAD_PRIEST.matches(updateEvent.entityLiving.getName()))
                 priestStand = (ArmorStand) updateEvent.entityLiving;
-            else if (TextUtils.getFormattedText(updateEvent.entityLiving.getName()).contains("§6§4§lUndead Warrior"))
+            // old: TextUtils.getFormattedText(updateEvent.entityLiving.getName()).contains("§6§4§lUndead Warrior")
+            else if (UNDEAD_WARRIOR.matches(updateEvent.entityLiving.getName()))
                 berserkStand = (ArmorStand) updateEvent.entityLiving;
         }
     }
@@ -142,7 +155,8 @@ public class BossfightProcessorScarf extends GeneralBossfightProcessor {
     @Override
     public MarkerData convertToMarker(Entity entity) {
         if (entity instanceof RemotePlayer) {
-            if ("Scarf ".equals(TextUtils.getFormattedText(entity.getName()))) {
+            // old: "Scarf ".equals(TextUtils.getFormattedText(entity.getName()))
+            if (SCARF.matches(entity.getName())) {
                 return MarkerData.fromEntity(entity, MarkerData.MobType.BOSS, 8);
             }
             Collection<Property> obj = ((RemotePlayer) entity).getGameProfile().properties().get("textures");

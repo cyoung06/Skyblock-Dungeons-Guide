@@ -19,16 +19,18 @@
 package kr.syeyoung.dungeonsguide.mod.features.impl.dungeon;
 
 
+import kr.syeyoung.dungeonsguide.mod.utils.string.ComponentMatcher;
 import kr.syeyoung.dungeonsguide.mod.DungeonsGuide;
 import kr.syeyoung.dungeonsguide.mod.SkyblockStatus;
 import kr.syeyoung.dungeonsguide.mod.events.annotations.DGEventHandler;
 import kr.syeyoung.dungeonsguide.mod.features.SimpleFeature;
-import kr.syeyoung.dungeonsguide.mod.utils.TextUtils;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import kr.syeyoung.dungeonsguide.mod.events.impl.RenderLivingEvent;
 
 
 public class FeatureHideNameTags extends SimpleFeature  {
+    private static final ComponentMatcher HEART = ComponentMatcher.compile("§?❤");
+
     public FeatureHideNameTags() {
         super("Player & Mob", "Hide mob nametags", "Hide mob nametags in dungeon", "dungeon.hidenametag", false);
     }
@@ -42,8 +44,7 @@ public class FeatureHideNameTags extends SimpleFeature  {
 
         if (renderPlayerEvent.entity instanceof ArmorStand) {
             ArmorStand armorStand = (ArmorStand) renderPlayerEvent.entity;
-            // TODO: D5 entity name stopgap (D116)
-            if (armorStand.isCustomNameVisible() && TextUtils.getFormattedText(armorStand.getName()).contains("❤"))
+            if (armorStand.isCustomNameVisible() && HEART.matches(armorStand.getName()))
                 renderPlayerEvent.setCanceled(true);
         }
     }

@@ -18,6 +18,7 @@
 
 package kr.syeyoung.dungeonsguide.mod.dungeon.roomprocessor.bossfight;
 
+import kr.syeyoung.dungeonsguide.mod.utils.string.ComponentMatcher;
 import kr.syeyoung.dungeonsguide.mod.events.impl.LivingTickEvent;
 import kr.syeyoung.dungeonsguide.mod.events.impl.BlockUpdateEvent;
 import kr.syeyoung.dungeonsguide.mod.utils.TextUtils;
@@ -76,6 +77,14 @@ public class BossfightProcessorLivid extends GeneralBossfightProcessor {
         put(13, "Frog"); // green
         put(14, "Hockey"); // red
     }};
+    private static final Map<String, ComponentMatcher> lividNameMatchers = new HashMap<>();
+    private static final Map<String, ComponentMatcher> lividStandMatchers = new HashMap<>();
+    static {
+        for (Map.Entry<String, String> entry : lividColorPrefix.entrySet()) {
+            lividNameMatchers.put(entry.getKey(), ComponentMatcher.compile("^" + entry.getKey()));
+            lividStandMatchers.put(entry.getKey(), ComponentMatcher.compile("^" + entry.getValue() + "﴾ "));
+        }
+    }
 
     private int correctLivid = 14;
     @Override
@@ -83,9 +92,11 @@ public class BossfightProcessorLivid extends GeneralBossfightProcessor {
         correctLivid = LegacyBlock.meta(Minecraft.getInstance().level.getBlockState(new BlockPos(5, 108, 42)));
         realLividName = lividMetadata.get(correctLivid);
         prefix = lividColorPrefix.get(realLividName);
-        if (TextUtils.getFormattedText(updateEvent.entityLiving.getName()).startsWith(realLividName) && updateEvent.entityLiving instanceof RemotePlayer) {
+        // old: TextUtils.getFormattedText(updateEvent.entityLiving.getName()).startsWith(realLividName)
+        if (lividNameMatchers.get(realLividName).matches(updateEvent.entityLiving.getName()) && updateEvent.entityLiving instanceof RemotePlayer) {
             realLivid = (RemotePlayer) updateEvent.entityLiving;
-        } else if (TextUtils.getFormattedText(updateEvent.entityLiving.getName()).startsWith(prefix+"﴾ ") && updateEvent.entityLiving instanceof ArmorStand) {
+        // old: TextUtils.getFormattedText(updateEvent.entityLiving.getName()).startsWith(prefix+"﴾ ")
+        } else if (lividStandMatchers.get(realLividName).matches(updateEvent.entityLiving.getName()) && updateEvent.entityLiving instanceof ArmorStand) {
             lividStand = (ArmorStand) updateEvent.entityLiving;
         }
     }
@@ -117,34 +128,55 @@ public class BossfightProcessorLivid extends GeneralBossfightProcessor {
         return realLividName == null ? "Livid" : realLividName;
     }
 
+    private static final ComponentMatcher LIVID = ComponentMatcher.compile("^Livid $");
+    private static final ComponentMatcher PURPLE_LIVID = ComponentMatcher.compile("^Purple Livid$");
+    private static final ComponentMatcher VENDETTA_LIVID = ComponentMatcher.compile("^Vendetta Livid$");
+    private static final ComponentMatcher CROSSED_LIVID = ComponentMatcher.compile("^Crossed Livid$");
+    private static final ComponentMatcher FROG_LIVID = ComponentMatcher.compile("^Frog Livid$");
+    private static final ComponentMatcher HOCKEY_LIVID = ComponentMatcher.compile("^Hockey Livid$");
+    private static final ComponentMatcher SMILE_LIVID = ComponentMatcher.compile("^Smile Livid$");
+    private static final ComponentMatcher ARCADE_LIVID = ComponentMatcher.compile("^Arcade Livid$");
+    private static final ComponentMatcher DOCTOR_LIVID = ComponentMatcher.compile("^Doctor Livid$");
+    private static final ComponentMatcher SCREAM_LIVID = ComponentMatcher.compile("^Scream Livid$");
+
     @Override
     public MarkerData convertToMarker(Entity entity) {
         if (entity instanceof RemotePlayer) {
-            String name = TextUtils.getFormattedText(entity.getName());
             int idx = 0;
-            if (name.equals("Livid ")) {
+            // old: name.equals("Livid ")
+            if (LIVID.matches(entity.getName())) {
                 return MarkerData.fromEntity(entity, MarkerData.MobType.BOSS, 46);
-            } else if ("Purple Livid".equals(name)) {
+            // old: "Purple Livid".equals(name)
+            } else if (PURPLE_LIVID.matches(entity.getName())) {
                 idx = 36;
-            } else if ("Vendetta Livid".equals(name)) {
+            // old: "Vendetta Livid".equals(name)
+            } else if (VENDETTA_LIVID.matches(entity.getName())) {
                 idx = 33;
-            } else if ("Crossed Livid".equals(name)) {
+            // old: "Crossed Livid".equals(name)
+            } else if (CROSSED_LIVID.matches(entity.getName())) {
                 idx = 38;
-            } else if ("Frog Livid".equals(name)) {
+            // old: "Frog Livid".equals(name)
+            } else if (FROG_LIVID.matches(entity.getName())) {
                 idx = 35;
-            } else if ("Hockey Livid".equals(name)) {
+            // old: "Hockey Livid".equals(name)
+            } else if (HOCKEY_LIVID.matches(entity.getName())) {
                 idx = 37;
-            } else if ("Smile Livid".equals(name)) {
+            // old: "Smile Livid".equals(name)
+            } else if (SMILE_LIVID.matches(entity.getName())) {
                 idx = 39;
-            } else if ("Arcade Livid".equals(name)) {
+            // old: "Arcade Livid".equals(name)
+            } else if (ARCADE_LIVID.matches(entity.getName())) {
                 idx = 32;
-            } else if ("Doctor Livid".equals(name)) {
+            // old: "Doctor Livid".equals(name)
+            } else if (DOCTOR_LIVID.matches(entity.getName())) {
                 idx = 34;
-            } else if ("Scream Livid".equals(name)) {
+            // old: "Scream Livid".equals(name)
+            } else if (SCREAM_LIVID.matches(entity.getName())) {
                 idx = 47;
             }
             if (idx == 0) return null;
-            return MarkerData.fromEntity(entity, name.startsWith(realLividName) ? MarkerData.MobType.BOSS : MarkerData.MobType.WRONG_LIVID, idx);
+            // old: name.startsWith(realLividName)
+            return MarkerData.fromEntity(entity, lividNameMatchers.get(realLividName).matches(entity.getName()) ? MarkerData.MobType.BOSS : MarkerData.MobType.WRONG_LIVID, idx);
         }
         return null;
     }

@@ -42,7 +42,8 @@ public class AnnotatedListenerHelper {
             try {
                 methodHandle.invoke(event);
             } catch (Throwable e) {
-                throw new RuntimeException("An error occurred while handling event at "+name, e);
+                // TODO : work towards removing it
+                EventHandlerRegistry.logger.error("An error occurred while handling event " + event.getClass().getName() + " at " + name, e);
             }
             return EventProcessResult.COMPLETE;
         }

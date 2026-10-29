@@ -18,6 +18,7 @@
 
 package kr.syeyoung.dungeonsguide.mod.dungeon.roomprocessor.bossfight;
 
+import kr.syeyoung.dungeonsguide.mod.utils.string.ComponentMatcher;
 import kr.syeyoung.dungeonsguide.mod.events.impl.LivingTickEvent;
 import com.mojang.authlib.properties.Property;
 import kr.syeyoung.dungeonsguide.mod.utils.TextUtils;
@@ -135,18 +136,30 @@ public class BossfightProcessorProf extends GeneralBossfightProcessor {
     private ArmorStand chaosGuard;
     private ArmorStand reinforcedGuard;
     private ArmorStand healthyGuard;
+    private static final ComponentMatcher PROFESSOR_STAND = ComponentMatcher.compile("^§e﴾ §[cl]The Professor");
+    private static final ComponentMatcher HEALTHY_GUARDIAN = ComponentMatcher.compile("^§cHealthy Guardian");
+    private static final ComponentMatcher CHAOS_GUARDIAN = ComponentMatcher.compile("^§cChaos Guardian");
+    private static final ComponentMatcher LASER_GUARDIAN = ComponentMatcher.compile("^§cLaser Guardian");
+    private static final ComponentMatcher REINFORCED_GUARDIAN = ComponentMatcher.compile("^§cReinforced Guardian");
+    private static final ComponentMatcher PROFESSOR = ComponentMatcher.compile("^The Professor$");
+
     @Override
     public void onEntityUpdate(LivingTickEvent updateEvent) {
         if (updateEvent.entityLiving instanceof ArmorStand) {
-            if (TextUtils.getFormattedText(updateEvent.entityLiving.getName()).startsWith("§e﴾ §c§lThe Professor§r"))
+            // old: TextUtils.getFormattedText(updateEvent.entityLiving.getName()).startsWith("§e﴾ §c§lThe Professor§r")
+            if (PROFESSOR_STAND.matches(updateEvent.entityLiving.getName()))
                 profStand = (ArmorStand) updateEvent.entityLiving;
-            else if (TextUtils.getFormattedText(updateEvent.entityLiving.getName()).startsWith("§cHealthy Guardian"))
+            // old: TextUtils.getFormattedText(updateEvent.entityLiving.getName()).startsWith("§cHealthy Guardian")
+            else if (HEALTHY_GUARDIAN.matches(updateEvent.entityLiving.getName()))
                 healthyGuard = (ArmorStand) updateEvent.entityLiving;
-            else if (TextUtils.getFormattedText(updateEvent.entityLiving.getName()).startsWith("§cChaos Guardian"))
+            // old: TextUtils.getFormattedText(updateEvent.entityLiving.getName()).startsWith("§cChaos Guardian")
+            else if (CHAOS_GUARDIAN.matches(updateEvent.entityLiving.getName()))
                 chaosGuard = (ArmorStand) updateEvent.entityLiving;
-            else if (TextUtils.getFormattedText(updateEvent.entityLiving.getName()).startsWith("§cLaser Guardian"))
+            // old: TextUtils.getFormattedText(updateEvent.entityLiving.getName()).startsWith("§cLaser Guardian")
+            else if (LASER_GUARDIAN.matches(updateEvent.entityLiving.getName()))
                 laserGuard = (ArmorStand) updateEvent.entityLiving;
-            else if (TextUtils.getFormattedText(updateEvent.entityLiving.getName()).startsWith("§cReinforced Guardian"))
+            // old: TextUtils.getFormattedText(updateEvent.entityLiving.getName()).startsWith("§cReinforced Guardian")
+            else if (REINFORCED_GUARDIAN.matches(updateEvent.entityLiving.getName()))
                 reinforcedGuard = (ArmorStand) updateEvent.entityLiving;
         }
         if (updateEvent.entityLiving instanceof Guardian) {
@@ -183,7 +196,8 @@ public class BossfightProcessorProf extends GeneralBossfightProcessor {
     @Override
     public MarkerData convertToMarker(Entity entity) {
         if (entity instanceof RemotePlayer) {
-            if ("The Professor".equals(TextUtils.getFormattedText(entity.getName()))) {
+            // old: "The Professor".equals(TextUtils.getFormattedText(entity.getName()))
+            if (PROFESSOR.matches(entity.getName())) {
                 return MarkerData.fromEntity(entity, MarkerData.MobType.BOSS, 16);
             }
         } else if (entity instanceof Guardian) {

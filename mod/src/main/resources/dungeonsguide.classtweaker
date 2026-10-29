@@ -5,3 +5,11 @@ accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScr
 accessible field net/minecraft/client/resources/sounds/AbstractSoundInstance volume F
 accessible field net/minecraft/client/resources/sounds/AbstractSoundInstance pitch F
 accessible field net/minecraft/client/OptionInstance value Ljava/lang/Object;
+accessible field net/minecraft/network/chat/Style color Lnet/minecraft/network/chat/TextColor;
+accessible field net/minecraft/network/chat/Style shadowColor Ljava/lang/Integer;
+accessible field net/minecraft/network/chat/Style bold Ljava/lang/Boolean;
+accessible field net/minecraft/network/chat/Style italic Ljava/lang/Boolean;
+accessible field net/minecraft/network/chat/Style underlined Ljava/lang/Boolean;
+accessible field net/minecraft/network/chat/Style strikethrough Ljava/lang/Boolean;
+accessible field net/minecraft/network/chat/Style obfuscated Ljava/lang/Boolean;
+accessible field net/minecraft/network/chat/Style font Lnet/minecraft/network/chat/FontDescription;

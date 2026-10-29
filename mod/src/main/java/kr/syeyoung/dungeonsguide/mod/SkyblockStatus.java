@@ -167,7 +167,7 @@ public class SkyblockStatus {
                             strippedLine.substring(9).split(" ")[0]));
                 }
             }
-            if (sc.getJustTeam().startsWith(" §7⏣")) {
+            if (sc.getJustTeam().startsWith(" §7\uE067")) {
                 setLocationName(strippedLine.trim());
             }
         }

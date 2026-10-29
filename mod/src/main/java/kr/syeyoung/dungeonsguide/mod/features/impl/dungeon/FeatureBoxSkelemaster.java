@@ -18,6 +18,7 @@
 
 package kr.syeyoung.dungeonsguide.mod.features.impl.dungeon;
 
+import kr.syeyoung.dungeonsguide.mod.utils.string.ComponentMatcher;
 import kr.syeyoung.dungeonsguide.mod.DungeonsGuide;
 import kr.syeyoung.dungeonsguide.mod.SkyblockStatus;
 import kr.syeyoung.dungeonsguide.mod.config.types.AColor;
@@ -27,7 +28,6 @@ import kr.syeyoung.dungeonsguide.mod.events.annotations.DGEventHandler;
 import kr.syeyoung.dungeonsguide.mod.features.FeatureParameter;
 import kr.syeyoung.dungeonsguide.mod.features.SimpleFeature;
 import kr.syeyoung.dungeonsguide.mod.utils.RenderUtils;
-import kr.syeyoung.dungeonsguide.mod.utils.TextUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.core.BlockPos;
@@ -41,6 +41,8 @@ import java.util.function.Predicate;
 
 
 public class FeatureBoxSkelemaster extends SimpleFeature  {
+    private static final ComponentMatcher SKELETON_MASTER = ComponentMatcher.compile("§?Skeleton Master");
+
     public FeatureBoxSkelemaster() {
         super("Player & Mob", "Box Skeleton Masters", "Box skeleton masters in dungeons", "dungeon.skeletonmasterbox", true);
         addParameter("radius", new FeatureParameter<Integer>("radius", "Highlight Radius", "The maximum distance between player and skeletonmaster to be boxed", 20, TCInteger.INSTANCE));
@@ -71,8 +73,7 @@ public class FeatureBoxSkelemaster extends SimpleFeature  {
                 // TODO: 1.8.9's getPosition() floored (x, y + 0.5, z), (x + 0.5, y + 0.5, z + 0.5) for the local player; blockPosition() floors (x, y, z)
                 if (player.distSqr(input.blockPosition()) > sq) return false;
                 if (!input.isCustomNameVisible()) return false;
-                // TODO: D5 entity name stopgap (D116)
-                return TextUtils.getFormattedText(input.getName()).contains("Skeleton Master");
+                return SKELETON_MASTER.matches(input.getName());
             }
         });
         AColor c = this.<AColor>getParameter("color").getValue();

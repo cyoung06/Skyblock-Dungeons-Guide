@@ -18,6 +18,7 @@
 
 package kr.syeyoung.dungeonsguide.mod.dungeon.roomprocessor.bossfight;
 
+import kr.syeyoung.dungeonsguide.mod.utils.string.ComponentMatcher;
 import kr.syeyoung.dungeonsguide.mod.events.impl.RenderWorldEvent;
 import kr.syeyoung.dungeonsguide.mod.utils.TextUtils;
 import kr.syeyoung.dungeonsguide.mod.DungeonsGuide;
@@ -46,7 +47,6 @@ import java.util.List;
 import java.util.Set;
 import net.minecraft.world.entity.ambient.Bat;
 
-// TODO: D5 entity name stopgap (D116), the getFormattedText(entity.getName()) reads
 public class BossfightProcessorThorn extends GeneralBossfightProcessor {
 
 
@@ -121,6 +121,8 @@ public class BossfightProcessorThorn extends GeneralBossfightProcessor {
         }
     }
 
+    private static final ComponentMatcher SPIRIT_BEAR = ComponentMatcher.compile("^Spirit Bear$");
+
     @Override
     public MarkerData convertToMarker(Entity entity) {
         if (entity.isInvisible()) return null;
@@ -139,7 +141,8 @@ public class BossfightProcessorThorn extends GeneralBossfightProcessor {
         } else if (entity instanceof Ghast) {
             return MarkerData.fromEntity(entity, MarkerData.MobType.BOSS, 25);
         } else if (entity instanceof RemotePlayer) {
-            if (TextUtils.getFormattedText(entity.getName()).equals("Spirit Bear"))
+            // old: TextUtils.getFormattedText(entity.getName()).equals("Spirit Bear")
+            if (SPIRIT_BEAR.matches(entity.getName()))
                 return MarkerData.fromEntity(entity, MarkerData.MobType.MINIBOSS, 24);
         }
         return null;

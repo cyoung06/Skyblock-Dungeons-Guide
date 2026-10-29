@@ -18,6 +18,7 @@
 
 package kr.syeyoung.dungeonsguide.mod.dungeon.roomprocessor;
 
+import kr.syeyoung.dungeonsguide.mod.utils.string.ComponentMatcher;
 import kr.syeyoung.dungeonsguide.mod.events.impl.RenderHUDEvent;
 import kr.syeyoung.dungeonsguide.mod.events.impl.RenderWorldEvent;
 import kr.syeyoung.dungeonsguide.mod.dungeon.data.LegacyBlock;
@@ -237,12 +238,14 @@ public class GeneralRoomProcessor implements RoomProcessor {
 
     }
 
+    private static final ComponentMatcher MIMIC = ComponentMatcher.compile("§?Mimic");
+
     @Override
     public void onEntityUpdate(LivingTickEvent updateEvent) {
         if (updateEvent.entityLiving instanceof ArmorStand &&
                 updateEvent.entityLiving.getName() != null &&
-                // TODO: D5 entity name stopgap (D116)
-                TextUtils.getFormattedText(updateEvent.entityLiving.getName()).contains("Mimic") &&
+                // old: TextUtils.getFormattedText(updateEvent.entityLiving.getName()).contains("Mimic")
+                MIMIC.matches(updateEvent.entityLiving.getName()) &&
                 !dungeonRoom.getContext().isGotMimic()) {
             dungeonRoom.getContext().setGotMimic(true);
 //            ChatProcessor.sendChatMessage("/pc $DG-Mimic");

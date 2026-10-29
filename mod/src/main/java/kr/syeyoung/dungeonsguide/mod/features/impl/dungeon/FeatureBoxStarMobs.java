@@ -18,6 +18,7 @@
 
 package kr.syeyoung.dungeonsguide.mod.features.impl.dungeon;
 
+import kr.syeyoung.dungeonsguide.mod.utils.string.ComponentMatcher;
 import kr.syeyoung.dungeonsguide.mod.DungeonsGuide;
 import kr.syeyoung.dungeonsguide.mod.SkyblockStatus;
 import kr.syeyoung.dungeonsguide.mod.config.types.AColor;
@@ -27,7 +28,6 @@ import kr.syeyoung.dungeonsguide.mod.events.annotations.DGEventHandler;
 import kr.syeyoung.dungeonsguide.mod.features.FeatureParameter;
 import kr.syeyoung.dungeonsguide.mod.features.SimpleFeature;
 import kr.syeyoung.dungeonsguide.mod.utils.RenderUtils;
-import kr.syeyoung.dungeonsguide.mod.utils.TextUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.core.BlockPos;
@@ -41,6 +41,9 @@ import java.util.function.Predicate;
 
 
 public class FeatureBoxStarMobs extends SimpleFeature {
+    private static final ComponentMatcher STAR = ComponentMatcher.compile("§?✯");
+    private static final ComponentMatcher SPACE = ComponentMatcher.compile("§? ");
+
     public FeatureBoxStarMobs() {
         super("Player & Mob", "Box Starred mobs", "Box Starred mobs in dungeons", "dungeon.starmobbox", false);
         addParameter("radius", new FeatureParameter<Integer>("radius", "Highlight Radius", "The maximum distance between player and starred mobs to be boxed", 20, TCInteger.INSTANCE));
@@ -71,8 +74,7 @@ public class FeatureBoxStarMobs extends SimpleFeature {
                 // TODO: 1.8.9's getPosition() floored (x, y + 0.5, z), (x + 0.5, y + 0.5, z + 0.5) for the local player; blockPosition() floors (x, y, z)
                 if (player.distSqr(input.blockPosition()) > sq) return false;
                 if (!input.isCustomNameVisible()) return false;
-                // TODO: D5 entity name stopgap (D116)
-                return TextUtils.getFormattedText(input.getName()).contains("✯") && TextUtils.getFormattedText(input.getName()).contains(" ");
+                return STAR.matches(input.getName()) && SPACE.matches(input.getName());
             }
         });
         AColor c = this.<AColor>getParameter("color").getValue();
