@@ -6,7 +6,6 @@
                     <size width="0" height="0">
                         <OnboardingCard id="$default" toggleGroup="" bind:controller="controller">
                             <slot slot="setting">
-                                <feature id="solver.bombdefuse"><_enabled>false</_enabled></feature>
                                 <feature id="solver.trivia"><_enabled>false</_enabled></feature>
                                 <feature id="solver.box"><_enabled>false</_enabled></feature>
                                 <feature id="solver.silverfish"><_enabled>false</_enabled></feature>
@@ -41,7 +40,6 @@
                             <Include include="dungeonsguide:gui/onboarding/standard_card_content.gui"
                                      title="Puzzle Solvers" description="Dungeons Guide presents you with the best possible solution for puzzle rooms." slot="body"/>
                             <slot slot="setting">
-                                <feature id="solver.bombdefuse"><_enabled>true</_enabled></feature>
                                 <feature id="solver.trivia"><_enabled>true</_enabled></feature>
                                 <feature id="solver.box"><_enabled>true</_enabled></feature>
                                 <feature id="solver.silverfish"><_enabled>true</_enabled></feature>

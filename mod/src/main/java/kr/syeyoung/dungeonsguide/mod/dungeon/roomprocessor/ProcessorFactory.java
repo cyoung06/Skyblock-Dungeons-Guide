@@ -18,7 +18,6 @@
 
 package kr.syeyoung.dungeonsguide.mod.dungeon.roomprocessor;
 
-import kr.syeyoung.dungeonsguide.mod.dungeon.roomprocessor.bombdefuse.RoomProcessorBombDefuseSolver;
 import kr.syeyoung.dungeonsguide.mod.dungeon.roomprocessor.boxpuzzle.RoomProcessorBoxSolver;
 import kr.syeyoung.dungeonsguide.mod.dungeon.roomprocessor.icefill.RoomProcessorIcePath2;
 import kr.syeyoung.dungeonsguide.mod.dungeon.roomprocessor.waterpuzzle.RoomProcessorWaterPuzzle;
@@ -58,7 +57,6 @@ public class ProcessorFactory {
         registerRoomProcessor("puzzle_icefill", new RoomProcessorIcePath2.Generator());
         registerRoomProcessor("puzzle_box", new RoomProcessorBoxSolver.Generator());
         registerRoomProcessor("puzzle_trivia", new RoomProcessorTrivia.Generator());
-        registerRoomProcessor("puzzle_bombdefuse", new RoomProcessorBombDefuseSolver.Generator());
 
         registerRoomProcessor("bossroom", new RoomProcessorRedRoom.Generator());
     }

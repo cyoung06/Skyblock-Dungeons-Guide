@@ -185,7 +185,6 @@ public class FeatureRegistry {
 
 
     // Puzzle Solvers
-    public static final FeatureSolverBombdefuse SOLVER_BOMBDEFUSE = register(new FeatureSolverBombdefuse());
     public static final FeatureSolverKahoot SOLVER_KAHOOT = register(new FeatureSolverKahoot());
     public static final FeatureSolverBox SOLVER_BOX = register(new FeatureSolverBox());
     public static final FeatureSolverSilverfish SOLVER_SILVERFISH = register(new FeatureSolverSilverfish());
