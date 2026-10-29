@@ -22,6 +22,8 @@ import com.mojang.blaze3d.pipeline.ColorTargetState;
 import com.mojang.blaze3d.pipeline.DepthStencilState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.CompareOp;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormatElement;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.client.renderer.rendertype.RenderSetup;
@@ -80,10 +82,39 @@ public class DGRenderTypes {
             .withCull(false)
             .withDepthStencilState(NO_DEPTH)
             .build();
+    private static final VertexFormat REPEAT_FORMAT = VertexFormat.builder()
+            .add("Position", VertexFormatElement.POSITION)
+            .add("UV0", VertexFormatElement.UV0)
+            .add("Color", VertexFormatElement.COLOR)
+            .add("UV1", VertexFormatElement.UV1)
+            .add("UV2", VertexFormatElement.UV2)
+            .build();
+    private static final RenderPipeline REPEAT_PIPELINE = RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET)
+            .withLocation(Identifier.fromNamespaceAndPath("dungeonsguide", "pipeline/repeat"))
+            .withVertexShader(Identifier.fromNamespaceAndPath("dungeonsguide", "repeat"))
+            .withFragmentShader(Identifier.fromNamespaceAndPath("dungeonsguide", "repeat"))
+            .withSampler("Sampler0")
+            .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
+            .withCull(false)
+            .withVertexFormat(REPEAT_FORMAT, VertexFormat.Mode.QUADS)
+            .withDepthStencilState(DepthStencilState.DEFAULT)
+            .build();
+    private static final RenderPipeline REPEAT_SEE_THROUGH_PIPELINE = RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET)
+            .withLocation(Identifier.fromNamespaceAndPath("dungeonsguide", "pipeline/repeat_see_through"))
+            .withVertexShader(Identifier.fromNamespaceAndPath("dungeonsguide", "repeat"))
+            .withFragmentShader(Identifier.fromNamespaceAndPath("dungeonsguide", "repeat"))
+            .withSampler("Sampler0")
+            .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
+            .withCull(false)
+            .withVertexFormat(REPEAT_FORMAT, VertexFormat.Mode.QUADS)
+            .withDepthStencilState(NO_DEPTH)
+            .build();
     private static final Map<Identifier, RenderType> IMAGE = new HashMap<>();
     private static final Map<Identifier, RenderType> IMAGE_SEE_THROUGH = new HashMap<>();
     private static final Map<Identifier, RenderType> TEXTURED_QUAD = new HashMap<>();
     private static final Map<Identifier, RenderType> TEXTURED_QUAD_SEE_THROUGH = new HashMap<>();
+    private static final Map<Identifier, RenderType> REPEAT = new HashMap<>();
+    private static final Map<Identifier, RenderType> REPEAT_SEE_THROUGH = new HashMap<>();
 
     public static RenderType filledSeeThrough() {
         return FILLED_SEE_THROUGH;
@@ -115,5 +146,15 @@ public class DGRenderTypes {
     public static RenderType texturedQuadSeeThrough(Identifier texture) {
         return TEXTURED_QUAD_SEE_THROUGH.computeIfAbsent(texture, t -> RenderType.create("dungeonsguide_textured_quad_see_through",
                 RenderSetup.builder(TEXTURED_QUAD_SEE_THROUGH_PIPELINE).withTexture("Sampler0", t).sortOnUpload().createRenderSetup()));
+    }
+
+    public static RenderType repeat(Identifier texture) {
+        return REPEAT.computeIfAbsent(texture, t -> RenderType.create("dungeonsguide_repeat",
+                RenderSetup.builder(REPEAT_PIPELINE).withTexture("Sampler0", t).sortOnUpload().createRenderSetup()));
+    }
+
+    public static RenderType repeatSeeThrough(Identifier texture) {
+        return REPEAT_SEE_THROUGH.computeIfAbsent(texture, t -> RenderType.create("dungeonsguide_repeat_see_through",
+                RenderSetup.builder(REPEAT_SEE_THROUGH_PIPELINE).withTexture("Sampler0", t).sortOnUpload().createRenderSetup()));
     }
 }
