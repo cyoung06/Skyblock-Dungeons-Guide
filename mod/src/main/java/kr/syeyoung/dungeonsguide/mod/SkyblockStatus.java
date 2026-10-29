@@ -149,7 +149,6 @@ public class SkyblockStatus {
 
         boolean skyblockFound = false;
         for (ComponentMatcher skyblock : SKYBLOCK_TITLES) {
-            // old: TextUtils.stripColor(TextUtils.getFormattedText(objective.getDisplayName())).startsWith(skyblock)
             if (skyblock.matches(objective.getDisplayName())) {
                 skyblockFound = true;
                 isOnSkyblock = true;
@@ -168,7 +167,6 @@ public class SkyblockStatus {
         Collection<Score> scores = objective.getScores();
         for (Score sc : scores) {
             Component line = sc.getLine();
-            // old: TextUtils.keepScoreboardCharacters(TextUtils.stripColor(sc.getJustTeam())).trim().contains("Cleared: ")
             if (CLEARED.matches(line)) {
                 foundDungeon = true;
                 DungeonContext context = DungeonsGuide.getDungeonsGuide().getDungeonFacade().getContext();
@@ -178,7 +176,6 @@ public class SkyblockStatus {
                     context.setPercentage(Integer.parseInt(visible.substring(start, visible.indexOf('%', start))));
                 }
             }
-            // old: sc.getJustTeam().startsWith(" §7\uE067")
             if (LOCATION.matches(line)) {
                 setLocationName(TextUtils.getVisibleText(line).substring(2).trim());
             }

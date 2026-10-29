@@ -82,7 +82,7 @@ public class FlatTextSpan {
 
                     // Force break.
                     if (character == '\n') {
-                        endIdx = i+1;
+                        endIdx = i;
                         lineBroken = true;
                         wasNewLine = true;
                         break;
@@ -129,7 +129,7 @@ public class FlatTextSpan {
                         break;
                     }
                 } else {
-                    startRealWord = endIdx;
+                    startRealWord = endIdx + 1;
                 }
                 if (startRealWord != -1) {
                     second = new char[value.length - startRealWord];
@@ -166,7 +166,7 @@ public class FlatTextSpan {
 
                 if (character == '\n') {
                     // Force break.
-                    endIdx = i + 1;
+                    endIdx = i;
                     lineBroken = true;
                     wasNewLine = true;
                     break;
@@ -194,7 +194,7 @@ public class FlatTextSpan {
                         break;
                     }
                 } else {
-                    startRealWord = endIdx;
+                    startRealWord = endIdx + 1;
                 }
                 if (startRealWord != -1) {
                     second = new char[value.length - startRealWord];

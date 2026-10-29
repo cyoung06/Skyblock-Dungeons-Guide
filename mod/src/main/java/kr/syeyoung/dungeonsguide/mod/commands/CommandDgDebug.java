@@ -72,6 +72,8 @@ import kr.syeyoung.dungeonsguide.mod.wsresource.StaticResourceCache;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import kr.syeyoung.dungeonsguide.mod.dungeon.data.LegacyBlock;
+import kr.syeyoung.dungeonsguide.mod.dungeon.dataprovider.DungeonDoor;
+import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.CompoundTag;
@@ -150,37 +152,18 @@ public class CommandDgDebug {
 
     @DGCommand("dgdebug randomroutine")
     public void randomRoutine() {
-        try {
-            Minecraft mc = Minecraft.getInstance();
-            DynamicOps<JsonElement> ops = mc.level.registryAccess().createSerializationContext(JsonOps.INSTANCE);
-            JsonArray entities = new JsonArray();
-            for (Entity entity : mc.level.entitiesForRendering()) {
-                if (!entity.hasCustomName() && !(entity instanceof ArmorStand)) continue;
-                JsonObject json = new JsonObject();
-                json.addProperty("type", BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString());
-                json.addProperty("pos", entity.getX() + ", " + entity.getY() + ", " + entity.getZ());
-                json.addProperty("distance", Math.sqrt(entity.distanceToSqr(mc.player)));
-                json.addProperty("customNameVisible", entity.isCustomNameVisible());
-                if (entity.getCustomName() != null)
-                    json.add("customName", ComponentSerialization.CODEC.encodeStart(ops, entity.getCustomName()).getOrThrow());
-                json.add("name", ComponentSerialization.CODEC.encodeStart(ops, entity.getName()).getOrThrow());
-                json.addProperty("formatted", TextUtils.getFormattedText(entity.getName()));
-                entities.add(json);
+        int changed = 0;
+        for (DungeonRoomInfo dungeonRoomInfo : DungeonRoomInfoRegistry.getRegistered()) {
+            Object warningDir = dungeonRoomInfo.getProperties().get("warning-dir");
+            if (warningDir instanceof String dir && !dir.equals(dir.toLowerCase(Locale.ROOT))) {
+                dungeonRoomInfo.getProperties().put("warning-dir", dir.toLowerCase(Locale.ROOT));
+                changed++;
+                ChatTransmitter.addToQueue("warning-dir of " + dungeonRoomInfo.getName() + ": " + dir + " -> " + dir.toLowerCase(Locale.ROOT));
             }
-            JsonObject capture = new JsonObject();
-            capture.addProperty("time", System.currentTimeMillis());
-            capture.add("entities", entities);
-
-            File dir = new File(Main.getConfigDir(), "entitycapture");
-            dir.mkdirs();
-            File file = new File(dir, System.currentTimeMillis() + ".json");
-            try (Writer writer = new FileWriter(file, StandardCharsets.UTF_8)) {
-                writer.write(new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(capture));
-            }
-            ChatTransmitter.addToQueue(Component.literal("§eDungeons Guide §7:: §fEntities captured to " + file.getAbsolutePath()));
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+        File out = new File(Main.getConfigDir(), "updatedroomdata");
+        DungeonRoomInfoRegistry.saveAll(new File(out, "roomdata"));
+        ChatTransmitter.addToQueue("changed " + changed + " rooms, saved all to " + out.getAbsolutePath());
     }
 
     @DGCommand("dgdebug mockdungeonstart")
