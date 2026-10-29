@@ -86,6 +86,7 @@ public class DGGuiRenderer implements AutoCloseable {
 
     private DGGuiRenderer() {
         pictureInPictureFactories.put(GuiEntityRenderState.class, bufferSource -> new GuiEntityRenderer(bufferSource, Minecraft.getInstance().getEntityRenderDispatcher()));
+        pictureInPictureFactories.put(PreviewSceneRenderState.class, PreviewSceneRenderer::new);
     }
 
     public void submit(StencilImage target, List<DGRenderState> states) {

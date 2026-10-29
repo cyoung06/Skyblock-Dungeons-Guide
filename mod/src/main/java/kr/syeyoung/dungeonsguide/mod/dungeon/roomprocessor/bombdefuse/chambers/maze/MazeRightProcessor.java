@@ -60,10 +60,10 @@ public class MazeRightProcessor extends GeneralDefuseChamberProcessor {
     @Override
     public void drawWorld(RenderWorldEvent event) {
         super.drawWorld(event);
-        RenderUtils.drawTextAtWorld(latestRequest == null ? "Request not received yet" : "Requested received "+latestRequest.getBlock().getName().getString() , center.getX()+ 0.5f, center.getY(), center.getZ()+ 0.5f, 0xFFFFFFFF, 0.03F, false, false, event.partialTicks);
+        RenderUtils.drawTextAtWorld(event.container, latestRequest == null ? "Request not received yet" : "Requested received "+latestRequest.getBlock().getName().getString() , center.getX()+ 0.5f, center.getY(), center.getZ()+ 0.5f, 0xFFFFFFFF, 0.03F, false, false, event.partialTicks);
         BlockPos pos = latestRequest == null ? null : blockToBlockPosMap.get(LegacyBlock.legacyId(latestRequest));
         if (pos == null) return;
-        RenderUtils.highlightBlock(pos, new Color(0,255,0,100), event.partialTicks, false);
+        RenderUtils.highlightBlock(event.container, pos, new Color(0,255,0,100), event.partialTicks, false);
     }
 
     @Override

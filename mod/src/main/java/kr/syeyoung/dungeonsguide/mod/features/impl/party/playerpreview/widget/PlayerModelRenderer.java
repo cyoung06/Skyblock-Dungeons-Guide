@@ -42,6 +42,8 @@ import kr.syeyoung.dungeonsguide.mod.player.PlayerManager;
 import lombok.Setter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.ChatFormatting;
 import org.lwjgl.opengl.GL11;
@@ -79,11 +81,8 @@ public class PlayerModelRenderer extends AnnotatedExportOnlyWidget implements La
 
     @Override
     public void doRender(float partialTicks, RenderingContext context, DomElement buildContext) {
-        // TODO: 3D previews are built later (D124), 1.8.9 drew the player model here:
-//        GlStateManager.enableDepth();
-//        GlStateManager.color(1, 1, 1, 1.0F);
-//        GuiInventory.drawEntityOnScreen(45, 150, 60, (float) -relMouseX+75, 0, fakePlayer);
-//        GlStateManager.disableDepth();
+        context.drawVanilla(graphics -> InventoryScreen.extractEntityInInventoryFollowsMouse(graphics, 0, 30, 90, 162, 60, 0,
+                (float) relMouseX - 30, 96, fakePlayer));
 
         String toDraw = fakePlayer.getGameProfile().name();
         List<ActiveCosmetic> activeCosmetics = DungeonsGuide.getDungeonsGuide().getCosmeticsManager().getActiveCosmeticByPlayer().get(
@@ -139,22 +138,22 @@ public class PlayerModelRenderer extends AnnotatedExportOnlyWidget implements La
         // yes, we don't care if child handled
         ItemStack toHover = null;
         this.relMouseX = relMouseX0;
-        // TODO: D124, FakePlayer's armor and held item are stubbed with the preview, 1.8.9 hovered them here:
-//        if (relMouseX0 > 20 && relMouseX0 < 70) {
-//            if (33 <= relMouseY0 && relMouseY0 <= 66) {
-//                toHover = fakePlayer.getInventory()[3];
-//            } else if (66 <= relMouseY0 && relMouseY0 <= 108) {
-//                toHover = fakePlayer.getInventory()[2];
-//            } else if (108 <= relMouseY0 && relMouseY0 <= 130) {
-//                toHover = fakePlayer.getInventory()[1];
-//            } else if (130 <= relMouseY0 && relMouseY0 <= 154) {
-//                toHover = fakePlayer.getInventory()[0];
-//            }
-//        } else if (relMouseX0 > 0 && relMouseX0 <= 20) {
-//            if (80 <= relMouseY0 && relMouseY0 <= 120) {
-//                toHover = fakePlayer.inventory.mainInventory[fakePlayer.inventory.currentItem];
-//            }
-//        }
+        if (relMouseX0 > 20 && relMouseX0 < 70) {
+            if (33 <= relMouseY0 && relMouseY0 <= 66) {
+                toHover = fakePlayer.getItemBySlot(EquipmentSlot.HEAD);
+            } else if (66 <= relMouseY0 && relMouseY0 <= 108) {
+                toHover = fakePlayer.getItemBySlot(EquipmentSlot.CHEST);
+            } else if (108 <= relMouseY0 && relMouseY0 <= 130) {
+                toHover = fakePlayer.getItemBySlot(EquipmentSlot.LEGS);
+            } else if (130 <= relMouseY0 && relMouseY0 <= 154) {
+                toHover = fakePlayer.getItemBySlot(EquipmentSlot.FEET);
+            }
+        } else if (relMouseX0 > 0 && relMouseX0 <= 20) {
+            if (80 <= relMouseY0 && relMouseY0 <= 120) {
+                toHover = fakePlayer.getMainHandItem();
+            }
+        }
+        if (toHover != null && toHover.isEmpty()) toHover = null;
         if (toHover != null) {
             List<String> list = toHover.getTooltipLines(Item.TooltipContext.of(Minecraft.getInstance().level), Minecraft.getInstance().player,
                 Minecraft.getInstance().options.advancedItemTooltips ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL)

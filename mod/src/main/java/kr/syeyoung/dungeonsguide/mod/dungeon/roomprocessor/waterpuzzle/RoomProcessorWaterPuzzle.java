@@ -333,7 +333,7 @@ public class RoomProcessorWaterPuzzle extends GeneralRoomProcessor {
             for (int x = 0; x < nodes[y].length; x++) {
                 Simulator.Node n = nodes[y][x];
                 if (n.getNodeType().isWater()) {
-                    RenderUtils.highlightBlock(ptMapping.get(new Simulator.Pt(x,y)), new Color(0, 255, 0, 50), event.partialTicks, true);
+                    RenderUtils.highlightBlock(event.container, ptMapping.get(new Simulator.Pt(x,y)), new Color(0, 255, 0, 50), event.partialTicks, true);
                 }
             }
         }
@@ -354,7 +354,7 @@ public class RoomProcessorWaterPuzzle extends GeneralRoomProcessor {
                     // target:
 
                     if (i == idx) {
-                        RenderUtils.drawLine(
+                        RenderUtils.drawLine(event.container, 
                                 Minecraft.getInstance().player.getEyePosition(event.partialTicks),
                                 Vec3.atLowerCornerOf(pos).add(0.5, 0, 0.5),
                                 Color.green,
@@ -366,7 +366,7 @@ public class RoomProcessorWaterPuzzle extends GeneralRoomProcessor {
 
                     double time = (target-System.currentTimeMillis()) / 1000.0 + 0.051;
                     if (time < 0) time = 0;
-                    RenderUtils.drawTextAtWorld(String.format("%.1f", time)+"s", pos.getX()+0.5f, pos.getY()+(i - idx)*0.2f - 0.5f, pos.getZ()+0.5f,
+                    RenderUtils.drawTextAtWorld(event.container, String.format("%.1f", time)+"s", pos.getX()+0.5f, pos.getY()+(i - idx)*0.2f - 0.5f, pos.getZ()+0.5f,
                             (i == idx) && target < System.currentTimeMillis() ? 0xFF00FF00 : 0xFFFF5500, 0.05f, false, false, event.partialTicks);
                 }
                 culMoves += moves;

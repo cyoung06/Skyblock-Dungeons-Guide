@@ -40,7 +40,6 @@ import kr.syeyoung.dungeonsguide.mod.events.impl.ScreenMouseEvent;
 import kr.syeyoung.dungeonsguide.mod.events.impl.ScreenRenderEvent;
 import kr.syeyoung.dungeonsguide.mod.events.impl.WorldLoadEvent;
 import kr.syeyoung.dungeonsguide.mod.render.world.DGRenderStateContainer;
-import kr.syeyoung.dungeonsguide.mod.render.world.DGWorldRenderer;
 import kr.syeyoung.dungeonsguide.mod.render.world.MainPhaseSubmitter;
 import kr.syeyoung.dungeonsguide.mod.utils.cursor.GLCursors;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
@@ -117,9 +116,7 @@ public class FabricEventBridge {
         ClientReceiveMessageEvents.ALLOW_CHAT.register((message, playerChatMessage, sender, boundChatType, timestamp) ->
                 !fire(new ChatReceivedEvent((byte) 0, message)));
 
-        // 1.8.9's RenderWorldLastEvent: handlers record DG world states during extraction, DG's frame graph passes draw them (D123)
         LevelRenderEvents.END_EXTRACTION.register(context -> {
-            DGWorldRenderer.beginExtraction(context.camera().position());
             DGRenderStateContainer container = new DGRenderStateContainer();
             context.levelState().setData(DGRenderStateContainer.KEY, container);
             fire(new RenderWorldEvent(context.deltaTracker().getGameTimeDeltaPartialTick(false), context, container));

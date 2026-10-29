@@ -1,5 +1,6 @@
 package kr.syeyoung.dungeonsguide.mod.features.impl.secret.linestyle.classic;
 
+import kr.syeyoung.dungeonsguide.mod.render.world.DGRenderStateContainer;
 import kr.syeyoung.dungeonsguide.mod.config.types.AColor;
 import kr.syeyoung.dungeonsguide.mod.dungeon.actions.*;
 import kr.syeyoung.dungeonsguide.mod.dungeon.actions.route.ActionRoute;
@@ -16,9 +17,8 @@ import kr.syeyoung.dungeonsguide.mod.pathfinding.pathfinder.PathfinderExecutor;
 import kr.syeyoung.dungeonsguide.mod.pathfinding.preset.RoomPresetPathPlanner;
 import kr.syeyoung.dungeonsguide.mod.utils.RenderUtils;
 import kr.syeyoung.dungeonsguide.mod.events.impl.RenderWorldEvent;
-import kr.syeyoung.dungeonsguide.mod.render.world.DGWorldRenderer;
-import kr.syeyoung.dungeonsguide.mod.render.world.state.BlockModelState;
-import kr.syeyoung.dungeonsguide.mod.render.world.state.LineStripState;
+import kr.syeyoung.dungeonsguide.mod.render.world.state.DGBlockModelRenderState;
+import kr.syeyoung.dungeonsguide.mod.render.world.state.LineStripRenderState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
@@ -176,22 +176,22 @@ public class ClassicPathDisplayEngine implements IPathDisplayEngine<ClassicPathE
     public void renderActionKill(ActionKill actionKill, DungeonRoom dungeonRoom, RenderWorldEvent event) {
         float partialTicks = event.partialTicks;
         BlockPos pos = actionKill.getTarget().getBlockPos(dungeonRoom);
-        RenderUtils.highlightBlock(pos, new Color(0, 255,255,50),partialTicks, true);
-        RenderUtils.drawTextAtWorld("Spawn", pos.getX() + 0.5f, pos.getY() + 0.3f, pos.getZ() + 0.5f, 0xFFFFFF00, 0.02f, false, false, partialTicks);
+        RenderUtils.highlightBlock(event.container, pos, new Color(0, 255,255,50),partialTicks, true);
+        RenderUtils.drawTextAtWorld(event.container, "Spawn", pos.getX() + 0.5f, pos.getY() + 0.3f, pos.getZ() + 0.5f, 0xFFFFFF00, 0.02f, false, false, partialTicks);
     }
 
     public void renderActionInteract(ActionInteract actionInteract, DungeonRoom dungeonRoom, RenderWorldEvent event) {
         float partialTicks = event.partialTicks;
         BlockPos pos = actionInteract.getTarget().getBlockPos(dungeonRoom);
-        RenderUtils.highlightBlock(pos, new Color(0, 255,255,50),partialTicks, true);
-        RenderUtils.drawTextAtWorld("Interact", pos.getX() + 0.5f, pos.getY() + 0.3f, pos.getZ() + 0.5f, 0xFFFFFF00, 0.02f, false, false, partialTicks);
+        RenderUtils.highlightBlock(event.container, pos, new Color(0, 255,255,50),partialTicks, true);
+        RenderUtils.drawTextAtWorld(event.container, "Interact", pos.getX() + 0.5f, pos.getY() + 0.3f, pos.getZ() + 0.5f, 0xFFFFFF00, 0.02f, false, false, partialTicks);
     }
 
     public void renderActionDropItem(ActionDropItem dropItem, DungeonRoom dungeonRoom, RenderWorldEvent event) {
         float partialTicks = event.partialTicks;
         BlockPos pos = dropItem.getTarget().getBlockPos(dungeonRoom);
-        RenderUtils.highlightBlock(pos, new Color(0, 255, 255, 50), partialTicks, true);
-        RenderUtils.drawTextAtWorld("Drop Item", pos.getX() + 0.5f, pos.getY() + 0.3f, pos.getZ() + 0.5f, 0xFFFFFF00, 0.02f, false, false, partialTicks);
+        RenderUtils.highlightBlock(event.container, pos, new Color(0, 255, 255, 50), partialTicks, true);
+        RenderUtils.drawTextAtWorld(event.container, "Drop Item", pos.getX() + 0.5f, pos.getY() + 0.3f, pos.getZ() + 0.5f, 0xFFFFFF00, 0.02f, false, false, partialTicks);
     }
 
     public void renderActionClickSet(ActionClickSet actionClickSet, DungeonRoom dungeonRoom, RenderWorldEvent event) {
@@ -205,24 +205,24 @@ public class ClassicPathDisplayEngine implements IPathDisplayEngine<ClassicPathE
             xAcc += pos.getX() + 0.5f;
             yAcc += pos.getY()+ 0.5f;
             zAcc += pos.getZ()+ 0.5f;
-            RenderUtils.highlightBlock(offsetPoint.getBlockPos(dungeonRoom), new Color(0, 255,255,50),partialTicks, true);
+            RenderUtils.highlightBlock(event.container, offsetPoint.getBlockPos(dungeonRoom), new Color(0, 255,255,50),partialTicks, true);
         }
 
-        RenderUtils.drawTextAtWorld("Click", xAcc / size, yAcc / size, zAcc / size, 0xFFFFFF00, 0.02f, false, false, partialTicks);
+        RenderUtils.drawTextAtWorld(event.container, "Click", xAcc / size, yAcc / size, zAcc / size, 0xFFFFFF00, 0.02f, false, false, partialTicks);
     }
 
     public void renderActionClick(ActionClick actionClick, DungeonRoom dungeonRoom, RenderWorldEvent event) {
         float partialTicks = event.partialTicks;
         BlockPos pos = actionClick.getTarget().getBlockPos(dungeonRoom);
-        RenderUtils.highlightBlock(pos, new Color(0, 255,255,50),partialTicks, false);
-        RenderUtils.drawTextAtWorld("Click", pos.getX() + 0.5f, pos.getY() + 0.3f, pos.getZ() + 0.5f, 0xFFFFFF00, 0.02f, false, false, partialTicks);
+        RenderUtils.highlightBlock(event.container, pos, new Color(0, 255,255,50),partialTicks, false);
+        RenderUtils.drawTextAtWorld(event.container, "Click", pos.getX() + 0.5f, pos.getY() + 0.3f, pos.getZ() + 0.5f, 0xFFFFFF00, 0.02f, false, false, partialTicks);
     }
 
     public void renderActionStonkClick(ActionStonkClick actionStonkClick, DungeonRoom dungeonRoom, RenderWorldEvent event) {
         float partialTicks = event.partialTicks;
         BlockPos pos = actionStonkClick.getTarget().getBlockPos(dungeonRoom);
-        RenderUtils.highlightBlock(pos, new Color(0, 255,255,50),partialTicks, false);
-        RenderUtils.drawTextAtWorld("Stonk&Click", pos.getX() + 0.5f, pos.getY() + 0.3f, pos.getZ() + 0.5f, 0xFFFFFF00, 0.02f, false, false, partialTicks);
+        RenderUtils.highlightBlock(event.container, pos, new Color(0, 255,255,50),partialTicks, false);
+        RenderUtils.drawTextAtWorld(event.container, "Stonk&Click", pos.getX() + 0.5f, pos.getY() + 0.3f, pos.getZ() + 0.5f, 0xFFFFFF00, 0.02f, false, false, partialTicks);
     }
 
     public void renderActionBreakWithSuperboom(ActionBreakWithSuperBoom superBoom, DungeonRoom dungeonRoom, RenderWorldEvent event) {
@@ -230,11 +230,11 @@ public class ClassicPathDisplayEngine implements IPathDisplayEngine<ClassicPathE
         BlockPos blockpos = superBoom.getTarget().getOffsetPointList().get(0).getBlockPos(dungeonRoom);
 
         // TODO: 1.8.9 rendered the tnt model with depth off
-        DGWorldRenderer.record(new BlockModelState(Blocks.TNT.defaultBlockState(),
+        event.container.blockModelRenderStates.add(new DGBlockModelRenderState(Blocks.TNT.defaultBlockState(),
                 new Matrix4f().translate(blockpos.getX(), blockpos.getY(), blockpos.getZ()), false));
 
-        RenderUtils.highlightBlock(blockpos, new Color(0, 255,255,50), partialTicks, true);
-        RenderUtils.drawTextAtWorld("Superboom", blockpos.getX() + 0.5f, blockpos.getY() + 0.5f, blockpos.getZ() + 0.5f, 0xFFFFFF00, 0.03f, false, false, partialTicks);
+        RenderUtils.highlightBlock(event.container, blockpos, new Color(0, 255,255,50), partialTicks, true);
+        RenderUtils.drawTextAtWorld(event.container, "Superboom", blockpos.getX() + 0.5f, blockpos.getY() + 0.5f, blockpos.getZ() + 0.5f, 0xFFFFFF00, 0.03f, false, false, partialTicks);
     }
 
     public void drawActionMove(AbstractActionMove actionMove, DungeonRoom dungeonRoom, RenderWorldEvent event) {
@@ -253,13 +253,13 @@ public class ClassicPathDisplayEngine implements IPathDisplayEngine<ClassicPathE
         float scale = 0.45f * multiplier;
         scale *= 25.0 / 6.0;
         if (classicPathEngineLineProperties.isBeacon()) {
-            RenderUtils.renderBeaconBeam(target.getX(), target.getY(), target.getZ(), classicPathEngineLineProperties.getBeaconBeamColor(), partialTicks);
-            RenderUtils.highlightBlock(target, classicPathEngineLineProperties.getBeaconColor(), partialTicks);
+            RenderUtils.renderBeaconBeam(event.container, target.getX(), target.getY(), target.getZ(), classicPathEngineLineProperties.getBeaconBeamColor(), partialTicks);
+            RenderUtils.highlightBlock(event.container, target, classicPathEngineLineProperties.getBeaconColor(), partialTicks);
         }
-        RenderUtils.drawTextAtWorld("Destination", target.getX() + 0.5f, target.getY() + 0.5f + scale, target.getZ() + 0.5f, 0xFF00FF00, 1f, true, false, partialTicks);
+        RenderUtils.drawTextAtWorld(event.container, "Destination", target.getX() + 0.5f, target.getY() + 0.5f + scale, target.getZ() + 0.5f, 0xFF00FF00, 1f, true, false, partialTicks);
 
         // TODO: 1.8.9's getPosition() floored (x, y + 0.5, z), (x + 0.5, y + 0.5, z + 0.5) for the local player; blockPosition() floors (x, y, z)
-        RenderUtils.drawTextAtWorld(String.format("%.2f",Math.sqrt(target.distSqr(Minecraft.getInstance().player.blockPosition())))+"m", target.getX() + 0.5f, target.getY() + 0.5f - scale, target.getZ() + 0.5f, 0xFFFFFF00, 1f, true, false, partialTicks);
+        RenderUtils.drawTextAtWorld(event.container, String.format("%.2f",Math.sqrt(target.distSqr(Minecraft.getInstance().player.blockPosition())))+"m", target.getX() + 0.5f, target.getY() + 0.5f - scale, target.getZ() + 0.5f, 0xFFFFFF00, 1f, true, false, partialTicks);
 
         if (!FeatureRegistry.SECRET_TOGGLE_KEY.isEnabled() || !FeatureRegistry.SECRET_TOGGLE_KEY.togglePathfindStatus) {
             if (poses != null){
@@ -271,12 +271,12 @@ public class ClassicPathDisplayEngine implements IPathDisplayEngine<ClassicPathE
                     cnt ++;
                     // TODO: 1.8.9's getPosition() floored (x, y + 0.5, z), (x + 0.5, y + 0.5, z + 0.5) for the local player; blockPosition() floors (x, y, z)
                     if (pose.getType() != null && pose.getType() != PathfindResult.PathfindNode.NodeType.WALK && pose.getType() != PathfindResult.PathfindNode.NodeType.STONK_WALK && pose.distanceSq(Minecraft.getInstance().player.blockPosition()) < 100) {
-                        RenderUtils.drawTextAtWorld(pose.getType().toString(), pose.getX(), pose.getY() + 0.5f, pose.getZ(), 0xFF00FF00, 0.02f, false, true, partialTicks);
+                        RenderUtils.drawTextAtWorld(event.container, pose.getType().toString(), pose.getX(), pose.getY() + 0.5f, pose.getZ(), 0xFF00FF00, 0.02f, false, true, partialTicks);
                     }
 
                     if (warp == 1) {
                         BlockPos pos = BlockPos.containing(pose.getX(), Math.floor(pose.getY()) -1 , pose.getZ());
-                        RenderUtils.highlightBox(new AABB(pos).inflate(0.003), Color.green, partialTicks, true);
+                        RenderUtils.highlightBox(event.container, new AABB(pos).inflate(0.003), Color.green, partialTicks, true);
                         warp = flag2 ? 0 : 2;
                     }
                     if (pose.getType() == PathfindResult.PathfindNode.NodeType.ETHERWARP &&
@@ -313,7 +313,7 @@ public class ClassicPathDisplayEngine implements IPathDisplayEngine<ClassicPathE
             colors.add(i);
 
             if (lastNode != null && lastNode.getType() != pos.getType()) {
-                recordLineStrip(points, colors, thickness, depth);
+                recordLineStrip(event.container, points, colors, thickness, depth);
                 points = new ArrayList<>();
                 colors = new ArrayList<>();
 
@@ -326,10 +326,10 @@ public class ClassicPathDisplayEngine implements IPathDisplayEngine<ClassicPathE
             lastNode = pos;
 
         }
-        recordLineStrip(points, colors, thickness, depth);
+        recordLineStrip(event.container, points, colors, thickness, depth);
     }
 
-    private static void recordLineStrip(List<Vec3> points, List<Integer> colors, float thickness, boolean depth) {
-        DGWorldRenderer.record(new LineStripState(points, colors.stream().mapToInt(Integer::intValue).toArray(), thickness, false, depth));
+    private static void recordLineStrip(DGRenderStateContainer container, List<Vec3> points, List<Integer> colors, float thickness, boolean depth) {
+        container.lineStripRenderStates.add(new LineStripRenderState(points, colors.stream().mapToInt(Integer::intValue).toArray(), thickness, false, depth));
     }
 }

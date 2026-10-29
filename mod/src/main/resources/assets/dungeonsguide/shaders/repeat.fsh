@@ -1,14 +1,11 @@
 #version 330
 
-layout(std140) uniform Repeat {
-    vec2 position;
-    vec2 size;
-};
-
 uniform sampler2D Sampler0;
 
 in vec2 texCoord0;
 in vec4 vertexColor;
+flat in vec2 position;
+flat in vec2 size;
 
 out vec4 fragColor;
 

@@ -18,6 +18,7 @@
 
 package kr.syeyoung.dungeonsguide.mod.dungeon.data.mechanics;
 
+import kr.syeyoung.dungeonsguide.mod.render.world.DGRenderStateContainer;
 import com.google.common.collect.Sets;
 import kr.syeyoung.dungeonsguide.mod.dungeon.data.OffsetPoint;
 import kr.syeyoung.dungeonsguide.mod.dungeon.data.OffsetPointSet;
@@ -65,18 +66,18 @@ public class DungeonTripwireTrapState implements DungeonMechanicState {
     }
 
     @Override
-    public void highlight(Color color, String name, float partialTicks) {
+    public void highlight(DGRenderStateContainer container, Color color, String name, float partialTicks) {
         if (data.dangerRegion.getOffsetPointList().isEmpty()) return;
         OffsetPoint firstPoint = data.dangerRegion.getOffsetPointList().get(0);
         BlockPos pos = firstPoint.getBlockPos(room);
-        RenderUtils.drawTextAtWorld(name, pos.getX() + 0.5f, pos.getY() + 0.75f, pos.getZ() + 0.5f, 0xFFFFFFFF, 0.03f, false, true, partialTicks);
-        RenderUtils.drawTextAtWorld(getCurrentState(), pos.getX() + 0.5f, pos.getY() + 0.25f, pos.getZ() + 0.5f, 0xFFFFFFFF, 0.03f, false, true, partialTicks);
+        RenderUtils.drawTextAtWorld(container, name, pos.getX() + 0.5f, pos.getY() + 0.75f, pos.getZ() + 0.5f, 0xFFFFFFFF, 0.03f, false, true, partialTicks);
+        RenderUtils.drawTextAtWorld(container, getCurrentState(), pos.getX() + 0.5f, pos.getY() + 0.25f, pos.getZ() + 0.5f, 0xFFFFFFFF, 0.03f, false, true, partialTicks);
 
         List<BlockPos> list = new ArrayList<>();
         for (OffsetPoint offsetPoint : data.dangerRegion.getOffsetPointList()) {
             list.add(offsetPoint.getBlockPos(room));
         }
-        RenderUtils.highlightBlocksStencil(list, partialTicks, color, false);
+        RenderUtils.highlightBlocksStencil(container, list, partialTicks, color, false);
     }
 
     @Override

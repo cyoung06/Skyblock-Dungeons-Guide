@@ -298,15 +298,15 @@ public class RoomProcessorBombDefuseSolver extends GeneralRoomProcessor {
 
         if ((maze || impossible) && warning != null && !found) {
             if (impossible) {
-                RenderUtils.drawTextAtWorld("Warning: This Bomb Defuse is bugged and Impossible" , warning.getX()+ 0.5f, warning.getY(), warning.getZ()+ 0.5f, 0xFF00FF00, 0.03F, false, false, event.partialTicks);
+                RenderUtils.drawTextAtWorld(event.container, "Warning: This Bomb Defuse is bugged and Impossible" , warning.getX()+ 0.5f, warning.getY(), warning.getZ()+ 0.5f, 0xFF00FF00, 0.03F, false, false, event.partialTicks);
             } else {
-                RenderUtils.drawTextAtWorld("Warning: This Bomb Defuse must be done with 2 people (maze)" , warning.getX()+ 0.5f, warning.getY(), warning.getZ()+ 0.5f, 0xFF00FF00, 0.03F, false, false, event.partialTicks);
+                RenderUtils.drawTextAtWorld(event.container, "Warning: This Bomb Defuse must be done with 2 people (maze)" , warning.getX()+ 0.5f, warning.getY(), warning.getZ()+ 0.5f, 0xFF00FF00, 0.03F, false, false, event.partialTicks);
             }
         }
         if (warning != null && !found) {
             for (int i = 0; i < 4; i++) {
                 BombDefuseChamberGenerator bdcg = chambers.get(i).getChamberGen();
-                RenderUtils.drawTextAtWorld((i + 1) + ". " + (bdcg == null ? "null" : bdcg.getName()), warning.getX() + 0.5f, warning.getY() - ((i + 1) * 0.3f), warning.getZ() + 0.5f, 0xFF00FF00, 0.03F, false, false, event.partialTicks);
+                RenderUtils.drawTextAtWorld(event.container, (i + 1) + ". " + (bdcg == null ? "null" : bdcg.getName()), warning.getX() + 0.5f, warning.getY() - ((i + 1) * 0.3f), warning.getZ() + 0.5f, 0xFF00FF00, 0.03F, false, false, event.partialTicks);
             }
         }
     }

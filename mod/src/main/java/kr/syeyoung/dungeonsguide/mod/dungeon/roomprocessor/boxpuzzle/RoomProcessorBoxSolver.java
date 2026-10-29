@@ -368,21 +368,21 @@ public class RoomProcessorBoxSolver extends GeneralRoomProcessor {
                 BlockPos highlight = pos2.offset(dir);
                 // TODO: 1.8.9's getPosition() floored (x, y + 0.5, z), (x + 0.5, y + 0.5, z + 0.5) for the local player; blockPosition() floors (x, y, z)
                 AColor color = FeatureRegistry.SOLVER_BOX.getTargetColor().multiplyAlpha(Mth.clamp(Minecraft.getInstance().player.blockPosition().distSqr(highlight), 100, 255) / 255);
-                RenderUtils.highlightBoxAColor(new AABB(highlight.getX(), highlight.getY(), highlight.getZ(), highlight.getX()+1, highlight.getY() + 1, highlight.getZ() + 1), color, event.partialTicks, false);
+                RenderUtils.highlightBoxAColor(event.container, new AABB(highlight.getX(), highlight.getY(), highlight.getZ(), highlight.getX()+1, highlight.getY() + 1, highlight.getZ() + 1), color, event.partialTicks, false);
             }
 
             if (pathFound != null) {
-                RenderUtils.drawLines(pathFound, FeatureRegistry.SOLVER_BOX.getLineColor(), (float) FeatureRegistry.SOLVER_BOX.getLineWidth(), event.partialTicks, true);
+                RenderUtils.drawLines(event.container, pathFound, FeatureRegistry.SOLVER_BOX.getLineColor(), (float) FeatureRegistry.SOLVER_BOX.getLineWidth(), event.partialTicks, true);
             }
         } else {
             if (totalPath != null) {
-                RenderUtils.drawLines(totalPath, FeatureRegistry.SOLVER_BOX.getLineColor(), (float) FeatureRegistry.SOLVER_BOX.getLineWidth(), event.partialTicks, false);
+                RenderUtils.drawLines(event.container, totalPath, FeatureRegistry.SOLVER_BOX.getLineColor(), (float) FeatureRegistry.SOLVER_BOX.getLineWidth(), event.partialTicks, false);
             }
             if (totalPushedBlocks != null) {
                 for (int i = 0; i < totalPushedBlocks.size(); i++) {
                     BlockPos pos = totalPushedBlocks.get(i);
-                    RenderUtils.highlightBoxAColor(new AABB(pos.getX(), pos.getY(), pos.getZ(), pos.getX()+1, pos.getY() + 1, pos.getZ() + 1),  FeatureRegistry.SOLVER_BOX.getTargetColor(), event.partialTicks, false);
-                    RenderUtils.drawTextAtWorld("#"+i, pos.getX()+0.5f, pos.getY() +0.5f, pos.getZ() + 0.5f, i != step ?
+                    RenderUtils.highlightBoxAColor(event.container, new AABB(pos.getX(), pos.getY(), pos.getZ(), pos.getX()+1, pos.getY() + 1, pos.getZ() + 1),  FeatureRegistry.SOLVER_BOX.getTargetColor(), event.partialTicks, false);
+                    RenderUtils.drawTextAtWorld(event.container, "#"+i, pos.getX()+0.5f, pos.getY() +0.5f, pos.getZ() + 0.5f, i != step ?
                             RenderUtils.getColorAt(pos.getX(), pos.getY(), pos.getZ(), FeatureRegistry.SOLVER_BOX.getTextColor2()) : RenderUtils.getColorAt(pos.getX(), pos.getY(), pos.getZ(), FeatureRegistry.SOLVER_BOX.getTextColor()), 0.1f, false, false, event.partialTicks);
                 }
             }

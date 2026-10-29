@@ -83,9 +83,9 @@ public class FeatureArrowPathSolver extends SimpleFeature {
             for (int x = 0; x < 5; x++) {
                 if (solution[y][x] == -1) continue;
                 if (depth)
-                    RenderUtils.drawTextAtWorldDepth((solution[y][x]-pendingClicks[y][x]) + "", -1.7f, 120.5f + y, 75.5f + x, 0xFF00FF00, 0.03f, false, false, event.partialTicks);
+                    RenderUtils.drawTextAtWorldDepth(event.container, (solution[y][x]-pendingClicks[y][x]) + "", -1.7f, 120.5f + y, 75.5f + x, 0xFF00FF00, 0.03f, false, false, event.partialTicks);
                 else
-                    RenderUtils.drawTextAtWorld((solution[y][x]-pendingClicks[y][x]) + "", -1.7f, 120.5f + y, 75.5f + x, 0xFF00FF00, 0.03f, false, false, event.partialTicks);
+                    RenderUtils.drawTextAtWorld(event.container, (solution[y][x]-pendingClicks[y][x]) + "", -1.7f, 120.5f + y, 75.5f + x, 0xFF00FF00, 0.03f, false, false, event.partialTicks);
             }
         }
     }

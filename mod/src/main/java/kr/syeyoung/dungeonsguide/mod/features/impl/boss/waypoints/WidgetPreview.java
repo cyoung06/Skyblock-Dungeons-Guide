@@ -28,6 +28,14 @@ import kr.syeyoung.dungeonsguide.mod.utils.RenderUtils;
 
 import java.util.Collections;
 import java.util.List;
+import net.minecraft.core.BlockPos;
+import kr.syeyoung.dungeonsguide.mod.render.gui.PreviewSceneRenderState;
+import kr.syeyoung.dungeonsguide.mod.render.world.DGRenderStateContainer;
+import kr.syeyoung.dungeonsguide.mod.render.world.state.DGBlockModelRenderState;
+import net.minecraft.client.renderer.state.level.LevelRenderState;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+import net.minecraft.world.level.block.Blocks;
 
 public class WidgetPreview extends Widget implements Renderer {
 
@@ -46,166 +54,41 @@ public class WidgetPreview extends Widget implements Renderer {
         return this;
     }
 
-    public static void drawTextAtWorld(String text, float x, float y, float z, int color, float scale, boolean increase, boolean renderBlackBox, float partialTicks) {
-        // TODO: 3D previews are built later (D124), the 1.8.9 preview drawing is kept below
-/*
-        float lScale = scale;
-
-        RenderManager renderManager = Minecraft.getInstance().getEntityRenderDispatcher();
-        FontRenderer fontRenderer = Minecraft.getInstance().font;
-
-        Vector3f renderPos = new Vector3f(x,y,z);
-
-        if (increase) {
-            double distance = Math.sqrt(renderPos.x * renderPos.x + renderPos.y * renderPos.y + renderPos.z * renderPos.z);
-            double multiplier = distance / 120f; //mobs only render ~120 blocks away
-            lScale *= 0.45f * multiplier;
-        }
-
-        GlStateManager.color(1f, 1f, 1f, 0.5f);
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(renderPos.x, renderPos.y, renderPos.z);
-        GlStateManager.rotate(35, 0.0f, 1.0f, 0.0f);
-        GlStateManager.rotate(25, 1.0f, 0.0f, 0.0f);
-        GlStateManager.scale(-lScale, -lScale, lScale);
-        GlStateManager.disableLighting();
-        GlStateManager.depthMask(false); GL11.glDisable(GL11.GL_DEPTH_TEST);
-        GlStateManager.disableDepth();
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
-        int textWidth = fontRenderer.getStringWidth(text);
-
-        Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer worldRenderer = tessellator.getWorldRenderer();
-        if (renderBlackBox) {
-            double j = textWidth / 2;
-            GlStateManager.disableTexture2D();
-            worldRenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-            worldRenderer.pos(-j - 1, -1, 0.0).color(0.0f, 0.0f, 0.0f, 0.25f).endVertex();
-            worldRenderer.pos(-j - 1, 8, 0.0).color(0.0f, 0.0f, 0.0f, 0.25f).endVertex();
-            worldRenderer.pos(j + 1, 8, 0.0).color(0.0f, 0.0f, 0.0f, 0.25f).endVertex();
-            worldRenderer.pos(j + 1, -1, 0.0).color(0.0f, 0.0f, 0.0f, 0.25f).endVertex();
-            tessellator.draw();
-            GlStateManager.enableTexture2D();
-        }
-
-        GlStateManager.enableBlend();
-        GL14.glBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        fontRenderer.drawString(text, -textWidth / 2, 0, color);
-
-        GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-        GlStateManager.depthMask(true);
-        GlStateManager.enableDepth();
-        GlStateManager.popMatrix();
-    */
-    }
-
-
     @Override
     public void doRender(float partialTicks, RenderingContext context, DomElement buildContext) {
-        // TODO: 3D previews are built later (D124), the 1.8.9 preview drawing is kept below
-/*
-        GL11.glViewport(
-                (int) buildContext.getAbsBounds().getX(),
-                (int) (Minecraft.getInstance().getWindow().getHeight() - buildContext.getAbsBounds().getY() - buildContext.getAbsBounds().getHeight()),
-                (int) buildContext.getAbsBounds().getWidth(),
-                (int) buildContext.getAbsBounds().getHeight());
-
-
-        GlStateManager.matrixMode(GL11.GL_PROJECTION);
-        GlStateManager.pushMatrix();
-        GlStateManager.loadIdentity();
-        Project.gluPerspective(70F,
-                (float) (buildContext.getSize().getWidth() / buildContext.getSize().getHeight())
-                , 0.05F, 4 * 16 * Mth.SQRT_2);
-
-        GlStateManager.matrixMode(GL11.GL_MODELVIEW);
-        GlStateManager.pushMatrix();
-        GlStateManager.loadIdentity();
-
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-
-        GlStateManager.rotate(25, 1, 0, 0);
-        GlStateManager.rotate(125, 0, 1, 0);
-
-        GlStateManager.translate(4, -7, 2);
-
-        GlStateManager.disableLighting();
-        GlStateManager.enableAlpha();
-        GlStateManager.enableDepth();
-        GlStateManager.depthMask(true);
-        GlStateManager.enableBlend();
-
-        Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer vertexBuffer = tessellator.getWorldRenderer();
-        vertexBuffer.begin(7, DefaultVertexFormats.BLOCK);
-
-        GlStateManager.enableTexture2D();
-        BlockRendererDispatcher blockrendererdispatcher = Minecraft.getInstance().getBlockRenderer();
-
-        PreviewWorld previewWorld = new PreviewWorld(Blocks.chest.getStateFromMeta(1), new BlockPos(2,2,4));
-
-        Minecraft.getInstance().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+        LevelRenderState levelState = new LevelRenderState();
+        levelState.cameraRenderState.orientation = new Quaternionf().rotateX((float) Math.toRadians(25)).rotateY((float) Math.toRadians(125)).conjugate();
+        DGRenderStateContainer container = new DGRenderStateContainer();
+        levelState.setData(DGRenderStateContainer.KEY, container);
         for (int x = 0; x < 5; x++) {
             for (int z = 0; z < 5; z++) {
-                BlockState toDraw = (x+z) % 2 == 0 ? Blocks.snow.getBlockState() : Blocks.coal_block.getBlockState();;
-//                if (z == 0) toDraw = Blocks.clay.getBlockState();
-//                if (x == 0 && z == 0) toDraw = Blocks.tnt.getBlockState();
-
-                blockrendererdispatcher.getBlockModelRenderer().renderModel(previewWorld,
-                        blockrendererdispatcher.getBlockModelShapes().getModelForState(toDraw.getBaseState()),
-                        toDraw.getBaseState(), new BlockPos(x,0,z ), vertexBuffer, false);
+                container.blockModelRenderStates.add(new DGBlockModelRenderState((x + z) % 2 == 0 ? Blocks.SNOW_BLOCK.defaultBlockState() : Blocks.COAL_BLOCK.defaultBlockState(),
+                        new Matrix4f().translation(x, 0, z), true));
             }
         }
-
-        BlockState iBlockState = Blocks.command_block.getDefaultState();
-
-        blockrendererdispatcher.getBlockModelRenderer().renderModel(previewWorld,
-                blockrendererdispatcher.getBlockModelShapes().getModelForState(iBlockState),
-                iBlockState, new BlockPos(2,2,4), vertexBuffer, false);
-        tessellator.draw();
-
+        container.blockModelRenderStates.add(new DGBlockModelRenderState(Blocks.COMMAND_BLOCK.defaultBlockState(), new Matrix4f().translation(2, 2, 4), true));
 
         if (waypoints.isBeam())
-            RenderUtils._renderBeaconBeam(2.5,2.5,4.5, waypoints.getBeamColor(), partialTicks);
-
+            RenderUtils._renderBeaconBeam(container, 2.5,2.5,4.5, waypoints.getBeamColor(), partialTicks);
         if (waypoints.isBeacon()) {
-            GlStateManager.pushMatrix();
-            RenderUtils._highlightBlock(new BlockPos(2, 2, 4), waypoints.getHighlightColor(), partialTicks, false);
-            GlStateManager.popMatrix();
+            RenderUtils._highlightBlock(container, new BlockPos(2, 2, 4), waypoints.getHighlightColor(), partialTicks, false);
         }
 
         if (waypoints.isStatus()) {
             float scale = 0.2f;
             int lol = (int) (System.currentTimeMillis() % 6000);
             int type = lol / 2000;
-
             if (type == 0) {
-                drawTextAtWorld("Done", 2.5f, 2.5f + scale, 4.5f, 0xFF00FF00, 2f, true, false, partialTicks);
+                RenderUtils.drawTextAtWorld(container, "Done", 2.5f, 2.5f + scale, 4.5f, 0xFF00FF00, 2f, true, false, partialTicks);
             } else if (type == 1) {
-                drawTextAtWorld("syeyoung", 2.5f, 2.5f + scale, 4.5f, 0xFFFFFF00, 2f, true, false, partialTicks);
+                RenderUtils.drawTextAtWorld(container, "syeyoung", 2.5f, 2.5f + scale, 4.5f, 0xFFFFFF00, 2f, true, false, partialTicks);
             } else if (type == 2){
-                drawTextAtWorld("Incomplete", 2.5f, 2.5f + scale, 4.5f, 0xFFFF0000, 2f, true, false, partialTicks);
+                RenderUtils.drawTextAtWorld(container, "Incomplete", 2.5f, 2.5f + scale, 4.5f, 0xFFFF0000, 2f, true, false, partialTicks);
             }
         }
 
-
-        GlStateManager.disableLighting();
-
-
-
-        GlStateManager.matrixMode(GL11.GL_PROJECTION);
-        GlStateManager.popMatrix();
-        GlStateManager.matrixMode(GL11.GL_MODELVIEW);
-        GlStateManager.popMatrix();
-
-
-
-
-        GL11.glViewport(0,0,Minecraft.getInstance().getWindow().getWidth(), Minecraft.getInstance().getWindow().getHeight());
-
-    */
+        context.drawPictureInPicture(new PreviewSceneRenderState(levelState,
+                new Matrix4f().rotateX((float) Math.toRadians(25)).rotateY((float) Math.toRadians(125)).translate(4, -7, 2),
+                70, (float) (4 * 16 * Math.sqrt(2)), 0, 0, (int) buildContext.getSize().getWidth(), (int) buildContext.getSize().getHeight()));
     }
 }

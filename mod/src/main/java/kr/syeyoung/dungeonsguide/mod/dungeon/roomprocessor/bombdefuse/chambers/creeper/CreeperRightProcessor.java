@@ -57,11 +57,11 @@ public class CreeperRightProcessor extends GeneralDefuseChamberProcessor {
     @Override
     public void drawWorld(RenderWorldEvent event) {
         super.drawWorld(event);
-        RenderUtils.drawTextAtWorld(answer == -1 ? "Answer not received yet. Visit left room to obtain solution" : "" , center.getX()+ 0.5f, center.getY(), center.getZ()+ 0.5f, 0xFFFFFFFF, 0.03F, false, false, event.partialTicks);
+        RenderUtils.drawTextAtWorld(event.container, answer == -1 ? "Answer not received yet. Visit left room to obtain solution" : "" , center.getX()+ 0.5f, center.getY(), center.getZ()+ 0.5f, 0xFFFFFFFF, 0.03F, false, false, event.partialTicks);
         if (answer != -1) {
             for (int i = 0; i < 9; i++) {
                 if (((answer >> i) & 0x01) == 0) {
-                    RenderUtils.highlightBlock(poses[i], new Color(0,255,0, 50), event.partialTicks, false);
+                    RenderUtils.highlightBlock(event.container, poses[i], new Color(0,255,0, 50), event.partialTicks, false);
                 }
             }
         }

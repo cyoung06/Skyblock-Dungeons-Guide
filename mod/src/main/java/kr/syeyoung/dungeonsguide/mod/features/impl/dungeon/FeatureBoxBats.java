@@ -75,7 +75,7 @@ public class FeatureBoxBats extends SimpleFeature  {
         AColor c = this.<AColor>getParameter("color").getValue();
         for (Bat entitySkeleton : skeletonList) {
             if (!entitySkeleton.isInvisible())
-                RenderUtils.highlightBox(entitySkeleton, c, partialTicks, true);
+                RenderUtils.highlightBox(event.container, entitySkeleton, c, partialTicks, true);
         }
     }
 }

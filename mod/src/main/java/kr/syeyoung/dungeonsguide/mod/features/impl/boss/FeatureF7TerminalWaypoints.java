@@ -104,21 +104,21 @@ public class FeatureF7TerminalWaypoints extends SimpleFeature {
 
         for (WaypointData allWaypt : allWaypts) {
             if (beam) {
-                RenderUtils.renderBeaconBeam(allWaypt.x, allWaypt.y, allWaypt.z, beamColor, event.partialTicks);
+                RenderUtils.renderBeaconBeam(event.container, allWaypt.x, allWaypt.y, allWaypt.z, beamColor, event.partialTicks);
             }
             if (beacon) {
-                RenderUtils.highlightBlock(new BlockPos(allWaypt.x, allWaypt.y, allWaypt.z), highlightColor, event.partialTicks, false);
+                RenderUtils.highlightBlock(event.container, new BlockPos(allWaypt.x, allWaypt.y, allWaypt.z), highlightColor, event.partialTicks, false);
             }
 
             if (status) {
                 if (completedTerminals.containsKey(allWaypt.id)) {
-                    RenderUtils.drawTextAtWorld("Done", allWaypt.x + 0.5f, allWaypt.y + 0.5f, allWaypt.z + 0.5f
+                    RenderUtils.drawTextAtWorld(event.container, "Done", allWaypt.x + 0.5f, allWaypt.y + 0.5f, allWaypt.z + 0.5f
                             , 0xFF00FF00, 1f, true, false, event.partialTicks);
                 } else if (nearPlayer.get(allWaypt.id) != null) {
-                    RenderUtils.drawTextAtWorld(nearPlayer.get(allWaypt.id), allWaypt.x + 0.5f, allWaypt.y + 0.5f, allWaypt.z + 0.5f
+                    RenderUtils.drawTextAtWorld(event.container, nearPlayer.get(allWaypt.id), allWaypt.x + 0.5f, allWaypt.y + 0.5f, allWaypt.z + 0.5f
                             , 0xFFFFFF00, 1f, true, false, event.partialTicks);
                 } else {
-                    RenderUtils.drawTextAtWorld("Incomplete", allWaypt.x + 0.5f, allWaypt.y + 0.5f, allWaypt.z + 0.5f
+                    RenderUtils.drawTextAtWorld(event.container, "Incomplete", allWaypt.x + 0.5f, allWaypt.y + 0.5f, allWaypt.z + 0.5f
                             , 0xFFFF0000, 1f, true, false, event.partialTicks);
                 }
             }

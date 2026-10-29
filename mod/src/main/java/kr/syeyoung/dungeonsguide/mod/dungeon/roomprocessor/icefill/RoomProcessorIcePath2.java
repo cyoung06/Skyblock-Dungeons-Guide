@@ -112,7 +112,7 @@ public class RoomProcessorIcePath2 extends GeneralRoomProcessor {
     public void drawWorld(RenderWorldEvent event) {
         if (!FeatureRegistry.SOLVER_ICEPATH.isEnabled()) return;
         for (List<BlockPos> solution:this.solution)
-            RenderUtils.drawLines(solution, FeatureRegistry.SOLVER_ICEPATH.getLineColor(), (float) FeatureRegistry.SOLVER_ICEPATH.getLineWidth(), event.partialTicks, true);
+            RenderUtils.drawLines(event.container, solution, FeatureRegistry.SOLVER_ICEPATH.getLineColor(), (float) FeatureRegistry.SOLVER_ICEPATH.getLineWidth(), event.partialTicks, true);
     }
 
     public static class Generator implements RoomProcessorGenerator<RoomProcessorIcePath2> {

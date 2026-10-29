@@ -85,7 +85,7 @@ public class ArrowLeftProcessor extends GeneralDefuseChamberProcessor {
             int direction = answers[i];
             String charac = arrows.get(direction);
 
-            RenderUtils.drawTextAtWorld(charac, pos.getX()+ 0.5f, pos.getY()+ 0.5f, pos.getZ()+ 0.5f, 0xFFFFFFFF, 0.05F, false, false, event.partialTicks);
+            RenderUtils.drawTextAtWorld(event.container, charac, pos.getX()+ 0.5f, pos.getY()+ 0.5f, pos.getZ()+ 0.5f, 0xFFFFFFFF, 0.05F, false, false, event.partialTicks);
         }
     }
 

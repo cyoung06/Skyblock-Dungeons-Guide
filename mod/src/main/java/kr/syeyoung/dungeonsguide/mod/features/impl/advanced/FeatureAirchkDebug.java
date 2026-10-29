@@ -84,7 +84,7 @@ public class FeatureAirchkDebug extends SimpleFeature {
 
 
             for (OffsetVec3 offsetVec3 : spot.getOffsetPointSet()) {
-                RenderUtils.highlightBox(
+                RenderUtils.highlightBox(event.container, 
                         new AABB(
                                 offsetVec3.xCoord - 0.025f, offsetVec3.yCoord - 0.025f + 70, offsetVec3.zCoord - 0.025f,
                                 offsetVec3.xCoord + 0.025f, offsetVec3.yCoord + 0.025f + 70, offsetVec3.zCoord + 0.025f
@@ -104,7 +104,7 @@ public class FeatureAirchkDebug extends SimpleFeature {
             cy /= spot.getOffsetPointSet().size();
             cz /= spot.getOffsetPointSet().size();
             cy += 0.2f;
-            RenderUtils.drawTextAtWorld(spot.getClusterId()+"/"+spot.isBlocked(), (float) cx, (float) cy, (float) cz, actual.getRGB(), 0.03f, false, true, event.partialTicks);
+            RenderUtils.drawTextAtWorld(event.container, spot.getClusterId()+"/"+spot.isBlocked(), (float) cx, (float) cy, (float) cz, actual.getRGB(), 0.03f, false, true, event.partialTicks);
 
 
         }

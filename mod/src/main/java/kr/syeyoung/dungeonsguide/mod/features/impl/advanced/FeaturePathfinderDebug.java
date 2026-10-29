@@ -18,6 +18,7 @@
 
 package kr.syeyoung.dungeonsguide.mod.features.impl.advanced;
 
+import kr.syeyoung.dungeonsguide.mod.render.world.DGRenderStateContainer;
 import kr.syeyoung.dungeonsguide.mod.DungeonsGuide;
 import kr.syeyoung.dungeonsguide.mod.config.types.AColor;
 import kr.syeyoung.dungeonsguide.mod.dungeon.DungeonContext;
@@ -64,7 +65,7 @@ public class FeaturePathfinderDebug extends SimpleFeature {
 
     private List<Vec3> pfDebugPts = new ArrayList<>();
 
-    private int renderRequests(int st, DungeonRoom drm, float partialTicks) {
+    private int renderRequests(DGRenderStateContainer container, int st, DungeonRoom drm, float partialTicks) {
         int cnt = requests.size() + precalcs.size();
         int i = st;
         for (PathfindRequest request : requests) {
@@ -78,7 +79,7 @@ public class FeaturePathfinderDebug extends SimpleFeature {
             for (OffsetVec3 offsetVec3 : request.getTarget()) {
                 Vec3 pos = offsetVec3.getPos(drm);
 
-                RenderUtils.highlightBox(
+                RenderUtils.highlightBox(container, 
                         new AABB(
                                 offsetVec3.xCoord - 0.025f, offsetVec3.yCoord + 0.025f + 70, offsetVec3.zCoord - 0.025f,
                                 offsetVec3.xCoord + 0.025f, offsetVec3.yCoord + 0.075f + 70, offsetVec3.zCoord + 0.025f
@@ -96,11 +97,11 @@ public class FeaturePathfinderDebug extends SimpleFeature {
             cy /= request.getTarget().size();
             cz /= request.getTarget().size();
             cy += 0.2f;
-            RenderUtils.drawTextAtWorld("Request: "+request.getHash(), (float) cx, (float) cy, (float) cz, actual.getRGB(), 0.01f, false, true, partialTicks);
+            RenderUtils.drawTextAtWorld(container, "Request: "+request.getHash(), (float) cx, (float) cy, (float) cz, actual.getRGB(), 0.01f, false, true, partialTicks);
         }
         return i;
     }
-    private int renderPrecalcs(int st, DungeonRoom drm, float partialTicks) {
+    private int renderPrecalcs(DGRenderStateContainer container, int st, DungeonRoom drm, float partialTicks) {
         int cnt = requests.size() + precalcs.size();
         int i = st;
         for (PathfindPrecalculation request : precalcs) {
@@ -114,7 +115,7 @@ public class FeaturePathfinderDebug extends SimpleFeature {
             for (OffsetVec3 offsetVec3 : request.getTargetLocations()) {
                 Vec3 pos = offsetVec3.getPos(drm);
 
-                RenderUtils.highlightBox(
+                RenderUtils.highlightBox(container, 
                         new AABB(
                                 offsetVec3.xCoord - 0.025f, offsetVec3.yCoord + 0.075f + 70, offsetVec3.zCoord - 0.025f,
                                 offsetVec3.xCoord + 0.025f, offsetVec3.yCoord + 0.125f + 70, offsetVec3.zCoord + 0.025f
@@ -132,7 +133,7 @@ public class FeaturePathfinderDebug extends SimpleFeature {
             cy /= request.getTargetLocations().size();
             cz /= request.getTargetLocations().size();
             cy += 0.4f;
-            RenderUtils.drawTextAtWorld("Precalc: "+request.getId()+"/"+request.getTargetHash(), (float) cx, (float) cy, (float) cz, actual.getRGB(), 0.01f, false, true, partialTicks);
+            RenderUtils.drawTextAtWorld(container, "Precalc: "+request.getId()+"/"+request.getTargetHash(), (float) cx, (float) cy, (float) cz, actual.getRGB(), 0.01f, false, true, partialTicks);
         }
         return i;
     }
@@ -148,8 +149,8 @@ public class FeaturePathfinderDebug extends SimpleFeature {
         );
         if (drm == null) return;
 
-        int i = renderRequests(0, drm, event.partialTicks);
-        i = renderPrecalcs(i, drm, event.partialTicks);
+        int i = renderRequests(event.container, 0, drm, event.partialTicks);
+        i = renderPrecalcs(event.container, i, drm, event.partialTicks);
 
 
         int cnt = 0;
@@ -166,7 +167,7 @@ public class FeaturePathfinderDebug extends SimpleFeature {
 
                 PathfindResult.PathfindNode n = res.getNodeList().get(0);
 
-                RenderUtils.drawTextAtWorld(
+                RenderUtils.drawTextAtWorld(event.container, 
                         "Cost"+ res.getCost(),
                         (float) n.getX(),
                         (float) n.getY() + 0.3f*cnt,
@@ -181,7 +182,7 @@ public class FeaturePathfinderDebug extends SimpleFeature {
                 for (PathfindResult.PathfindNode pose : res.getNodeList()) {
                     // TODO: 1.8.9's getPosition() floored (x, y + 0.5, z), (x + 0.5, y + 0.5, z + 0.5) for the local player; blockPosition() floors (x, y, z)
                     if (pose.getType() != null && pose.getType() != PathfindResult.PathfindNode.NodeType.WALK && pose.getType() != PathfindResult.PathfindNode.NodeType.STONK_WALK && pose.distanceSq(Minecraft.getInstance().player.blockPosition()) < 100) {
-                        RenderUtils.drawTextAtWorld(pose.getType().toString(), pose.getX(), pose.getY() + 0.5f, pose.getZ(),
+                        RenderUtils.drawTextAtWorld(event.container, pose.getType().toString(), pose.getX(), pose.getY() + 0.5f, pose.getZ(),
                                 0xFF000000 | c.getRGB(), 0.02f, false, true, event.partialTicks);
                     }
 

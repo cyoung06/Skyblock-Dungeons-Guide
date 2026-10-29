@@ -18,6 +18,7 @@
 
 package kr.syeyoung.dungeonsguide.mod.dungeon.data.mechanics;
 
+import kr.syeyoung.dungeonsguide.mod.render.world.DGRenderStateContainer;
 import com.google.common.collect.Sets;
 import kr.syeyoung.dungeonsguide.mod.dungeon.data.OffsetPoint;
 import kr.syeyoung.dungeonsguide.mod.dungeon.data.mechanics.dunegonmechanic.DungeonMechanicData;
@@ -68,11 +69,11 @@ public class DungeonMushroomState implements DungeonMechanicState {
     }
 
     @Override
-    public void highlight(Color color, String name, float partialTicks) {
+    public void highlight(DGRenderStateContainer container, Color color, String name, float partialTicks) {
         BlockPos pos = data.secretPoint.getBlockPos(room);
-        RenderUtils.highlightBlockStencil(pos, partialTicks, color, false);
-        RenderUtils.drawTextAtWorld("M-" + name, pos.getX() + 0.5f, pos.getY() + 0.375f, pos.getZ() + 0.5f, 0xFFFFFFFF, 0.03f, false, true, partialTicks);
-        RenderUtils.drawTextAtWorld(getCurrentState(), pos.getX() + 0.5f, pos.getY() + 0f, pos.getZ() + 0.5f, 0xFFFFFFFF, 0.03f, false, true, partialTicks);
+        RenderUtils.highlightBlockStencil(container, pos, partialTicks, color, false);
+        RenderUtils.drawTextAtWorld(container, "M-" + name, pos.getX() + 0.5f, pos.getY() + 0.375f, pos.getZ() + 0.5f, 0xFFFFFFFF, 0.03f, false, true, partialTicks);
+        RenderUtils.drawTextAtWorld(container, getCurrentState(), pos.getX() + 0.5f, pos.getY() + 0f, pos.getZ() + 0.5f, 0xFFFFFFFF, 0.03f, false, true, partialTicks);
     }
 
 

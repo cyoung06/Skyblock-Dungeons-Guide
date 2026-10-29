@@ -21,29 +21,21 @@ package kr.syeyoung.dungeonsguide.mod.features.impl.party.playerpreview;
 import com.mojang.authlib.GameProfile;
 import kr.syeyoung.dungeonsguide.mod.features.impl.party.playerpreview.api.SkinFetcher;
 import kr.syeyoung.dungeonsguide.mod.features.impl.party.playerpreview.api.playerprofile.PlayerProfile;
+import kr.syeyoung.dungeonsguide.mod.utils.TextUtils;
 import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.RemotePlayer;
+import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.core.ClientAsset;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.PlayerModelType;
+import net.minecraft.world.entity.player.PlayerSkin;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.scores.PlayerTeam;
+import net.minecraft.world.scores.Scoreboard;
+import net.minecraft.world.scores.Team;
 
-// TODO: D124, only drawn by the 3D player preview, which is stubbed. The profile is kept; armor, held item, skin and
-// the render-only overrides of 1.8.9 (below) come back with the previews
 public class FakePlayer extends RemotePlayer {
-    @Setter
-    @Getter
-    private PlayerProfile skyblockProfile;
-
-    private final SkinFetcher.SkinSet skinSet;
-
-    public FakePlayer(GameProfile playerProfile, SkinFetcher.SkinSet skinSet, PlayerProfile skyblockProfile) {
-        super(Minecraft.getInstance().level, playerProfile);
-        this.skyblockProfile = skyblockProfile;
-        this.skinSet = skinSet;
-    }
-
-/*
-
-    @Setter
     @Getter
     private PlayerProfile skyblockProfile;
 
@@ -52,22 +44,18 @@ public class FakePlayer extends RemotePlayer {
 
         armor = skyblockProfile.getCurrentArmor();
         if (skyblockProfile.getCurrentArmor() != null)
-            this.inventory.armorInventory = skyblockProfile.getCurrentArmor().getArmorSlots();
+            setArmor(skyblockProfile.getCurrentArmor().getArmorSlots());
         else
-            this.inventory.armorInventory = new ItemStack[4];
+            setArmor(new ItemStack[4]);
 
         int highestDungeonScore = Integer.MIN_VALUE;
-        this.inventory.mainInventory[0] = null;
+        setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
         if (skyblockProfile.getInventory() != null) {
             ItemStack highestItem = null;
             for (ItemStack itemStack : skyblockProfile.getInventory()) {
                 if (itemStack == null) continue;
-                CompoundTag display = itemStack.getTagCompound().getCompoundTag("display");
-                if (display == null) continue;
-                ListTag nbtTagList = display.getTagList("Lore", 8);
-                if (nbtTagList == null) continue;
-                for (int i = 0; i < nbtTagList.tagCount(); i++) {
-                    String str = nbtTagList.getStringTagAt(i);
+                // TODO: D5 stopgap (D125), 1.8.9 read the display.Lore strings
+                for (String str : TextUtils.getFormattedLore(itemStack)) {
                     if (TextUtils.stripColor(str).startsWith("Gear")) {
                         int dungeonScore = Integer.parseInt(TextUtils.keepIntegerCharactersOnly(TextUtils.stripColor(str).split(" ")[2]));
                         if (dungeonScore > highestDungeonScore) {
@@ -78,82 +66,40 @@ public class FakePlayer extends RemotePlayer {
                 }
             }
 
-            this.inventory.mainInventory[0] = highestItem;
-            this.inventory.currentItem = 0;
+            setItemSlot(EquipmentSlot.MAINHAND, highestItem == null ? ItemStack.EMPTY : highestItem);
         }
     }
 
     private final SkinFetcher.SkinSet skinSet;
     private PlayerProfile.Armor armor;
-
-    private FakePlayer(World w) {
-        super(w, null);
-        throw new UnsupportedOperationException("what");
-    }
+    private final PlayerTeam team = new PlayerTeam(new Scoreboard(), "");
 
     public FakePlayer(GameProfile playerProfile, SkinFetcher.SkinSet skinSet, PlayerProfile skyblockProfile) {
         super(Minecraft.getInstance().level, playerProfile);
-        this.skyblockProfile = skyblockProfile;
         this.skinSet = skinSet;
-        armor = skyblockProfile.getCurrentArmor();
-        this.inventory.armorInventory = skyblockProfile.getCurrentArmor().getArmorSlots();
+        team.setNameTagVisibility(Team.Visibility.NEVER);
+        setSkyblockProfile(skyblockProfile);
+    }
 
-        int highestDungeonScore = Integer.MIN_VALUE;
-        if (skyblockProfile.getInventory() != null) {
-            ItemStack highestItem = null;
-            for (ItemStack itemStack : skyblockProfile.getInventory()) {
-                if (itemStack == null) continue;
-                CompoundTag display = itemStack.getTagCompound().getCompoundTag("display");
-                if (display == null) continue;
-                ListTag nbtTagList = display.getTagList("Lore", 8);
-                if (nbtTagList == null) continue;
-                for (int i = 0; i < nbtTagList.tagCount(); i++) {
-                    String str = nbtTagList.getStringTagAt(i);
-                    if (TextUtils.stripColor(str).startsWith("Gear")) {
-                        int dungeonScore = Integer.parseInt(TextUtils.keepIntegerCharactersOnly(TextUtils.stripColor(str).split(" ")[2]));
-                        if (dungeonScore > highestDungeonScore) {
-                            highestItem = itemStack;
-                            highestDungeonScore = dungeonScore;
-                        }
-                    }
-                }
-            }
-
-            this.inventory.mainInventory[0] = highestItem;
-            this.inventory.currentItem = 0;
+    private void setArmor(ItemStack[] armorSlots) {
+        EquipmentSlot[] slots = {EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD};
+        for (int i = 0; i < slots.length; i++) {
+            setItemSlot(slots[i], armorSlots[i] == null ? ItemStack.EMPTY : armorSlots[i]);
         }
     }
 
-    public String getSkinType() {
-        return this.skinSet == null ? DefaultPlayerSkin.getSkinType(getGameProfile().getId()) : this.skinSet.getSkinType();
-    }
-
-    public Identifier getLocationSkin() {
-        return Objects.firstNonNull(skinSet.getSkinLoc(), DefaultPlayerSkin.getDefaultSkin(getGameProfile().getId()));
-    }
-
-    public Identifier getLocationCape() {
-        return skinSet.getCapeLoc();
+    @Override
+    public PlayerSkin getSkin() {
+        if (skinSet == null || skinSet.getSkinLoc() == null) return DefaultPlayerSkin.get(getGameProfile());
+        return PlayerSkin.insecure(
+                new ClientAsset.DownloadedTexture(skinSet.getSkinLoc(), ""),
+                skinSet.getCapeLoc() == null ? null : new ClientAsset.DownloadedTexture(skinSet.getCapeLoc(), ""),
+                null,
+                "slim".equals(skinSet.getSkinType()) ? PlayerModelType.SLIM : PlayerModelType.WIDE);
     }
 
     @Override
-    public ItemStack[] getInventory() {
-        return this.inventory.armorInventory;
+    public PlayerTeam getTeam() {
+        return team;
     }
-
-    @Override
-    public boolean isInvisibleToPlayer(Player player) {
-        return true;
-    }
-
-    @Override
-    public Team getTeam() {
-        return new ScorePlayerTeam(null, null) {
-            @Override
-            public EnumVisible getNameTagVisibility() {
-                return EnumVisible.NEVER;
-            }
-        };
-    }
-*/
 }

@@ -136,11 +136,11 @@ public class RoomProcessorTeleportMazeSolver extends GeneralRoomProcessor {
         super.drawWorld(event);
         if (!FeatureRegistry.SOLVER_TELEPORT.isEnabled()) return;
         for (BlockPos bpos:visitedPortals) {
-            RenderUtils.highlightBoxAColor( new AABB(bpos.getX(), bpos.getY(), bpos.getZ(), bpos.getX()+1, bpos.getY() + 1, bpos.getZ() + 1),  FeatureRegistry.SOLVER_TELEPORT.getTargetColor2(), event.partialTicks, true);
+            RenderUtils.highlightBoxAColor(event.container,  new AABB(bpos.getX(), bpos.getY(), bpos.getZ(), bpos.getX()+1, bpos.getY() + 1, bpos.getZ() + 1),  FeatureRegistry.SOLVER_TELEPORT.getTargetColor2(), event.partialTicks, true);
         }
 
         if (intersection != null) {
-            RenderUtils.highlightBoxAColor( new AABB(intersection.getX(), intersection.getY(), intersection.getZ(), intersection.getX()+1, intersection.getY() + 1, intersection.getZ() + 1),   FeatureRegistry.SOLVER_TELEPORT.getTargetColor(), event.partialTicks, false);
+            RenderUtils.highlightBoxAColor(event.container,  new AABB(intersection.getX(), intersection.getY(), intersection.getZ(), intersection.getX()+1, intersection.getY() + 1, intersection.getZ() + 1),   FeatureRegistry.SOLVER_TELEPORT.getTargetColor(), event.partialTicks, false);
         }
     }
     public static class Generator implements RoomProcessorGenerator<RoomProcessorTeleportMazeSolver> {

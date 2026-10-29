@@ -18,6 +18,7 @@
 
 package kr.syeyoung.dungeonsguide.mod.dungeon.data.mechanics.dunegonmechanic;
 
+import kr.syeyoung.dungeonsguide.mod.render.world.DGRenderStateContainer;
 import kr.syeyoung.dungeonsguide.mod.dungeon.data.OffsetPoint;
 import kr.syeyoung.dungeonsguide.mod.dungeon.actions.PathfindImpossibleException;
 import kr.syeyoung.dungeonsguide.mod.dungeon.actions.tree.ActionDAGBuilder;
@@ -32,7 +33,7 @@ public interface DungeonMechanicState {
 
 
 
-    void highlight(Color color, String name, float partialTicks);
+    void highlight(DGRenderStateContainer container, Color color, String name, float partialTicks);
     String getCurrentState();
     Set<String> getTotalPossibleStates(); // no one cares.
     OffsetPoint getRepresentingPoint();
