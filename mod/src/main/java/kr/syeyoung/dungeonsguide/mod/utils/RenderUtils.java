@@ -18,14 +18,14 @@
 
 package kr.syeyoung.dungeonsguide.mod.utils;
 
+import kr.syeyoung.dungeonsguide.mod.render.world.DGRenderStateContainer;
 import kr.syeyoung.dungeonsguide.mod.config.types.AColor;
 import kr.syeyoung.dungeonsguide.mod.dungeon.dataprovider.DungeonDoor;
-import kr.syeyoung.dungeonsguide.mod.render.world.DGWorldRenderer;
-import kr.syeyoung.dungeonsguide.mod.render.world.state.BeaconBeamState;
-import kr.syeyoung.dungeonsguide.mod.render.world.state.FilledBoxState;
-import kr.syeyoung.dungeonsguide.mod.render.world.state.LineStripState;
-import kr.syeyoung.dungeonsguide.mod.render.world.state.QuadState;
-import kr.syeyoung.dungeonsguide.mod.render.world.state.WorldTextState;
+import kr.syeyoung.dungeonsguide.mod.render.world.state.BeaconBeamRenderState;
+import kr.syeyoung.dungeonsguide.mod.render.world.state.FilledBoxRenderState;
+import kr.syeyoung.dungeonsguide.mod.render.world.state.LineStripRenderState;
+import kr.syeyoung.dungeonsguide.mod.render.world.state.QuadRenderState;
+import kr.syeyoung.dungeonsguide.mod.render.world.state.WorldTextRenderState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.ArmorStand;
@@ -43,12 +43,12 @@ import net.minecraft.world.phys.Vec3;
 public class RenderUtils {
     public static final Identifier icons = Identifier.parse("textures/gui/icons.png");
 
-    public static void renderBeaconBeam(double x, double y, double z, AColor aColor, float partialTicks) {
-        _renderBeaconBeam(x, y, z, aColor, partialTicks);
+    public static void renderBeaconBeam(DGRenderStateContainer container, double x, double y, double z, AColor aColor, float partialTicks) {
+        _renderBeaconBeam(container, x, y, z, aColor, partialTicks);
     }
 
-    public static void _renderBeaconBeam(double x, double y, double z, AColor aColor, float partialTicks) {
-        DGWorldRenderer.record(new BeaconBeamState(x, y, z, getColorAt(x,y,z, aColor), partialTicks));
+    public static void _renderBeaconBeam(DGRenderStateContainer container, double x, double y, double z, AColor aColor, float partialTicks) {
+        container.beaconBeamRenderStates.add(new BeaconBeamRenderState(x, y, z, getColorAt(x,y,z, aColor), partialTicks));
     }
 
     private static float zLevel = 0;
@@ -202,22 +202,22 @@ public class RenderUtils {
                 | ((color.getAlpha() << 24) & 0xff000000);
     }
 
-    public static void renderDoor(DungeonDoor dungeonDoor, float partialTicks) {
+    public static void renderDoor(DGRenderStateContainer container, DungeonDoor dungeonDoor, float partialTicks) {
         double x = dungeonDoor.getPosition().getX() + 0.5;
         double y = dungeonDoor.getPosition().getY() -0.99;
         double z = dungeonDoor.getPosition().getZ() + 0.5;
 
-        DGWorldRenderer.record(new QuadState(new Vec3[] {
+        container.quadRenderStates.add(new QuadRenderState(new Vec3[] {
                 new Vec3(x - 2.5, y, z - 2.5), new Vec3(x - 2.5, y, z + 2.5), new Vec3(x + 2.5, y, z + 2.5), new Vec3(x + 2.5, y, z - 2.5)
         }, dungeonDoor.getType().isExist() ? 0xFF00FF00 : 0xFFFF0000, true));
 
         if (dungeonDoor.getType().isExist()) {
             if (dungeonDoor.isZDir()) {
-                DGWorldRenderer.record(new QuadState(new Vec3[] {
+                container.quadRenderStates.add(new QuadRenderState(new Vec3[] {
                         new Vec3(x - 0.5, y + 0.1, z - 2.5), new Vec3(x - 0.5, y+ 0.1, z + 2.5), new Vec3(x + 0.5, y+ 0.1, z + 2.5), new Vec3(x + 0.5, y+ 0.1, z - 2.5)
                 }, 0xFF0000FF, true));
             } else {
-                DGWorldRenderer.record(new QuadState(new Vec3[] {
+                container.quadRenderStates.add(new QuadRenderState(new Vec3[] {
                         new Vec3(x - 2.5, y+ 0.1, z - 0.5), new Vec3(x - 2.5, y+ 0.1, z + 0.5), new Vec3(x + 2.5, y+ 0.1, z + 0.5), new Vec3(x + 2.5, y+ 0.1, z - 0.5)
                 }, 0xFF0000FF, true));
             }
@@ -228,35 +228,35 @@ public class RenderUtils {
             loop1.add(new Vec3(x + 2.5, y + 5, z - 2.5));
             loop1.add(new Vec3(x + 2.5, y, z + 2.5));
             loop1.add(new Vec3(x - 2.5, y + 5, z + 2.5));
-            DGWorldRenderer.record(new LineStripState(loop1, red, 5, true, true));
+            container.lineStripRenderStates.add(new LineStripRenderState(loop1, red, 5, true, true));
             List<Vec3> loop2 = new ArrayList<>();
             loop2.add(new Vec3(x - 2.5, y +5, z - 2.5));
             loop2.add(new Vec3(x + 2.5, y, z - 2.5));
             loop2.add(new Vec3(x + 2.5, y + 5, z + 2.5));
             loop2.add(new Vec3(x - 2.5, y, z + 2.5));
-            DGWorldRenderer.record(new LineStripState(loop2, red, 5, true, true));
+            container.lineStripRenderStates.add(new LineStripRenderState(loop2, red, 5, true, true));
         }
 
-        DGWorldRenderer.record(new WorldTextState("Type: "+dungeonDoor.getType(),
+        container.worldTextRenderStates.add(new WorldTextRenderState("Type: "+dungeonDoor.getType(),
                 new Vec3(dungeonDoor.getPosition().getX(), dungeonDoor.getPosition().getY(), dungeonDoor.getPosition().getZ()),
                 0xFF00FFFF, 0.02f, false, false, true));
     }
 
-    public static void drawLine(Vec3 pos1, Vec3 pos2, Color colour, float partialTicks , boolean depth) {
+    public static void drawLine(DGRenderStateContainer container, Vec3 pos1, Vec3 pos2, Color colour, float partialTicks , boolean depth) {
         List<Vec3> points = new ArrayList<>();
         points.add(pos1);
         points.add(pos2);
-        DGWorldRenderer.record(new LineStripState(points, new int[] {colour.getRGB(), colour.getRGB()}, 2, false, depth));
+        container.lineStripRenderStates.add(new LineStripRenderState(points, new int[] {colour.getRGB(), colour.getRGB()}, 2, false, depth));
     }
 
-    public static void drawLinesVec3(List<Vec3> poses, AColor colour, float thickness, float partialTicks, boolean depth) {
+    public static void drawLinesVec3(DGRenderStateContainer container, List<Vec3> poses, AColor colour, float thickness, float partialTicks, boolean depth) {
         int[] colors = new int[poses.size()];
         for (int num = 0; num < colors.length; num++) {
             colors[num] = getColorAt(num * 10,0, colour);
         }
-        DGWorldRenderer.record(new LineStripState(new ArrayList<>(poses), colors, thickness, false, depth));
+        container.lineStripRenderStates.add(new LineStripRenderState(new ArrayList<>(poses), colors, thickness, false, depth));
     }
-    public static void drawLines(List<BlockPos> poses, AColor colour, float thickness, float partialTicks, boolean depth) {
+    public static void drawLines(DGRenderStateContainer container, List<BlockPos> poses, AColor colour, float thickness, float partialTicks, boolean depth) {
         List<Vec3> points = new ArrayList<>();
         int[] colors = new int[poses.size()];
         int num = 0;
@@ -265,11 +265,11 @@ public class RenderUtils {
             colors[num] = getColorAt(num * 10,0, colour);
             num++;
         }
-        DGWorldRenderer.record(new LineStripState(points, colors, thickness, false, depth));
+        container.lineStripRenderStates.add(new LineStripRenderState(points, colors, thickness, false, depth));
     }
 
-    public static void drawLines(List<BlockPos> poses, Color colour, float thickness, float partialTicks, boolean depth) {
-        if (colour instanceof AColor) drawLines(poses, (AColor)colour, thickness, partialTicks,depth);
+    public static void drawLines(DGRenderStateContainer container, List<BlockPos> poses, Color colour, float thickness, float partialTicks, boolean depth) {
+        if (colour instanceof AColor) drawLines(container, poses, (AColor)colour, thickness, partialTicks,depth);
         List<Vec3> points = new ArrayList<>();
         int[] colors = new int[poses.size()];
         int num = 0;
@@ -277,29 +277,29 @@ public class RenderUtils {
             points.add(new Vec3(pos.getX() +0.5, pos.getY() +0.5, pos.getZ() +0.5));
             colors[num++] = colour.getRGB();
         }
-        DGWorldRenderer.record(new LineStripState(points, colors, thickness, false, depth));
+        container.lineStripRenderStates.add(new LineStripRenderState(points, colors, thickness, false, depth));
     }
 
-    public static void highlightBlock(BlockPos blockpos, Color c, float partialTicks) {
-        highlightBlock(blockpos,c,partialTicks,false);
+    public static void highlightBlock(DGRenderStateContainer container, BlockPos blockpos, Color c, float partialTicks) {
+        highlightBlock(container, blockpos,c,partialTicks,false);
     }
-    public static void _highlightBlock(BlockPos blockpos, Color c, float partialTicks, boolean depth) {
-        highlightBlock(blockpos, c, partialTicks, depth);
+    public static void _highlightBlock(DGRenderStateContainer container, BlockPos blockpos, Color c, float partialTicks, boolean depth) {
+        highlightBlock(container, blockpos, c, partialTicks, depth);
     }
 
-    public static void highlightBlock(BlockPos blockpos, Color c, float partialTicks, boolean depth) {
-        DGWorldRenderer.record(new FilledBoxState(new AABB(blockpos), c.getRGB(), depth));
+    public static void highlightBlock(DGRenderStateContainer container, BlockPos blockpos, Color c, float partialTicks, boolean depth) {
+        container.filledBoxRenderStates.add(new FilledBoxRenderState(new AABB(blockpos), c.getRGB(), depth));
     }
 
 
     // TODO: D72, 1.8.9 masked the highlight to the block's model with the stencil buffer, 26.1 draws the box
-    public static AABB highlightBlockStencil(BlockPos blockPos, float partialTicks, Color color, boolean depth) {
+    public static AABB highlightBlockStencil(DGRenderStateContainer container, BlockPos blockPos, float partialTicks, Color color, boolean depth) {
         AABB bb = new AABB(blockPos);
-        RenderUtils.highlightBox(bb, color, partialTicks, false);
+        RenderUtils.highlightBox(container, bb, color, partialTicks, false);
         return bb;
     }
     // TODO: D72, 1.8.9 masked the highlight to the blocks' models with the stencil buffer, 26.1 draws the box
-    public static AABB highlightBlocksStencil(List<BlockPos> blockPos, float partialTicks, Color color, boolean depth) {
+    public static AABB highlightBlocksStencil(DGRenderStateContainer container, List<BlockPos> blockPos, float partialTicks, Color color, boolean depth) {
         double minX = 1e9, minY = 1e9, minZ = 1e9, maxX = -1e9, maxY = -1e9, maxZ = -1e9;
         for (BlockPos pos : blockPos) {
             minX = Math.min(minX, pos.getX());
@@ -310,16 +310,16 @@ public class RenderUtils {
             maxZ = Math.max(maxZ, pos.getZ() + 1);
         }
         AABB bb= new AABB(minX, minY, minZ, maxX, maxY, maxZ);
-        RenderUtils.highlightBox(bb, color, partialTicks, false);
+        RenderUtils.highlightBox(container, bb, color, partialTicks, false);
         return bb;
     }
 
-    public static void highlightBox(AABB  axisAlignedBB, Color c, float partialTicks, boolean depth) {
-        DGWorldRenderer.record(new FilledBoxState(axisAlignedBB, c.getRGB(), depth));
+    public static void highlightBox(DGRenderStateContainer container, AABB  axisAlignedBB, Color c, float partialTicks, boolean depth) {
+        container.filledBoxRenderStates.add(new FilledBoxRenderState(axisAlignedBB, c.getRGB(), depth));
     }
-    public static void highlightBoxAColor(AABB  axisAlignedBB, AColor c, float partialTicks, boolean depth) {
+    public static void highlightBoxAColor(DGRenderStateContainer container, AABB  axisAlignedBB, AColor c, float partialTicks, boolean depth) {
         int rgb = RenderUtils.getColorAt(axisAlignedBB.minX, axisAlignedBB.minY, axisAlignedBB.minZ, c);
-        DGWorldRenderer.record(new FilledBoxState(axisAlignedBB, rgb, depth));
+        container.filledBoxRenderStates.add(new FilledBoxRenderState(axisAlignedBB, rgb, depth));
     }
 
     private static AABB entityBox(Entity entity) {
@@ -332,30 +332,30 @@ public class RenderUtils {
         }
     }
 
-    public static void highlightBox(Entity entity, AABB  axisAlignedBB, AColor c, float partialTicks, boolean depth) {
+    public static void highlightBox(DGRenderStateContainer container, Entity entity, AABB  axisAlignedBB, AColor c, float partialTicks, boolean depth) {
         int rgb = RenderUtils.getColorAt(entity.getX() * 10,entity.getY() * 10,c);
         if (axisAlignedBB == null) axisAlignedBB = entityBox(entity);
-        DGWorldRenderer.record(new FilledBoxState(axisAlignedBB.move(entity.getPosition(partialTicks)), rgb, depth));
+        container.filledBoxRenderStates.add(new FilledBoxRenderState(axisAlignedBB.move(entity.getPosition(partialTicks)), rgb, depth));
     }
 
-    public static void highlightBox(Entity entity, AABB  axisAlignedBB, Color c, float partialTicks, boolean depth) {
+    public static void highlightBox(DGRenderStateContainer container, Entity entity, AABB  axisAlignedBB, Color c, float partialTicks, boolean depth) {
         if (axisAlignedBB == null) axisAlignedBB = entityBox(entity);
-        DGWorldRenderer.record(new FilledBoxState(axisAlignedBB.move(entity.getPosition(partialTicks)), c.getRGB(), depth));
+        container.filledBoxRenderStates.add(new FilledBoxRenderState(axisAlignedBB.move(entity.getPosition(partialTicks)), c.getRGB(), depth));
     }
-    public static void highlightBox(Entity entity, Color c, float partialTicks, boolean depth) {
-        DGWorldRenderer.record(new FilledBoxState(entityBox(entity).move(entity.getPosition(partialTicks)), c.getRGB(), depth));
+    public static void highlightBox(DGRenderStateContainer container, Entity entity, Color c, float partialTicks, boolean depth) {
+        container.filledBoxRenderStates.add(new FilledBoxRenderState(entityBox(entity).move(entity.getPosition(partialTicks)), c.getRGB(), depth));
     }
 
-    public static void highlightBox(Entity entity, AColor c, float partialTicks, boolean depth) {
+    public static void highlightBox(DGRenderStateContainer container, Entity entity, AColor c, float partialTicks, boolean depth) {
         int rgb = RenderUtils.getColorAt(entity.getX() % 20,entity.getY() % 20,c);
-        DGWorldRenderer.record(new FilledBoxState(entityBox(entity).move(entity.getPosition(partialTicks)), rgb, depth));
+        container.filledBoxRenderStates.add(new FilledBoxRenderState(entityBox(entity).move(entity.getPosition(partialTicks)), rgb, depth));
     }
-    public static void drawTextAtWorld(String text, float x, float y, float z, int color, float scale, boolean increase, boolean renderBlackBox, float partialTicks) {
-        DGWorldRenderer.record(new WorldTextState(text, new Vec3(x, y, z), color, scale, increase, renderBlackBox, false));
+    public static void drawTextAtWorld(DGRenderStateContainer container, String text, float x, float y, float z, int color, float scale, boolean increase, boolean renderBlackBox, float partialTicks) {
+        container.worldTextRenderStates.add(new WorldTextRenderState(text, new Vec3(x, y, z), color, scale, increase, renderBlackBox, false));
     }
 
-    public static void drawTextAtWorldDepth(String text, float x, float y, float z, int color, float scale, boolean increase, boolean renderBlackBox, float partialTicks) {
-        DGWorldRenderer.record(new WorldTextState(text, new Vec3(x, y, z), color, scale, increase, renderBlackBox, true));
+    public static void drawTextAtWorldDepth(DGRenderStateContainer container, String text, float x, float y, float z, int color, float scale, boolean increase, boolean renderBlackBox, float partialTicks) {
+        container.worldTextRenderStates.add(new WorldTextRenderState(text, new Vec3(x, y, z), color, scale, increase, renderBlackBox, true));
     }
 
     public static Vector3f getRenderPos(float x, float y, float z, float partialTicks) {

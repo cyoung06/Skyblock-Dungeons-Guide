@@ -35,8 +35,7 @@ import kr.syeyoung.dungeonsguide.mod.gui.primitive.Size;
 import kr.syeyoung.dungeonsguide.mod.gui.renderer.RenderingContext;
 import kr.syeyoung.dungeonsguide.mod.render.gui.StencilImage;
 import kr.syeyoung.dungeonsguide.mod.render.gui.StencilImageTexture;
-import kr.syeyoung.dungeonsguide.mod.render.world.DGWorldRenderer;
-import kr.syeyoung.dungeonsguide.mod.render.world.state.WorldImageState;
+import kr.syeyoung.dungeonsguide.mod.render.world.state.WorldImageRenderState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -154,7 +153,7 @@ public class RoomProcessorRedRoom extends GeneralRoomProcessor {
                     warningCorner(angle, textWidth, textHeight),
                     warningCorner(angle, textWidth, 0)
             };
-            DGWorldRenderer.record(new WorldImageState(warningImage, WARNING_TEXTURE, context.getStates(), width, height, corners, false));
+            event.container.worldImageRenderStates.add(new WorldImageRenderState(warningImage, WARNING_TEXTURE, context.getStates(), width, height, corners, false));
         }
     }
 

@@ -63,9 +63,9 @@ public class FeatureSimonSaysSolver extends SimpleFeature {
 
 
         if (orderClick.size() >= 1)
-            RenderUtils.highlightBlock(orderClick.get(0), new Color(0, 255 ,255, 100), partialTicks, false);
+            RenderUtils.highlightBlock(event.container, orderClick.get(0), new Color(0, 255 ,255, 100), partialTicks, false);
         if (orderClick.size() >= 2)
-            RenderUtils.highlightBlock(orderClick.get(1), new Color(255, 170, 0, 100), partialTicks, false);
+            RenderUtils.highlightBlock(event.container, orderClick.get(1), new Color(255, 170, 0, 100), partialTicks, false);
     }
     private boolean wasButton = false;
     @DGEventHandler

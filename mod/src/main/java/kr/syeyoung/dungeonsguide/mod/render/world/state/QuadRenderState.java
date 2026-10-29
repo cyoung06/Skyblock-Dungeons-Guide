@@ -15,33 +15,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 package kr.syeyoung.dungeonsguide.mod.render.world.state;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import kr.syeyoung.dungeonsguide.mod.render.world.DGRenderTypes;
+import kr.syeyoung.dungeonsguide.mod.render.world.RenderState;
+import kr.syeyoung.dungeonsguide.mod.render.world.RenderStateSubmitter;
 import lombok.AllArgsConstructor;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.resources.Identifier;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Matrix4f;
 
 @AllArgsConstructor
-public class TexturedQuadState implements DGWorldRenderState {
-    private final Identifier texture;
-    private final Vec3[] corners;
-    private final float[][] uvs;
-    private final int color;
-    private final boolean depth;
+public class QuadRenderState implements RenderState, RenderStateSubmitter<QuadRenderState> {
+    public Vec3[] corners;
+    public int color;
+    public boolean depth;
 
     @Override
-    public void submit(PoseStack poseStack, MultiBufferSource bufferSource, Vec3 camera) {
-        VertexConsumer consumer = bufferSource.getBuffer(depth ? DGRenderTypes.texturedQuad(texture) : DGRenderTypes.texturedQuadSeeThrough(texture));
-        Matrix4f pose = poseStack.last().pose();
-        for (int i = 0; i < 4; i++) {
-            Vec3 corner = corners[i];
-            consumer.addVertex(pose, (float) (corner.x - camera.x), (float) (corner.y - camera.y), (float) (corner.z - camera.z))
-                    .setUv(uvs[i][0], uvs[i][1]).setColor(color);
-        }
+    public void submit(QuadRenderState state, CameraRenderState camera, PoseStack poseStack, SubmitNodeCollector collector) {
+        collector.submitCustomGeometry(poseStack, state.depth ? RenderTypes.debugQuads() : DGRenderTypes.filledSeeThrough(), (pose, consumer) -> {
+            for (Vec3 corner : state.corners) {
+                consumer.addVertex(pose, (float) (corner.x - camera.pos.x), (float) (corner.y - camera.pos.y), (float) (corner.z - camera.pos.z)).setColor(state.color);
+            }
+        });
     }
 }

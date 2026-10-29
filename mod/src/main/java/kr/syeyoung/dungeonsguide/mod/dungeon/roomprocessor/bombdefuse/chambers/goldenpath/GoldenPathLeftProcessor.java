@@ -108,7 +108,7 @@ public class GoldenPathLeftProcessor extends GeneralDefuseChamberProcessor {
     @Override
     public void drawWorld(RenderWorldEvent event) {
         super.drawWorld(event);
-        RenderUtils.drawLines(blocksolution, new AColor(0,0,255,0), 1,event.partialTicks, false);
+        RenderUtils.drawLines(event.container, blocksolution, new AColor(0,0,255,0), 1,event.partialTicks, false);
     }
 
     @Override

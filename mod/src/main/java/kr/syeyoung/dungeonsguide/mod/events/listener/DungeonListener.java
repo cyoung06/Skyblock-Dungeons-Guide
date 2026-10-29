@@ -88,8 +88,7 @@ import java.util.HashSet;
 import java.util.Set;
 import kr.syeyoung.dungeonsguide.mod.dungeon.world.MinecraftWorld;
 import kr.syeyoung.dungeonsguide.mod.parallelUniverse.bossbar.BossBarManager;
-import kr.syeyoung.dungeonsguide.mod.render.world.DGWorldRenderer;
-import kr.syeyoung.dungeonsguide.mod.render.world.state.BlockModelState;
+import kr.syeyoung.dungeonsguide.mod.render.world.state.DGBlockModelRenderState;
 import org.joml.Matrix4f;
 
 public class DungeonListener {
@@ -390,7 +389,7 @@ public class DungeonListener {
                 if (context.getScaffoldParser() != null) {
                     for (DungeonRoom dungeonRoom : context.getScaffoldParser().getDungeonRoomList()) {
                         for (DungeonDoor door : dungeonRoom.getDoors()) {
-                            RenderUtils.renderDoor(door, renderWorldLastEvent.partialTicks);
+                            RenderUtils.renderDoor(renderWorldLastEvent.container, door, renderWorldLastEvent.partialTicks);
                         }
                     }
                 }
@@ -427,13 +426,13 @@ public class DungeonListener {
 
                         for (BlockPos allInBox : BlockPos.betweenClosed(real.offset(-1, -1, -1), real.offset(1, 1, 1))) {
                             CollisionStateCalculatingCoordinateMap.CollisionState blocked = roomProcessor.getPathfinderWorld().getBlock(allInBox.getX(), allInBox.getY(), allInBox.getZ());
-                            RenderUtils.highlightBox(
+                            RenderUtils.highlightBox(renderWorldLastEvent.container, 
                                     new AABB(
                                             allInBox.getX() / 2.0 - 0.1, allInBox.getY() / 2.0 - 0.1, allInBox.getZ() / 2.0 - 0.1,
                                             allInBox.getX() / 2.0 + 0.1, allInBox.getY() / 2.0 + 0.1, allInBox.getZ() / 2.0 + 0.1
                                     ), blocked.getColor(), renderWorldLastEvent.partialTicks, false);
                             PearlCalculatingCoordinateMap.PearlLandType type = roomProcessor.getPathfinderWorld().getPearl(allInBox.getX(), allInBox.getY(), allInBox.getZ());
-                            RenderUtils.drawTextAtWorld(type.name(), (float) (allInBox.getX() / 2.0 - 0.1), (float) (allInBox.getY() / 2.0 - 0.1), (float) (allInBox.getZ() / 2.0 - 0.1),
+                            RenderUtils.drawTextAtWorld(renderWorldLastEvent.container, type.name(), (float) (allInBox.getX() / 2.0 - 0.1), (float) (allInBox.getY() / 2.0 - 0.1), (float) (allInBox.getZ() / 2.0 - 0.1),
                                     0xFFFFFFFF,0.01f, false, true, renderWorldLastEvent.partialTicks);
                         }
                     } catch (Exception ignored) {}
@@ -444,8 +443,8 @@ public class DungeonListener {
                             offsetPoint.setPosInWorld(dungeonRoom, allInBox);
                             BlockState blockState = dungeonRoom.getDungeonRoomInfo().getBlock(offsetPoint, dungeonRoom.getRoomMatcher().getRotation());
                             if (!blockState.equals(dungeonRoom.getCachedWorld().getBlockState(allInBox))) {
-                                RenderUtils.highlightBlock(allInBox, new Color(0x70FF0000,true), renderWorldLastEvent.partialTicks, false);
-                                DGWorldRenderer.record(new BlockModelState(blockState,
+                                RenderUtils.highlightBlock(renderWorldLastEvent.container, allInBox, new Color(0x70FF0000,true), renderWorldLastEvent.partialTicks, false);
+                                renderWorldLastEvent.container.blockModelRenderStates.add(new DGBlockModelRenderState(blockState,
                                         new Matrix4f().translate(allInBox.getX(), allInBox.getY(), allInBox.getZ()).scale(0.5f).translate(0.5f, 0.5f, 0.5f), true));
                             }
                         }

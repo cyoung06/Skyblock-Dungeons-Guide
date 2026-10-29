@@ -77,7 +77,7 @@ public class FeatureBoxStarMobs extends SimpleFeature {
         });
         AColor c = this.<AColor>getParameter("color").getValue();
         for (ArmorStand entitySkeleton : skeletonList) {
-                RenderUtils.highlightBox(entitySkeleton, c, partialTicks, true);
+                RenderUtils.highlightBox(event.container, entitySkeleton, c, partialTicks, true);
         }
     }
 }

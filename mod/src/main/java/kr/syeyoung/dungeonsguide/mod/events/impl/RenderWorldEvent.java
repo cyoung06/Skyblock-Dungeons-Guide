@@ -19,6 +19,7 @@
 package kr.syeyoung.dungeonsguide.mod.events.impl;
 
 import kr.syeyoung.dungeonsguide.mod.events.DGEvent;
+import kr.syeyoung.dungeonsguide.mod.render.world.DGRenderStateContainer;
 import lombok.AllArgsConstructor;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelExtractionContext;
 
@@ -26,4 +27,5 @@ import net.fabricmc.fabric.api.client.rendering.v1.level.LevelExtractionContext;
 public class RenderWorldEvent extends DGEvent {
     public final float partialTicks;
     public final LevelExtractionContext context;
+    public final DGRenderStateContainer container;
 }

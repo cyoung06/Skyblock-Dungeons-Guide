@@ -51,6 +51,6 @@ public class FeatureBoxRealLivid extends SimpleFeature {
         RemotePlayer playerMP = ((BossfightProcessorLivid) DungeonsGuide.getDungeonsGuide().getDungeonFacade().getContext().getBossfightProcessor()).getRealLivid();
 
         if (playerMP != null)
-            RenderUtils.highlightBox(playerMP, new AABB(-0.4,0,-0.4,0.4,1.8,0.4), color, partialTicks, true);
+            RenderUtils.highlightBox(event.container, playerMP, new AABB(-0.4,0,-0.4,0.4,1.8,0.4), color, partialTicks, true);
     }
 }

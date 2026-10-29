@@ -78,10 +78,10 @@ public class NumberLeftProcessor extends GeneralDefuseChamberProcessor {
     @Override
     public void drawWorld(RenderWorldEvent event) {
         super.drawWorld(event);
-            RenderUtils.drawTextAtWorld(d1+"", d1p.getX()+ 0.5f, d1p.getY()+ 0.5f, d1p.getZ()+ 0.5f, 0xFFFFFFFF, 0.03F, false, false, event.partialTicks);
-            RenderUtils.drawTextAtWorld(d2+"", d2p.getX()+ 0.5f, d2p.getY()+ 0.5f, d2p.getZ()+ 0.5f, 0xFFFFFFFF, 0.03F, false, false, event.partialTicks);
-            RenderUtils.drawTextAtWorld(d3+"", d3p.getX()+ 0.5f, d3p.getY()+ 0.5f, d3p.getZ()+ 0.5f, 0xFFFFFFFF, 0.03F, false, false, event.partialTicks);
-            RenderUtils.drawTextAtWorld(d4+"", d4p.getX()+ 0.5f, d4p.getY()+ 0.5f, d4p.getZ()+ 0.5f, 0xFFFFFFFF, 0.03F, false, false, event.partialTicks);
+            RenderUtils.drawTextAtWorld(event.container, d1+"", d1p.getX()+ 0.5f, d1p.getY()+ 0.5f, d1p.getZ()+ 0.5f, 0xFFFFFFFF, 0.03F, false, false, event.partialTicks);
+            RenderUtils.drawTextAtWorld(event.container, d2+"", d2p.getX()+ 0.5f, d2p.getY()+ 0.5f, d2p.getZ()+ 0.5f, 0xFFFFFFFF, 0.03F, false, false, event.partialTicks);
+            RenderUtils.drawTextAtWorld(event.container, d3+"", d3p.getX()+ 0.5f, d3p.getY()+ 0.5f, d3p.getZ()+ 0.5f, 0xFFFFFFFF, 0.03F, false, false, event.partialTicks);
+            RenderUtils.drawTextAtWorld(event.container, d4+"", d4p.getX()+ 0.5f, d4p.getY()+ 0.5f, d4p.getZ()+ 0.5f, 0xFFFFFFFF, 0.03F, false, false, event.partialTicks);
 
     }
 

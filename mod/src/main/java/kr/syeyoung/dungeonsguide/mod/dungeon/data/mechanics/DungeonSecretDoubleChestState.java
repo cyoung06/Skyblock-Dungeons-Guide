@@ -18,6 +18,7 @@
 
 package kr.syeyoung.dungeonsguide.mod.dungeon.data.mechanics;
 
+import kr.syeyoung.dungeonsguide.mod.render.world.DGRenderStateContainer;
 import kr.syeyoung.dungeonsguide.mod.dungeon.data.LegacyBlock;
 import com.google.common.collect.Sets;
 import kr.syeyoung.dungeonsguide.mod.dungeon.data.OffsetPoint;
@@ -149,11 +150,11 @@ public class DungeonSecretDoubleChestState implements DungeonMechanicState, ISec
     }
 
     @Override
-    public void highlight(Color color, String name, float partialTicks) {
+    public void highlight(DGRenderStateContainer container, Color color, String name, float partialTicks) {
         BlockPos pos = getSecretPoint().getBlockPos(room);
-        RenderUtils.highlightBlocksStencil(Arrays.asList(pos, data.secretPoint2.getBlockPos(room)), partialTicks, color, false);
-        RenderUtils.drawTextAtWorld(name, pos.getX() + 0.5f, pos.getY() + 0.375f, pos.getZ() + 0.5f, 0xFFFFFFFF, 0.03f, false, true, partialTicks);
-        RenderUtils.drawTextAtWorld(getCurrentState(), pos.getX() + 0.5f, pos.getY() + 0f, pos.getZ() + 0.5f, 0xFFFFFFFF, 0.03f, false, true, partialTicks);
+        RenderUtils.highlightBlocksStencil(container, Arrays.asList(pos, data.secretPoint2.getBlockPos(room)), partialTicks, color, false);
+        RenderUtils.drawTextAtWorld(container, name, pos.getX() + 0.5f, pos.getY() + 0.375f, pos.getZ() + 0.5f, 0xFFFFFFFF, 0.03f, false, true, partialTicks);
+        RenderUtils.drawTextAtWorld(container, getCurrentState(), pos.getX() + 0.5f, pos.getY() + 0f, pos.getZ() + 0.5f, 0xFFFFFFFF, 0.03f, false, true, partialTicks);
     }
 
     public void markFound() {

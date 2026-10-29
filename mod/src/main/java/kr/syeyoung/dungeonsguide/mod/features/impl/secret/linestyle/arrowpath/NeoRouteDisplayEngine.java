@@ -1,5 +1,6 @@
 package kr.syeyoung.dungeonsguide.mod.features.impl.secret.linestyle.arrowpath;
 
+import kr.syeyoung.dungeonsguide.mod.render.world.DGRenderStateContainer;
 import kr.syeyoung.dungeonsguide.mod.config.types.AColor;
 import kr.syeyoung.dungeonsguide.mod.dungeon.actions.*;
 import kr.syeyoung.dungeonsguide.mod.dungeon.actions.route.ActionRoute;
@@ -14,7 +15,6 @@ import kr.syeyoung.dungeonsguide.mod.features.impl.secret.routedisplay.LiveRoute
 import kr.syeyoung.dungeonsguide.mod.pathfinding.PathfindResult;
 import kr.syeyoung.dungeonsguide.mod.pathfinding.pathfinder.PathfinderExecutor;
 import kr.syeyoung.dungeonsguide.mod.pathfinding.preset.RoomPresetPathPlanner;
-import kr.syeyoung.dungeonsguide.mod.shader.ShaderManager;
 import kr.syeyoung.dungeonsguide.mod.shader.ShaderProgram;
 import kr.syeyoung.dungeonsguide.mod.utils.RenderUtils;
 import lombok.AllArgsConstructor;
@@ -22,11 +22,9 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import kr.syeyoung.dungeonsguide.mod.events.impl.RenderWorldEvent;
-import kr.syeyoung.dungeonsguide.mod.render.world.DGWorldRenderer;
-import kr.syeyoung.dungeonsguide.mod.render.world.state.QuadState;
-import kr.syeyoung.dungeonsguide.mod.render.world.state.ShaderQuadState;
-import kr.syeyoung.dungeonsguide.mod.render.world.state.TexturedQuadState;
-import kr.syeyoung.dungeonsguide.mod.shader.RepeatUniforms;
+import kr.syeyoung.dungeonsguide.mod.render.world.state.QuadRenderState;
+import kr.syeyoung.dungeonsguide.mod.render.world.state.ShaderQuadRenderState;
+import kr.syeyoung.dungeonsguide.mod.render.world.state.TexturedQuadRenderState;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.level.block.Blocks;
@@ -183,22 +181,22 @@ public class NeoRouteDisplayEngine implements IPathDisplayEngine<NeoRouteDisplay
     public void renderActionKill(ActionKill actionKill, DungeonRoom dungeonRoom, RenderWorldEvent event) {
         float partialTicks = event.partialTicks;
         BlockPos pos = actionKill.getTarget().getBlockPos(dungeonRoom);
-        RenderUtils.highlightBlock(pos, new Color(0, 255,255,50),partialTicks, true);
-        RenderUtils.drawTextAtWorld("Spawn", pos.getX() + 0.5f, pos.getY() + 0.3f, pos.getZ() + 0.5f, 0xFFFFFF00, 0.02f, false, false, partialTicks);
+        RenderUtils.highlightBlock(event.container, pos, new Color(0, 255,255,50),partialTicks, true);
+        RenderUtils.drawTextAtWorld(event.container, "Spawn", pos.getX() + 0.5f, pos.getY() + 0.3f, pos.getZ() + 0.5f, 0xFFFFFF00, 0.02f, false, false, partialTicks);
     }
 
     public void renderActionInteract(ActionInteract actionInteract, DungeonRoom dungeonRoom, RenderWorldEvent event) {
         float partialTicks = event.partialTicks;
         BlockPos pos = actionInteract.getTarget().getBlockPos(dungeonRoom);
-        RenderUtils.highlightBlock(pos, new Color(0, 255,255,50),partialTicks, true);
-        RenderUtils.drawTextAtWorld("Interact", pos.getX() + 0.5f, pos.getY() + 0.3f, pos.getZ() + 0.5f, 0xFFFFFF00, 0.02f, false, false, partialTicks);
+        RenderUtils.highlightBlock(event.container, pos, new Color(0, 255,255,50),partialTicks, true);
+        RenderUtils.drawTextAtWorld(event.container, "Interact", pos.getX() + 0.5f, pos.getY() + 0.3f, pos.getZ() + 0.5f, 0xFFFFFF00, 0.02f, false, false, partialTicks);
     }
 
     public void renderActionDropItem(ActionDropItem dropItem, DungeonRoom dungeonRoom, RenderWorldEvent event) {
         float partialTicks = event.partialTicks;
         BlockPos pos = dropItem.getTarget().getBlockPos(dungeonRoom);
-        RenderUtils.highlightBlock(pos, new Color(0, 255, 255, 50), partialTicks, true);
-        RenderUtils.drawTextAtWorld("Drop Item", pos.getX() + 0.5f, pos.getY() + 0.3f, pos.getZ() + 0.5f, 0xFFFFFF00, 0.02f, false, false, partialTicks);
+        RenderUtils.highlightBlock(event.container, pos, new Color(0, 255, 255, 50), partialTicks, true);
+        RenderUtils.drawTextAtWorld(event.container, "Drop Item", pos.getX() + 0.5f, pos.getY() + 0.3f, pos.getZ() + 0.5f, 0xFFFFFF00, 0.02f, false, false, partialTicks);
     }
 
     public void renderActionClickSet(ActionClickSet actionClickSet, DungeonRoom dungeonRoom, RenderWorldEvent event) {
@@ -215,16 +213,16 @@ public class NeoRouteDisplayEngine implements IPathDisplayEngine<NeoRouteDisplay
             zAcc += pos.getZ()+ 0.5f;
             list.add(pos);
         }
-        RenderUtils.highlightBlocksStencil(list, partialTicks, new AColor(0, 255,255,50), true);
+        RenderUtils.highlightBlocksStencil(event.container, list, partialTicks, new AColor(0, 255,255,50), true);
 
-        RenderUtils.drawTextAtWorld("Click", xAcc / size, yAcc / size, zAcc / size, 0xFFFFFF00, 0.02f, false, false, partialTicks);
+        RenderUtils.drawTextAtWorld(event.container, "Click", xAcc / size, yAcc / size, zAcc / size, 0xFFFFFF00, 0.02f, false, false, partialTicks);
     }
 
     public void renderActionClick(ActionClick actionClick, DungeonRoom dungeonRoom, RenderWorldEvent event) {
         float partialTicks = event.partialTicks;
         BlockPos pos = actionClick.getTarget().getBlockPos(dungeonRoom);
-        RenderUtils.highlightBlockStencil(pos, partialTicks,new AColor(0, 255,0,100), false);
-        RenderUtils.drawTextAtWorld("Click", pos.getX() + 0.5f, pos.getY() + 0.3f, pos.getZ() + 0.5f, 0xFFFFFF00, 0.02f, false, false, partialTicks);
+        RenderUtils.highlightBlockStencil(event.container, pos, partialTicks,new AColor(0, 255,0,100), false);
+        RenderUtils.drawTextAtWorld(event.container, "Click", pos.getX() + 0.5f, pos.getY() + 0.3f, pos.getZ() + 0.5f, 0xFFFFFF00, 0.02f, false, false, partialTicks);
 
         Vec3 from = new Vec3(pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5);
         Vec3 eyePos = Minecraft.getInstance().player.getEyePosition(partialTicks);
@@ -254,8 +252,8 @@ public class NeoRouteDisplayEngine implements IPathDisplayEngine<NeoRouteDisplay
     public void renderActionStonkClick(ActionStonkClick actionStonkClick, DungeonRoom dungeonRoom, RenderWorldEvent event) {
         float partialTicks = event.partialTicks;
         BlockPos pos = actionStonkClick.getTarget().getBlockPos(dungeonRoom);
-        RenderUtils.highlightBlockStencil(pos, partialTicks,new AColor(0, 255,0,100), false);
-        RenderUtils.drawTextAtWorld("Stonk&Click", pos.getX() + 0.5f, pos.getY() + 0.3f, pos.getZ() + 0.5f, 0xFFFFFF00, 0.02f, false, false, partialTicks);
+        RenderUtils.highlightBlockStencil(event.container, pos, partialTicks,new AColor(0, 255,0,100), false);
+        RenderUtils.drawTextAtWorld(event.container, "Stonk&Click", pos.getX() + 0.5f, pos.getY() + 0.3f, pos.getZ() + 0.5f, 0xFFFFFF00, 0.02f, false, false, partialTicks);
     }
 
     public void renderActionBreakWithSuperboom(ActionBreakWithSuperBoom superBoom, DungeonRoom dungeonRoom, RenderWorldEvent event) {
@@ -286,14 +284,14 @@ public class NeoRouteDisplayEngine implements IPathDisplayEngine<NeoRouteDisplay
         scale *= 25.0 / 6.0;
 
         if (getSettings().isEnableBeacon()) {
-            RenderUtils.renderBeaconBeam(target.getX(), target.getY(), target.getZ(), settings.getBeamColor(), partialTicks);
-            RenderUtils.highlightBlock(target, settings.getBeaconColor(), partialTicks);
+            RenderUtils.renderBeaconBeam(event.container, target.getX(), target.getY(), target.getZ(), settings.getBeamColor(), partialTicks);
+            RenderUtils.highlightBlock(event.container, target, settings.getBeaconColor(), partialTicks);
         }
 
         if (settings.getDestinationSize() != 0) {
-            RenderUtils.drawTextAtWorld("Destination", target.getX() + 0.5f, target.getY() + 0.5f + scale, target.getZ() + 0.5f, 0xFF00FF00, (float) settings.getDestinationSize(), true, false, partialTicks);
+            RenderUtils.drawTextAtWorld(event.container, "Destination", target.getX() + 0.5f, target.getY() + 0.5f + scale, target.getZ() + 0.5f, 0xFF00FF00, (float) settings.getDestinationSize(), true, false, partialTicks);
             // TODO: 1.8.9's getPosition() floored (x, y + 0.5, z), (x + 0.5, y + 0.5, z + 0.5) for the local player; blockPosition() floors (x, y, z)
-            RenderUtils.drawTextAtWorld(String.format("%.2f", Math.sqrt(target.distSqr(Minecraft.getInstance().player.blockPosition()))) + "m", target.getX() + 0.5f, target.getY() + 0.5f - scale, target.getZ() + 0.5f, 0xFFFFFF00, (float) settings.getDestinationSize(), true, false, partialTicks);
+            RenderUtils.drawTextAtWorld(event.container, String.format("%.2f", Math.sqrt(target.distSqr(Minecraft.getInstance().player.blockPosition()))) + "m", target.getX() + 0.5f, target.getY() + 0.5f - scale, target.getZ() + 0.5f, 0xFFFFFF00, (float) settings.getDestinationSize(), true, false, partialTicks);
         }
 
         if (!FeatureRegistry.SECRET_TOGGLE_KEY.isEnabled() || !FeatureRegistry.SECRET_TOGGLE_KEY.togglePathfindStatus) {
@@ -304,7 +302,7 @@ public class NeoRouteDisplayEngine implements IPathDisplayEngine<NeoRouteDisplay
                 if (settings.isEnableEtherwarpTracer()) {
                     for (PathSegment segment : context.segment) {
                         if (segment.nodeType == PathfindResult.PathfindNode.NodeType.ETHERWARP && segment.from.distanceToSqr(pos) < settings.getEtherwarpTracerDist()) {
-                            RenderUtils.drawLinesVec3(Arrays.asList(
+                            RenderUtils.drawLinesVec3(event.container, Arrays.asList(
                                     Minecraft.getInstance().player.getEyePosition(partialTicks),
                                     segment.to.add(0, -0.5, 0)), settings.getEtherwarpTracerColor(), settings.getEtherwarpTracerWidth(), partialTicks, false);
                         }
@@ -321,7 +319,7 @@ public class NeoRouteDisplayEngine implements IPathDisplayEngine<NeoRouteDisplay
                             pose.getType() != PathfindResult.PathfindNode.NodeType.SUPERBOOM &&
                             // TODO: 1.8.9's getPosition() floored (x, y + 0.5, z), (x + 0.5, y + 0.5, z + 0.5) for the local player; blockPosition() floors (x, y, z)
                             pose.distanceSq(Minecraft.getInstance().player.blockPosition()) < 100) {
-                        RenderUtils.drawTextAtWorld(pose.getType().toString(), pose.getX(), pose.getY() + 0.5f, pose.getZ(), 0xFF00FF00, 0.02f, false, true, partialTicks);
+                        RenderUtils.drawTextAtWorld(event.container, pose.getType().toString(), pose.getX(), pose.getY() + 0.5f, pose.getZ(), 0xFF00FF00, 0.02f, false, true, partialTicks);
                     }
                     if (last != null && last.getType() == PathfindResult.PathfindNode.NodeType.SUPERBOOM) {
                         BlockPos test = BlockPos.containing(pose.getX(), pose.getY(), pose.getZ());
@@ -503,7 +501,7 @@ public class NeoRouteDisplayEngine implements IPathDisplayEngine<NeoRouteDisplay
 
     private static void highlightSuperboom(List<BlockPos> blockPos, RenderWorldEvent event, AColor color) {
         float partialTicks = event.partialTicks;
-        AABB bb = RenderUtils.highlightBlocksStencil(blockPos, partialTicks, color, true);
+        AABB bb = RenderUtils.highlightBlocksStencil(event.container, blockPos, partialTicks, color, true);
 
         int[][][] quads = {
                 {{0,0,-1}, {1,0,-1}, {1,1,-1}, {0,1,-1}},
@@ -532,7 +530,7 @@ public class NeoRouteDisplayEngine implements IPathDisplayEngine<NeoRouteDisplay
                                 faces[1][quads[i][j][1]+1],
                                 faces[2][quads[i][j][2]+1]);
             }
-            DGWorldRenderer.record(new TexturedQuadState(tntSide, corners, quads2, 0xFFFFFFFF, true));
+            event.container.texturedQuadRenderStates.add(new TexturedQuadRenderState(tntSide, corners, quads2, 0xFFFFFFFF, true));
         }
     }
 
@@ -540,9 +538,8 @@ public class NeoRouteDisplayEngine implements IPathDisplayEngine<NeoRouteDisplay
     public static final Identifier arrow = Identifier.parse("dungeonsguide:textures/arrow.png");
     public static final Identifier abilities = Identifier.parse("dungeonsguide:textures/features/precalclist/abilities.png");
 
-    private static void drawArrows(Vec3[] corners, float[][] uvs, int color, boolean depth) {
-        DGWorldRenderer.record(new ShaderQuadState(ShaderManager.getShader("shaders/repeat"), new RepeatUniforms(0, 0, 1, 1),
-                arrow, corners, uvs, color, depth));
+    private static void drawArrows(DGRenderStateContainer container, Vec3[] corners, float[][] uvs, int color, boolean depth) {
+        container.shaderQuadRenderStates.add(new ShaderQuadRenderState(arrow, corners, uvs, color, depth, 0, 0, 1, 1));
     }
 
     private static Vec3 billboardCorner(Vec3 from, Matrix4f rotation, float u, float v) {
@@ -571,10 +568,10 @@ public class NeoRouteDisplayEngine implements IPathDisplayEngine<NeoRouteDisplay
             int i = RenderUtils.getColorAt(0, 0, 0, colour);
             Vec3 quadBL = fixedFrom.add(normal), quadBR = fixedFrom.subtract(normal), quadTL = segment.to.add(normal), quadTR = segment.to.subtract(normal);
             // TODO: 1.8.9 turned depth off when the segment starts at the camera
-            DGWorldRenderer.record(new QuadState(new Vec3[] {quadBL, quadBR, quadTR, quadTL}, i, flag));
+            event.container.quadRenderStates.add(new QuadRenderState(new Vec3[] {quadBL, quadBR, quadTR, quadTL}, i, flag));
 
             i = RenderUtils.getColorAt(0,0,0, texture);
-            drawArrows(new Vec3[] {quadBL, quadBR, quadTR, quadTL}, new float[][] {
+            drawArrows(event.container, new Vec3[] {quadBL, quadBR, quadTR, quadTL}, new float[][] {
                     {0, (float) -animate},
                     {1, (float) -animate},
                     {1, (float) (-len / 0.1-animate)},
@@ -588,7 +585,7 @@ public class NeoRouteDisplayEngine implements IPathDisplayEngine<NeoRouteDisplay
                 .scale(1/32.0f, -1/32.0f, 1/32.0f);
 
         int size = 16;
-        DGWorldRenderer.record(new QuadState(new Vec3[] {
+        event.container.quadRenderStates.add(new QuadRenderState(new Vec3[] {
                 billboardCorner(segment.from, rotation, -size /2 - 1, -size /2-1),
                 billboardCorner(segment.from, rotation, -size /2 - 1, size /2+1),
                 billboardCorner(segment.from, rotation, size /2 + 1, size /2+1),
@@ -596,7 +593,7 @@ public class NeoRouteDisplayEngine implements IPathDisplayEngine<NeoRouteDisplay
         }, 0x40000000, true));
 
         float u = (iconIdx % 8)*32 + 0.5f, v = (iconIdx/8)*32 + 0.5f;
-        DGWorldRenderer.record(new TexturedQuadState(abilities, new Vec3[] {
+        event.container.texturedQuadRenderStates.add(new TexturedQuadRenderState(abilities, new Vec3[] {
                 billboardCorner(segment.from, rotation, -size /2, size /2),
                 billboardCorner(segment.from, rotation, size /2, size /2),
                 billboardCorner(segment.from, rotation, size /2, -size /2),
@@ -610,22 +607,22 @@ public class NeoRouteDisplayEngine implements IPathDisplayEngine<NeoRouteDisplay
 
         // TODO: 1.8.9 drew this highlight with polygon offset (-1, -1), 26.1 draws it as is
         BlockPos pos = BlockPos.containing(segment.to.x, Math.floor(segment.to.y) -1 , segment.to.z);
-        RenderUtils._highlightBlock(pos, Color.green, partialTicks, true);
+        RenderUtils._highlightBlock(event.container, pos, Color.green, partialTicks, true);
     }
 
-    public static void drawLinesNormal(List<PathSegment> poses, int from, int to, PathfindResult.PathfindNode.NodeType type, AColor colour, AColor texture, RenderWorldEvent event, double animate) {
+    public static void drawLinesNormal(List<PathSegment> poses, int from, int to, PathfindResult.PathfindNode.NodeType type, AColor colour, AColor texture, DGRenderStateContainer container, double animate) {
         boolean depth = !(type == PathfindResult.PathfindNode.NodeType.STONK_WALK || type == PathfindResult.PathfindNode.NodeType.STONK_EXIT);
 
         int i = RenderUtils.getColorAt(0,0,0, colour);
         for (int j = from; j < to; j++) {
             PathSegment pos = poses.get(j);
-            DGWorldRenderer.record(new QuadState(new Vec3[] {pos.BL, pos.BR, pos.TR, pos.TL}, i, depth));
+            container.quadRenderStates.add(new QuadRenderState(new Vec3[] {pos.BL, pos.BR, pos.TR, pos.TL}, i, depth));
         }
 
         i = RenderUtils.getColorAt(0,0,0, texture);
         for (int j = from; j < to; j++) {
             PathSegment pos = poses.get(j);
-            drawArrows(new Vec3[] {pos.BL, pos.BR, pos.TR, pos.TL}, new float[][] {
+            drawArrows(container, new Vec3[] {pos.BL, pos.BR, pos.TR, pos.TL}, new float[][] {
                     {0, (float) (-pos.texCulLenFrom-animate)},
                     {1, (float) (-pos.texCulLenFrom-animate)},
                     {1, (float) (-pos.texCulLenTo-animate)},
@@ -657,7 +654,7 @@ public class NeoRouteDisplayEngine implements IPathDisplayEngine<NeoRouteDisplay
             } else if (nodeType == PathfindResult.PathfindNode.NodeType.ENDERPEARL)
                 drawIcon(41, poses.get(st), colour, texture, event, animate, true);
             else
-                drawLinesNormal(poses, st, toIdx, poses.get(st).nodeType, colour, texture, event, animate);
+                drawLinesNormal(poses, st, toIdx, poses.get(st).nodeType, colour, texture, event.container, animate);
         }
     }
 }

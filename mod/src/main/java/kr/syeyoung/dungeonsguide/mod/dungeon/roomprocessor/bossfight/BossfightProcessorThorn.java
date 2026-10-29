@@ -110,9 +110,9 @@ public class BossfightProcessorThorn extends GeneralBossfightProcessor {
         if (!FeatureRegistry.DEBUG.isEnabled()) return;
         try {
             BlockPos pos = new BlockPos(205,77, 205);
-            RenderUtils.highlightBlock(pos, new Color(0, 255, 255, 50), event.partialTicks, false);
+            RenderUtils.highlightBlock(event.container, pos, new Color(0, 255, 255, 50), event.partialTicks, false);
             for (BlockPos pos2 : progressBar) {
-                RenderUtils.highlightBlock(pos2, LegacyBlock.SEA_LANTERN.is(w.getBlockState(pos2)) ?
+                RenderUtils.highlightBlock(event.container, pos2, LegacyBlock.SEA_LANTERN.is(w.getBlockState(pos2)) ?
                             new Color(0, 255, 0, 50) : new Color(255,0,0, 50), event.partialTicks, false);
             }
         } catch (Exception e) {

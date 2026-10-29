@@ -38,7 +38,7 @@ public class LineRenderUtils {
                     PossibleMoveSpot spot2 = RaytraceHelper.chooseMinimalY2(Arrays.asList(spot)).get(0);
                     for (OffsetVec3 _vec3 : spot2.getOffsetPointSet()) {
                         Vec3 offsetVec3 = _vec3.getPos(dungeonRoom);
-                        RenderUtils.highlightBox(
+                        RenderUtils.highlightBox(event.container, 
                                 new AABB(
                                         offsetVec3.x - 0.25f, offsetVec3.y + 0.025f, offsetVec3.z - 0.25f,
                                         offsetVec3.x + 0.25f, offsetVec3.y + 0.026f, offsetVec3.z + 0.25f
@@ -52,7 +52,7 @@ public class LineRenderUtils {
                 actual = new Color(c.getRGB() & 0xFFFFFF | 0x10000000, true);
                 for (OffsetVec3 _vec3 : spot.getOffsetPointSet()) {
                     Vec3 offsetVec3 = _vec3.getPos(dungeonRoom);
-                    RenderUtils.highlightBox(
+                    RenderUtils.highlightBox(event.container, 
                             new AABB(
                                     offsetVec3.x - 0.25f, offsetVec3.y - 0.025f, offsetVec3.z - 0.25f,
                                     offsetVec3.x + 0.25f, offsetVec3.y + 0.475f, offsetVec3.z + 0.25f
@@ -73,7 +73,7 @@ public class LineRenderUtils {
                 cy /= spot.getOffsetPointSet().size();
                 cz /= spot.getOffsetPointSet().size();
                 cy += 0.2f;
-                RenderUtils.drawTextAtWorld(
+                RenderUtils.drawTextAtWorld(event.container, 
                         spot.getClusterId() + "/" + spot.isBlocked() + " / " + spot.getOffsetPointSet().size(), (float) cx, (float) cy, (float) cz, actual.getRGB() | 0xFF000000, 0.01f, false, true, partialTicks);
 
 
@@ -95,7 +95,7 @@ public class LineRenderUtils {
                 Color actual = new Color(c.getRGB() & 0xFFFFFF | 0x90000000, true);
                 for (OffsetVec3 _vec3 : spot.getOffsetPointSet()) {
                     Vec3 offsetVec3 = _vec3.getPos(dungeonRoom);
-                    RenderUtils.highlightBox(
+                    RenderUtils.highlightBox(event.container, 
                             new AABB(
                                     offsetVec3.x - 0.25f, offsetVec3.y + 0.025f, offsetVec3.z - 0.25f,
                                     offsetVec3.x + 0.25f, offsetVec3.y + 0.026f, offsetVec3.z + 0.25f
@@ -116,7 +116,7 @@ public class LineRenderUtils {
                 Color actual = new Color(c.getRGB() & 0xFFFFFF | 0x10000000, true);
                 for (OffsetVec3 _vec3 : spot.getOffsetPointSet()) {
                     Vec3 offsetVec3 = _vec3.getPos(dungeonRoom);
-                    RenderUtils.highlightBox(
+                    RenderUtils.highlightBox(event.container, 
                             new AABB(
                                     offsetVec3.x - 0.25f, offsetVec3.y - 0.025f, offsetVec3.z - 0.25f,
                                     offsetVec3.x + 0.25f, offsetVec3.y + 0.475f, offsetVec3.z + 0.25f
@@ -138,7 +138,7 @@ public class LineRenderUtils {
                 cy /= spot.getOffsetPointSet().size();
                 cz /= spot.getOffsetPointSet().size();
                 cy += 0.2f;
-                RenderUtils.drawTextAtWorld(
+                RenderUtils.drawTextAtWorld(event.container, 
                         Arrays.stream(spot.getTools())
                                 .map(a -> a == null ? "null" : a.getBreakingPower() + ":" + a.getHarvestLv()).collect(Collectors.joining(";"))
                                 + ":::" + spot.getClusterId() + "/" + spot.isStonkingReq(), (float) cx, (float) cy, (float) cz, actual.getRGB(), 0.01f, false, true, partialTicks);

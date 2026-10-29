@@ -93,7 +93,7 @@ public class FeatureStonkDebug extends SimpleFeature {
 
 
             for (OffsetVec3 offsetVec3 : spot.getOffsetPointSet()) {
-                RenderUtils.highlightBox(
+                RenderUtils.highlightBox(event.container, 
                         new AABB(
                                 offsetVec3.xCoord - 0.025f, offsetVec3.yCoord - 0.025f + 70, offsetVec3.zCoord - 0.025f,
                                 offsetVec3.xCoord + 0.025f, offsetVec3.yCoord + 0.025f + 70, offsetVec3.zCoord + 0.025f
@@ -113,7 +113,7 @@ public class FeatureStonkDebug extends SimpleFeature {
             cy /= spot.getOffsetPointSet().size();
             cz /= spot.getOffsetPointSet().size();
             cy += 0.2f;
-            RenderUtils.drawTextAtWorld(
+            RenderUtils.drawTextAtWorld(event.container, 
                     Arrays.stream(spot.getTools())
                             .map(a -> a == null ? "null" : a.getBreakingPower()+":"+a.getHarvestLv()).collect(Collectors.joining(";"))
                     +":::"+spot.getClusterId()+"/"+spot.isStonkingReq(), (float) cx, (float) cy, (float) cz, actual.getRGB(), 0.01f, false, true, event.partialTicks);

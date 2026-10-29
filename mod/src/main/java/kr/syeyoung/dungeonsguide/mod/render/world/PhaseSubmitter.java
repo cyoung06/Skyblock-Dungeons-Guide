@@ -15,16 +15,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package kr.syeyoung.dungeonsguide.mod.render.world.state;
+
+package kr.syeyoung.dungeonsguide.mod.render.world;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 
-/**
- * Something DG draws in the world. Recorded by RenderUtils during RenderWorldEvent, submitted by DGWorldRenderer (D81).
- * Positions are world positions; the pose stack is camera relative, so states subtract camera.
- */
-public interface DGWorldRenderState {
-    void submit(PoseStack poseStack, MultiBufferSource bufferSource, Vec3 camera);
+public interface PhaseSubmitter {
+    void submit(DGRenderStateContainer container, CameraRenderState camera, PoseStack poseStack, SubmitNodeCollector collector);
 }

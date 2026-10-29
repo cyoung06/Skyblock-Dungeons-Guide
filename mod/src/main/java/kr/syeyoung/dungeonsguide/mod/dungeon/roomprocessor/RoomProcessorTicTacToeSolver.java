@@ -202,7 +202,7 @@ public class RoomProcessorTicTacToeSolver extends GeneralRoomProcessor {
                 }
                 whoseturn = ones < negativeones;
             }
-            RenderUtils.highlightBoxAColor(new AABB(block.getX(), block.getY(), block.getZ(), block.getX()+1, block.getY() + 1, block.getZ() + 1),
+            RenderUtils.highlightBoxAColor(event.container, new AABB(block.getX(), block.getY(), block.getZ(), block.getX()+1, block.getY() + 1, block.getZ() + 1),
                     whoseturn ? FeatureRegistry.SOLVER_TICTACTOE.getTargetColor()
                             : FeatureRegistry.SOLVER_TICTACTOE.getTargetColor2(), event.partialTicks, true);
         }

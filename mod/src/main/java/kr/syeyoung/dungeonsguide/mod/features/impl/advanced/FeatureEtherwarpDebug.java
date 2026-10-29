@@ -66,7 +66,7 @@ public class FeatureEtherwarpDebug extends SimpleFeature implements ShadowCast.C
         if (toHighlight == null) return;
         Color c =  new Color(0x3300FF00, true);
         for (BlockPos spot : toHighlight) {
-             RenderUtils.highlightBox(
+             RenderUtils.highlightBox(event.container, 
 //                     spot
                      new AABB(spot.getX() / 2.0 - 0.25, spot.getY() / 2.0 - 0.25, spot.getZ() / 2.0 - 0.25,
                              spot.getX() / 2.0 + 0.25, spot.getY() / 2.0 + 0.25, spot.getZ() / 2.0 + 0.25)

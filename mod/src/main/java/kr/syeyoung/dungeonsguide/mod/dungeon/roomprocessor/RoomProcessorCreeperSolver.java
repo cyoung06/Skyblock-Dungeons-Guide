@@ -139,7 +139,7 @@ public class RoomProcessorCreeperSolver extends GeneralRoomProcessor {
             Color color = colors[i % colors.length];
             boolean oneIsConnected = !LegacyBlock.SEA_LANTERN.is(w.getBlockState(poset[0])) &&
                     !LegacyBlock.SEA_LANTERN.is(w.getBlockState(poset[1]));
-            RenderUtils.drawLine(new Vec3(poset[0].getX() +0.5, poset[0].getY() +0.5, poset[0].getZ()+0.5),
+            RenderUtils.drawLine(event.container, new Vec3(poset[0].getX() +0.5, poset[0].getY() +0.5, poset[0].getZ()+0.5),
                     new Vec3(poset[1].getX() +0.5, poset[1].getY() +0.5, poset[1].getZ()+0.5), oneIsConnected ? new Color(0,0,0,50) : color, event.partialTicks, true);
         }
         final BlockPos low = getDungeonRoom().getRoomBounds().getMin();
@@ -147,7 +147,7 @@ public class RoomProcessorCreeperSolver extends GeneralRoomProcessor {
                 low.getX() + 17, low.getY() + 5, low.getZ() + 17,
                 low.getX() + 16, low.getY() + 8.5, low.getZ() + 16
         );
-        RenderUtils.highlightBox(axis, new Color(0x4400FF00, true), event.partialTicks, false);
+        RenderUtils.highlightBox(event.container, axis, new Color(0x4400FF00, true), event.partialTicks, false);
     }
 
     public static class Generator implements RoomProcessorGenerator<RoomProcessorCreeperSolver> {

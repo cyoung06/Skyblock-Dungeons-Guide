@@ -61,9 +61,9 @@ public class GoldenPathRightProcessor extends GeneralDefuseChamberProcessor {
     @Override
     public void drawWorld(RenderWorldEvent event) {
         super.drawWorld(event);
-        RenderUtils.drawTextAtWorld(blocksolution.size() == 0 ? "Answer not received yet. Visit left room to obtain solution" : "" , center.getX()+ 0.5f, center.getY(), center.getZ()+ 0.5f, 0xFFFFFFFF, 0.03F, false, false, event.partialTicks);
+        RenderUtils.drawTextAtWorld(event.container, blocksolution.size() == 0 ? "Answer not received yet. Visit left room to obtain solution" : "" , center.getX()+ 0.5f, center.getY(), center.getZ()+ 0.5f, 0xFFFFFFFF, 0.03F, false, false, event.partialTicks);
 
-        RenderUtils.drawLines(blocksolution, new AColor(0,0,255,0),1, event.partialTicks, false);
+        RenderUtils.drawLines(event.container, blocksolution, new AColor(0,0,255,0),1, event.partialTicks, false);
 
     }
 

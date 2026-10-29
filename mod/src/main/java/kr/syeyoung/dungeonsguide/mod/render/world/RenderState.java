@@ -16,28 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package kr.syeyoung.dungeonsguide.mod.shader;
+package kr.syeyoung.dungeonsguide.mod.render.world;
 
-import com.mojang.blaze3d.buffers.Std140Builder;
-import com.mojang.blaze3d.buffers.Std140SizeCalculator;
-
-import java.nio.ByteBuffer;
-
-public record RepeatUniforms(float positionX, float positionY, float sizeX, float sizeY) implements ShaderUniforms {
-    private static final int SIZE = new Std140SizeCalculator().putVec2().putVec2().get();
-
-    @Override
-    public void write(ByteBuffer buffer) {
-        Std140Builder.intoBuffer(buffer).putVec2(positionX, positionY).putVec2(sizeX, sizeY);
-    }
-
-    @Override
-    public String blockName() {
-        return "Repeat";
-    }
-
-    @Override
-    public int blockSize() {
-        return SIZE;
-    }
+public interface RenderState {
 }

@@ -15,35 +15,35 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 package kr.syeyoung.dungeonsguide.mod.render.world.state;
 
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import kr.syeyoung.dungeonsguide.mod.render.gui.DGGuiRenderer;
 import kr.syeyoung.dungeonsguide.mod.render.gui.StencilImage;
 import kr.syeyoung.dungeonsguide.mod.render.gui.state.DGRenderState;
 import kr.syeyoung.dungeonsguide.mod.render.world.DGRenderTypes;
+import kr.syeyoung.dungeonsguide.mod.render.world.RenderState;
+import kr.syeyoung.dungeonsguide.mod.render.world.RenderStateSubmitter;
 import lombok.AllArgsConstructor;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Matrix4f;
 
 import java.util.List;
 
-/**
- * 2D DG content on a quad in the world: the gui render states are rendered into the image first
- * (DGWorldRenderer's prepare, like vanilla's picture in picture in reverse), then the quad samples it by texture id.
- */
 @AllArgsConstructor
-public class WorldImageState implements DGWorldRenderState {
-    private final StencilImage image;
-    private final Identifier texture;
-    private final List<DGRenderState> states;
-    private final int width, height;
-    private final Vec3[] corners;
-    private final boolean depth;
+public class WorldImageRenderState implements RenderState, RenderStateSubmitter<WorldImageRenderState> {
+    private static final float[][] UVS = {{0, 1}, {0, 0}, {1, 0}, {1, 1}};
+
+    public StencilImage image;
+    public Identifier texture;
+    public List<DGRenderState> states;
+    public int width, height;
+    public Vec3[] corners;
+    public boolean depth;
 
     public void prepare(GpuBufferSlice fog) {
         image.ensureSize(width, height);
@@ -51,15 +51,15 @@ public class WorldImageState implements DGWorldRenderState {
     }
 
     @Override
-    public void submit(PoseStack poseStack, MultiBufferSource bufferSource, Vec3 camera) {
-        VertexConsumer consumer = bufferSource.getBuffer(depth ? DGRenderTypes.image(texture) : DGRenderTypes.imageSeeThrough(texture));
-        Matrix4f pose = poseStack.last().pose();
-        // gl textures start at the bottom row
-        float[][] uvs = {{0, 1}, {0, 0}, {1, 0}, {1, 1}};
-        for (int i = 0; i < 4; i++) {
-            Vec3 corner = corners[i];
-            consumer.addVertex(pose, (float) (corner.x - camera.x), (float) (corner.y - camera.y), (float) (corner.z - camera.z))
-                    .setUv(uvs[i][0], uvs[i][1]).setColor(-1);
-        }
+    public void submit(WorldImageRenderState state, CameraRenderState camera, PoseStack poseStack, SubmitNodeCollector collector) {
+        collector.submitCustomGeometry(poseStack,
+                state.depth ? DGRenderTypes.image(state.texture) : DGRenderTypes.imageSeeThrough(state.texture),
+                (pose, consumer) -> {
+                    for (int i = 0; i < 4; i++) {
+                        Vec3 corner = state.corners[i];
+                        consumer.addVertex(pose, (float) (corner.x - camera.pos.x), (float) (corner.y - camera.pos.y), (float) (corner.z - camera.pos.z))
+                                .setUv(UVS[i][0], UVS[i][1]).setColor(-1);
+                    }
+                });
     }
 }

@@ -32,6 +32,7 @@ import com.mojang.blaze3d.vertex.MeshData;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import kr.syeyoung.dungeonsguide.mod.render.gui.state.DGRenderState;
 import kr.syeyoung.dungeonsguide.mod.render.gui.state.ItemState;
+import kr.syeyoung.dungeonsguide.mod.render.gui.state.PictureInPictureState;
 import kr.syeyoung.dungeonsguide.mod.render.gui.state.ShaderShapeState;
 import kr.syeyoung.dungeonsguide.mod.shader.ShaderUniforms;
 import kr.syeyoung.dungeonsguide.mod.render.gui.state.StencilState;
@@ -39,12 +40,20 @@ import lombok.AllArgsConstructor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.render.GuiItemAtlas;
 import net.minecraft.client.gui.render.TextureSetup;
+import net.minecraft.client.gui.render.pip.GuiEntityRenderer;
+import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
 import net.minecraft.client.renderer.DynamicUniformStorage;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MappableRingBuffer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Projection;
 import net.minecraft.client.renderer.ProjectionMatrixBuffer;
+import net.minecraft.client.renderer.state.gui.BlitRenderState;
+import net.minecraft.client.renderer.state.gui.GuiRenderState;
+import net.minecraft.client.renderer.state.gui.pip.GuiEntityRenderState;
+import net.minecraft.client.renderer.state.gui.pip.PictureInPictureRenderState;
 import net.minecraft.resources.Identifier;
+import org.joml.Matrix3x2f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -55,6 +64,7 @@ import java.awt.*;
 import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.List;
+import java.util.function.Function;
 
 public class DGGuiRenderer implements AutoCloseable {
     public static final DGGuiRenderer INSTANCE = new DGGuiRenderer();
@@ -69,6 +79,16 @@ public class DGGuiRenderer implements AutoCloseable {
     private GuiItemAtlas itemAtlas;
     private int itemAtlasGuiScale;
 
+    private final Map<Class<?>, Function<MultiBufferSource.BufferSource, PictureInPictureRenderer<?>>> pictureInPictureFactories = new HashMap<>();
+    private final Map<Class<?>, List<PictureInPictureRenderer<?>>> pictureInPictureRenderers = new HashMap<>();
+    private final Map<Class<?>, Integer> pictureInPictureUsed = new HashMap<>();
+    private final MultiBufferSource.BufferSource pictureInPictureBufferSource = MultiBufferSource.immediate(new ByteBufferBuilder(786432));
+
+    private DGGuiRenderer() {
+        pictureInPictureFactories.put(GuiEntityRenderState.class, bufferSource -> new GuiEntityRenderer(bufferSource, Minecraft.getInstance().getEntityRenderDispatcher()));
+        pictureInPictureFactories.put(PreviewSceneRenderState.class, PreviewSceneRenderer::new);
+    }
+
     public void submit(StencilImage target, List<DGRenderState> states) {
         queue.add(new Job(target, states));
     }
@@ -81,6 +101,7 @@ public class DGGuiRenderer implements AutoCloseable {
         } finally {
             queue.clear();
             if (itemAtlas != null) itemAtlas.endFrame();
+            pictureInPictureUsed.clear();
             for (DynamicUniformStorage<ShaderUniforms> storage : shaderUniforms.values()) {
                 storage.endFrame();
             }
@@ -89,6 +110,7 @@ public class DGGuiRenderer implements AutoCloseable {
 
     public void renderInto(StencilImage target, List<DGRenderState> states, GpuBufferSlice fog) {
         prepareItems(states);
+        preparePictureInPicture(states);
 
         List<Step> steps = new ArrayList<>();
         BufferBuilder bufferBuilder = null;
@@ -119,6 +141,7 @@ public class DGGuiRenderer implements AutoCloseable {
             }
 
             if (state instanceof ItemState && ((ItemState) state).getSlot() == null) continue;
+            if (state instanceof PictureInPictureState && ((PictureInPictureState) state).getBlit() == null) continue;
 
             RenderPipeline pipeline = state.stencilMask() ? maskVariant(state.pipeline()) : state.pipeline();
             TextureSetup textures = state.textureSetup();
@@ -200,6 +223,49 @@ public class DGGuiRenderer implements AutoCloseable {
                 itemState.setSlot(itemAtlas.getOrUpdate(itemState.getItem()));
             }
         }
+    }
+
+    private void preparePictureInPicture(List<DGRenderState> states) {
+        boolean any = false;
+        for (DGRenderState state : states) {
+            if (state instanceof PictureInPictureState) any = true;
+        }
+        if (!any) return;
+
+        RenderSystem.backupProjectionMatrix();
+        try {
+            for (DGRenderState state : states) {
+                if (state instanceof PictureInPictureState) preparePictureInPicture((PictureInPictureState) state);
+            }
+        } finally {
+            RenderSystem.restoreProjectionMatrix();
+        }
+    }
+
+    private <T extends PictureInPictureRenderState> void preparePictureInPicture(PictureInPictureState state) {
+        T pictureInPicture = (T) state.getPictureInPicture();
+        PictureInPictureRenderer<T> renderer = (PictureInPictureRenderer<T>) nextPictureInPictureRenderer(pictureInPicture.getClass());
+        if (renderer == null) return;
+
+        GuiRenderState scratch = new GuiRenderState();
+        renderer.prepare(pictureInPicture, scratch, textureScale(state.getPose()));
+        scratch.forEachElement(element -> {
+            if (element instanceof BlitRenderState) state.setBlit((BlitRenderState) element);
+        }, GuiRenderState.TraverseRange.ALL);
+    }
+
+    private PictureInPictureRenderer<?> nextPictureInPictureRenderer(Class<?> stateClass) {
+        Function<MultiBufferSource.BufferSource, PictureInPictureRenderer<?>> factory = pictureInPictureFactories.get(stateClass);
+        if (factory == null) return null;
+        List<PictureInPictureRenderer<?>> renderers = pictureInPictureRenderers.computeIfAbsent(stateClass, c -> new ArrayList<>());
+        int index = pictureInPictureUsed.merge(stateClass, 1, Integer::sum) - 1;
+        if (index == renderers.size()) renderers.add(factory.apply(pictureInPictureBufferSource));
+        return renderers.get(index);
+    }
+
+    private static int textureScale(Matrix3x2f pose) {
+        double scale = Math.max(Math.hypot(pose.m00, pose.m01), Math.hypot(pose.m10, pose.m11));
+        return Math.max(1, (int) Math.ceil(scale - 1.0E-3));
     }
 
     private void recordMesh(List<Step> steps, BufferBuilder bufferBuilder, RenderPipeline pipeline, TextureSetup textures, Rectangle scissor) {
@@ -330,6 +396,11 @@ public class DGGuiRenderer implements AutoCloseable {
     @Override
     public void close() {
         if (itemAtlas != null) itemAtlas.close();
+        for (List<PictureInPictureRenderer<?>> renderers : pictureInPictureRenderers.values()) {
+            for (PictureInPictureRenderer<?> renderer : renderers) {
+                renderer.close();
+            }
+        }
         for (DynamicUniformStorage<ShaderUniforms> storage : shaderUniforms.values()) {
             storage.close();
         }

@@ -115,7 +115,7 @@ public class RoomProcessorRiddle extends GeneralRoomProcessor {
         super.drawWorld(event);
         if (!FeatureRegistry.SOLVER_RIDDLE.isEnabled()) return;
         if (chest != null) {
-            RenderUtils.highlightBoxAColor(new AABB(chest.getX(), chest.getY(), chest.getZ(), chest.getX()+1, chest.getY() + 1, chest.getZ() + 1),  FeatureRegistry.SOLVER_RIDDLE.getTargetColor(), event.partialTicks, true);
+            RenderUtils.highlightBoxAColor(event.container, new AABB(chest.getX(), chest.getY(), chest.getZ(), chest.getX()+1, chest.getY() + 1, chest.getZ() + 1),  FeatureRegistry.SOLVER_RIDDLE.getTargetColor(), event.partialTicks, true);
         }
     }
 

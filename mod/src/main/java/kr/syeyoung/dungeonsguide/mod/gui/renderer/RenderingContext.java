@@ -28,6 +28,7 @@ import kr.syeyoung.dungeonsguide.mod.gui.primitive.Size;
 import kr.syeyoung.dungeonsguide.mod.render.gui.state.DGRenderState;
 import kr.syeyoung.dungeonsguide.mod.render.gui.state.GlyphRunState;
 import kr.syeyoung.dungeonsguide.mod.render.gui.state.ItemState;
+import kr.syeyoung.dungeonsguide.mod.render.gui.state.PictureInPictureState;
 import kr.syeyoung.dungeonsguide.mod.render.gui.state.RectState;
 import kr.syeyoung.dungeonsguide.mod.render.gui.state.ShaderShapeState;
 import kr.syeyoung.dungeonsguide.mod.render.gui.state.StencilState;
@@ -42,6 +43,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.state.gui.GuiRenderState;
+import net.minecraft.client.renderer.state.gui.pip.PictureInPictureRenderState;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
@@ -368,6 +370,7 @@ public class RenderingContext {
         extraction.accept(graphics);
 
         renderState.forEachElement(element -> states.add(new VanillaElementState(element, currentClip(), writingStencilMask)), GuiRenderState.TraverseRange.ALL);
+        renderState.forEachPictureInPicture(this::drawPictureInPicture);
         renderState.forEachText(text -> {
             List<TextRenderable> glyphs = new ArrayList<>();
             text.ensurePrepared().visit(new Font.GlyphVisitor() {
@@ -385,6 +388,11 @@ public class RenderingContext {
                 states.add(new GlyphRunState(new Matrix3x2f(text.pose), glyphs, currentClip(), writingStencilMask));
         });
         renderState.forEachItem(item -> states.add(new ItemState(new Matrix3x2f(item.pose()), item.itemStackRenderState(), item.x(), item.y(), currentClip(), writingStencilMask)));
+    }
+
+    public void drawPictureInPicture(PictureInPictureRenderState pictureInPicture) {
+        if (isClipEmpty()) return;
+        states.add(new PictureInPictureState(new Matrix3x2f(pose), pictureInPicture, currentClip(), writingStencilMask));
     }
 
     public void beginStencilMask() {

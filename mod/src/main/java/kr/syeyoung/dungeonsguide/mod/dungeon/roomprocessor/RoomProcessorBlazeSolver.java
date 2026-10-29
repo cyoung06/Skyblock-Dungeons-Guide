@@ -113,18 +113,18 @@ public class RoomProcessorBlazeSolver extends GeneralRoomProcessor {
         if (!FeatureRegistry.SOLVER_BLAZE.isEnabled()) return;
         if (next == null) return;
         Vec3 pos = next.getEyePosition(event.partialTicks);
-        RenderUtils.drawTextAtWorld("NEXT", (float)pos.x, (float)pos.y, (float)pos.z, 0xFFFF0000, 0.5f, true, false, event.partialTicks);
+        RenderUtils.drawTextAtWorld(event.container, "NEXT", (float)pos.x, (float)pos.y, (float)pos.z, 0xFFFF0000, 0.5f, true, false, event.partialTicks);
 
         for (Blaze entity : blazeList) {
             // TODO: D72, 1.8.9 masked these boxes to the blaze's shape (and a 1.1x scaled one for the border) with the stencil buffer, 26.1 draws the boxes
-            RenderUtils.highlightBox(entity, new AABB(-0.8,0, -0.8, 0.8, 2, 0.8), FeatureRegistry.SOLVER_BLAZE.getBlazeColor(), event.partialTicks, false);
+            RenderUtils.highlightBox(event.container, entity, new AABB(-0.8,0, -0.8, 0.8, 2, 0.8), FeatureRegistry.SOLVER_BLAZE.getBlazeColor(), event.partialTicks, false);
             if (entity == nextBlaze) {
-                RenderUtils.highlightBox(entity, new AABB(-0.8,0, -0.8, 0.8, 2, 0.8), FeatureRegistry.SOLVER_BLAZE.getNextUpBlazeColor(), event.partialTicks, false);
+                RenderUtils.highlightBox(event.container, entity, new AABB(-0.8,0, -0.8, 0.8, 2, 0.8), FeatureRegistry.SOLVER_BLAZE.getNextUpBlazeColor(), event.partialTicks, false);
             } else if (entity == currentBlaze)
-                RenderUtils.highlightBox(entity, new AABB(-0.8,0, -0.8, 0.8, 2, 0.8), FeatureRegistry.SOLVER_BLAZE.getNextBlazeColor(), event.partialTicks, false);
+                RenderUtils.highlightBox(event.container, entity, new AABB(-0.8,0, -0.8, 0.8, 2, 0.8), FeatureRegistry.SOLVER_BLAZE.getNextBlazeColor(), event.partialTicks, false);
 
             if (FeatureRegistry.SOLVER_BLAZE.<AColor>getParameter("blazeborder").getValue().getAlpha() > 0x10) {
-                RenderUtils.highlightBox(entity, new AABB(-1, 0, -1, 1, 2, 1), FeatureRegistry.SOLVER_BLAZE.<AColor>getParameter("blazeborder").getValue(), event.partialTicks, false);
+                RenderUtils.highlightBox(event.container, entity, new AABB(-1, 0, -1, 1, 2, 1), FeatureRegistry.SOLVER_BLAZE.<AColor>getParameter("blazeborder").getValue(), event.partialTicks, false);
             }
         }
     }

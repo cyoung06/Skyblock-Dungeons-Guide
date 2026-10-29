@@ -114,13 +114,13 @@ public class RoomProcessorButtonSolver extends GeneralRoomProcessor {
             BlockPos pos = woods[i];
 
             if (data == 0) {
-                RenderUtils.highlightBlock(pos, new Color(0, 255, 255, 50), event.partialTicks, false);
+                RenderUtils.highlightBlock(event.container, pos, new Color(0, 255, 255, 50), event.partialTicks, false);
             } else if (data == -1) {
-                RenderUtils.highlightBlock(pos, new Color(255, 0, 0, 50), event.partialTicks, false);
+                RenderUtils.highlightBlock(event.container, pos, new Color(255, 0, 0, 50), event.partialTicks, false);
             } else if (data == 1) {
-                RenderUtils.highlightBlock(pos, new Color(0, 255, 0, 50), event.partialTicks, false);
+                RenderUtils.highlightBlock(event.container, pos, new Color(0, 255, 0, 50), event.partialTicks, false);
             } else if (data == 2) {
-                RenderUtils.highlightBlock(pos, new Color(0, 255, 0, 100), event.partialTicks, false);
+                RenderUtils.highlightBlock(event.container, pos, new Color(0, 255, 0, 100), event.partialTicks, false);
             }
         }
     }
