@@ -33,7 +33,7 @@ import kr.syeyoung.dungeonsguide.mod.gui.elements.richtext.TextSpan;
 import kr.syeyoung.dungeonsguide.mod.events.impl.ChatReceivedEvent;
 
 import java.util.UUID;
-import kr.syeyoung.dungeonsguide.mod.utils.TextUtils;
+import kr.syeyoung.dungeonsguide.mod.utils.string.TextUtils;
 
 public class FeatureWatcherWarning extends TextHUDFeature {
 

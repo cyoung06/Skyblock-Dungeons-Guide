@@ -21,7 +21,7 @@ package kr.syeyoung.dungeonsguide.mod.dungeon.roomprocessor.bossfight;
 import kr.syeyoung.dungeonsguide.mod.utils.string.ComponentMatcher;
 import kr.syeyoung.dungeonsguide.mod.events.impl.LivingTickEvent;
 import kr.syeyoung.dungeonsguide.mod.events.impl.BlockUpdateEvent;
-import kr.syeyoung.dungeonsguide.mod.utils.TextUtils;
+import kr.syeyoung.dungeonsguide.mod.utils.string.TextUtils;
 import kr.syeyoung.dungeonsguide.mod.dungeon.data.LegacyBlock;
 import lombok.Getter;
 import net.minecraft.world.level.block.state.BlockState;

@@ -19,7 +19,7 @@
 package kr.syeyoung.dungeonsguide.mod.features.impl.party.customgui;
 
 import java.util.stream.Collectors;
-import kr.syeyoung.dungeonsguide.mod.utils.TextUtils;
+import kr.syeyoung.dungeonsguide.mod.utils.string.TextUtils;
 import net.minecraft.world.item.TooltipFlag;
 import kr.syeyoung.dungeonsguide.mod.features.FeatureRegistry;
 import kr.syeyoung.dungeonsguide.mod.gui.BindableAttribute;

@@ -19,7 +19,7 @@
 package kr.syeyoung.dungeonsguide.mod.features.impl.party.customgui;
 
 import java.util.List;
-import kr.syeyoung.dungeonsguide.mod.utils.TextUtils;
+import kr.syeyoung.dungeonsguide.mod.utils.string.TextUtils;
 import kr.syeyoung.dungeonsguide.mod.events.impl.ScreenOpenEvent;
 
 

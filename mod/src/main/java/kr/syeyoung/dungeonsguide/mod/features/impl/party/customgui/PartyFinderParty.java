@@ -19,7 +19,7 @@
 package kr.syeyoung.dungeonsguide.mod.features.impl.party.customgui;
 
 import net.minecraft.core.component.DataComponents;
-import kr.syeyoung.dungeonsguide.mod.utils.TextUtils;
+import kr.syeyoung.dungeonsguide.mod.utils.string.TextUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.minecraft.world.item.ItemStack;

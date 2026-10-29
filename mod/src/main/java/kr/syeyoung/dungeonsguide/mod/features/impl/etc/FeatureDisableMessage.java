@@ -29,7 +29,7 @@ import lombok.Data;
 import kr.syeyoung.dungeonsguide.mod.events.impl.ChatReceivedEvent;
 
 import java.util.regex.Pattern;
-import kr.syeyoung.dungeonsguide.mod.utils.TextUtils;
+import kr.syeyoung.dungeonsguide.mod.utils.string.TextUtils;
 
 public class FeatureDisableMessage extends SimpleFeature {
     @Data

@@ -29,7 +29,7 @@ import kr.syeyoung.dungeonsguide.mod.dungeon.roomedit.valueedit.ValueEditCreator
 import kr.syeyoung.dungeonsguide.mod.features.FeatureRegistry;
 import kr.syeyoung.dungeonsguide.mod.features.impl.etc.FeatureCollectDungeonRooms;
 import kr.syeyoung.dungeonsguide.mod.dungeon.roomedit.gui.MPanel;
-import kr.syeyoung.dungeonsguide.mod.utils.TextUtils;
+import kr.syeyoung.dungeonsguide.mod.utils.string.TextUtils;
 import net.minecraft.init.Blocks;
 
 import java.awt.*;

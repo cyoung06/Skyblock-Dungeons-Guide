@@ -29,7 +29,7 @@ import kr.syeyoung.dungeonsguide.mod.events.impl.PlayerInteractEvent;
 
 import java.awt.*;
 import java.util.Arrays;
-import kr.syeyoung.dungeonsguide.mod.utils.TextUtils;
+import kr.syeyoung.dungeonsguide.mod.utils.string.TextUtils;
 
 public class RoomProcessorButtonSolver extends GeneralRoomProcessor {
     public RoomProcessorButtonSolver(DungeonRoom dungeonRoom) {

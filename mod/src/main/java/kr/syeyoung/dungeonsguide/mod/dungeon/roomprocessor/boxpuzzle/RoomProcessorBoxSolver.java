@@ -43,7 +43,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.Queue;
 import java.util.*;
-import kr.syeyoung.dungeonsguide.mod.utils.TextUtils;
+import kr.syeyoung.dungeonsguide.mod.utils.string.TextUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.AABB;

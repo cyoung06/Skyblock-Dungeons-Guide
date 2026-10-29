@@ -29,7 +29,7 @@ import kr.syeyoung.dungeonsguide.mod.dungeon.roomedit.gui.elements.MLabel;
 import kr.syeyoung.dungeonsguide.mod.dungeon.roomedit.gui.elements.MLabelAndElement;
 import kr.syeyoung.dungeonsguide.mod.dungeon.roomedit.gui.elements.MTextField;
 import kr.syeyoung.dungeonsguide.mod.dungeon.roomedit.gui.elements.MValue;
-import kr.syeyoung.dungeonsguide.mod.utils.TextUtils;
+import kr.syeyoung.dungeonsguide.mod.utils.string.TextUtils;
 
 import java.awt.*;
 import java.util.Arrays;

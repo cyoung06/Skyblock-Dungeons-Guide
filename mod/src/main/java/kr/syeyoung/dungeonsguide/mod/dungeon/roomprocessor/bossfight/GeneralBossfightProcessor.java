@@ -41,7 +41,7 @@ import kr.syeyoung.dungeonsguide.mod.events.impl.PlayerInteractEvent;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
-import kr.syeyoung.dungeonsguide.mod.utils.TextUtils;
+import kr.syeyoung.dungeonsguide.mod.utils.string.TextUtils;
 
 public abstract class GeneralBossfightProcessor implements BossfightProcessor {
     private final Map<String, PhaseData> phases = new HashMap<String, PhaseData>();

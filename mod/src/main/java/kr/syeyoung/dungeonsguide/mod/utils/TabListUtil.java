@@ -18,6 +18,7 @@
 
 package kr.syeyoung.dungeonsguide.mod.utils;
 
+import kr.syeyoung.dungeonsguide.mod.utils.string.TextUtils;
 import kr.syeyoung.dungeonsguide.mod.parallelUniverse.tab.TabList;
 import kr.syeyoung.dungeonsguide.mod.parallelUniverse.tab.TabListEntry;
 import org.jetbrains.annotations.Nullable;

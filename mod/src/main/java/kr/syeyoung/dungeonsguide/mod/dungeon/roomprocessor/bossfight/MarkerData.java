@@ -18,7 +18,7 @@
 
 package kr.syeyoung.dungeonsguide.mod.dungeon.roomprocessor.bossfight;
 
-import kr.syeyoung.dungeonsguide.mod.utils.TextUtils;
+import kr.syeyoung.dungeonsguide.mod.utils.string.TextUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.minecraft.world.entity.Entity;

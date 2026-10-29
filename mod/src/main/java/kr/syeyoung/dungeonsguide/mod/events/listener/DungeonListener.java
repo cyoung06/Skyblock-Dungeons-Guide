@@ -80,7 +80,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import com.mojang.blaze3d.platform.InputConstants;
-import kr.syeyoung.dungeonsguide.mod.utils.TextUtils;
+import kr.syeyoung.dungeonsguide.mod.utils.string.TextUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.util.Tuple;

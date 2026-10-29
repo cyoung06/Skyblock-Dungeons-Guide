@@ -30,7 +30,7 @@ import kr.syeyoung.dungeonsguide.mod.dungeon.roomedit.gui.elements.MValue;
 import kr.syeyoung.dungeonsguide.mod.dungeon.roomedit.valueedit.ValueEdit;
 import kr.syeyoung.dungeonsguide.mod.dungeon.roomedit.valueedit.ValueEditCreator;
 import kr.syeyoung.dungeonsguide.mod.dungeon.roomedit.gui.MPanel;
-import kr.syeyoung.dungeonsguide.mod.utils.TextUtils;
+import kr.syeyoung.dungeonsguide.mod.utils.string.TextUtils;
 
 import java.awt.*;
 import java.util.Arrays;

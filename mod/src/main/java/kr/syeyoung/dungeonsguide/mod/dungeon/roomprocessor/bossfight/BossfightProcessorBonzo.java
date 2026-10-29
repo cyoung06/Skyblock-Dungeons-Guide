@@ -22,7 +22,7 @@ import kr.syeyoung.dungeonsguide.mod.utils.string.ComponentMatcher;
 import kr.syeyoung.dungeonsguide.mod.events.impl.LivingTickEvent;
 
 
-import kr.syeyoung.dungeonsguide.mod.utils.TextUtils;
+import kr.syeyoung.dungeonsguide.mod.utils.string.TextUtils;
 import lombok.AllArgsConstructor;
 import net.minecraft.client.player.RemotePlayer;
 import net.minecraft.world.entity.Entity;

@@ -20,7 +20,7 @@ package kr.syeyoung.dungeonsguide.mod.features.impl.party.customgui;
 
 import java.util.stream.Collectors;
 import net.minecraft.world.item.TooltipFlag;
-import kr.syeyoung.dungeonsguide.mod.utils.TextUtils;
+import kr.syeyoung.dungeonsguide.mod.utils.string.TextUtils;
 import kr.syeyoung.dungeonsguide.mod.chat.ChatProcessResult;
 import kr.syeyoung.dungeonsguide.mod.chat.ChatProcessor;
 import kr.syeyoung.dungeonsguide.mod.chat.ChatSubscriber;

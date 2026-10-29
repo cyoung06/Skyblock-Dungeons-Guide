@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package kr.syeyoung.dungeonsguide.mod.utils;
+package kr.syeyoung.dungeonsguide.mod.utils.string;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;

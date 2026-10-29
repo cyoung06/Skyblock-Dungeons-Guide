@@ -19,7 +19,7 @@
 package kr.syeyoung.dungeonsguide.mod.dungeon.data.mechanics;
 
 import kr.syeyoung.dungeonsguide.mod.render.world.DGRenderStateContainer;
-import kr.syeyoung.dungeonsguide.mod.utils.TextUtils;
+import kr.syeyoung.dungeonsguide.mod.utils.string.TextUtils;
 import kr.syeyoung.dungeonsguide.mod.dungeon.data.LegacyBlock;
 import com.google.common.collect.Sets;
 import kr.syeyoung.dungeonsguide.mod.dungeon.data.OffsetPoint;

@@ -18,7 +18,7 @@
 
 package kr.syeyoung.dungeonsguide.mod.parallelUniverse.bossbar;
 
-import kr.syeyoung.dungeonsguide.mod.utils.TextUtils;
+import kr.syeyoung.dungeonsguide.mod.utils.string.TextUtils;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
